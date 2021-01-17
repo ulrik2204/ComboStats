@@ -1,0 +1,15 @@
+@import "config"; // For some reason I am not able to use @use here
+
+body {
+  background-color: $background;
+  border-radius: 0%;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.content {
+  margin: 2% 200px 5% 200px;
+}

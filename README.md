@@ -1,46 +1,34 @@
-# Getting Started with Create React App
+# ComboStats
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+By using typescript, react and create-react-app, this non-profit webapp will estimate the probability of success when drawing elements from any pool of elements. When finished, this app will let you
 
-In the project directory, you can run:
+1. Create a pool of elements with attached characteristics
+2. Select what elements that have to be drawn for success to be registered
+3. If success i drawn, but if certain other elements are also drawn, failure can be registered instead.
+4. Effects can be applied when certain elements are drawn, for example to draw another random element from the pool.
+5. Estimate the probaility of success (while not drawing any failures) by drawing any number of samples where any number of elements can be drawn per sample.
+
+By using the calculating power of the computer, 10 000 or more samples can be drawn in a short period of time. This makes the estimate extremely accurate. The default result will be provided as an estimate, however the option to provide the result as a confidence interval will also be available over time.
+
+The probability of most scenarios can be calculated exact by using probability theory and combinatorics. However, in some trading card games, like Yu-Gi-Oh! and Magic The Gathering, a lot of variables makes this expression extremely big and very difficult to calculate by hand. In addition effects may be applied by certain cards that change the outcome for that sample. Therefore actually drawing hands and registering successes can be a better way to test how consistent a deck is.
+
+This webapp will be created with generelization in mind. Thus statistical terminology will be used. This might make it difficult for a lot of people to appeal to. Therefore I will make a TCG mode that will change this terminology and maybe optimize the functionality for TCGs.
+
+A [draft/rough prototype](https://www.figma.com/proto/bxJtxBuVM68r6Ir7Ga0gej/Combo-Stats?node-id=45%3A12766&scaling=min-zoom) for the design and the pages of the app has been made in Figma. The design may change from this draft.
+
+## Using the app
+
+The app is started with:
 
 ### `yarn start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+(From create-react-app)
 
-### `yarn test`
+## Image
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+![Image](draft.png)
