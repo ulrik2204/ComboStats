@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 const More: FC = () => {
   return <div>More</div>;

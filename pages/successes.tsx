@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 const Successes: FC = () => {
   return <div>Successes</div>;

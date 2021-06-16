@@ -1,6 +1,5 @@
 # ComboStats
 
-
 By using typescript, react and create-next-app, this non-profit webapp will estimate the probability of success when drawing elements from any pool of elements. When finished, this app will let you
 
 1. Create a pool of elements with attached characteristics
@@ -16,8 +15,6 @@ The probability of most scenarios can be calculated exact by using probability t
 This webapp will be created with generelization in mind. Thus statistical terminology will be used. This might make it difficult for a lot of people to appeal to. Therefore I will make a TCG mode that will change this terminology and maybe optimize the functionality for TCGs.
 
 A [draft/rough prototype](https://www.figma.com/proto/bxJtxBuVM68r6Ir7Ga0gej/Combo-Stats?node-id=45%3A12766&scaling=min-zoom) for the design and the pages of the app has been made in Figma. The design may change from this draft.
-
-
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

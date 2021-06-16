@@ -1,14 +1,8 @@
-import { FC } from "react";
-import Menu from "../components/Menu";
-import Simple from "../components/Simple";
-
+import { FC } from 'react';
 const Home: FC = () => {
   return (
     <div>
-      {" "}
-      <Menu />
-      <h1>Hello!</h1>
-      <Simple />
+      <h1>Home</h1>
     </div>
   );
 };
