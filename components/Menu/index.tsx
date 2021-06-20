@@ -30,7 +30,13 @@ const Menu: FC = () => {
       <MuiThemeProvider theme={backgroundTheme}>
         <AppBar position="fixed" color="secondary" className={classes.appBar}>
           <div>
-            <span style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>
+            <span
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                router.push('/');
+                setLastClicked({ population: false, successes: false, more: false, calculate: false });
+              }}
+            >
               <Image width={120} height={80} src="/vercel.svg" />
             </span>
             <Arrowbutton
