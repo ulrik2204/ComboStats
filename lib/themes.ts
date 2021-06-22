@@ -6,6 +6,15 @@ export const backgroundTheme = createMuiTheme({
       main: '#D1D2F9',
     },
     secondary: {
+      main: '#19A1B3',
+    },
+    
+  },
+});
+
+export const appBarTheme = createMuiTheme({
+  palette: {
+    primary: {
       main: '#FFBE86',
     },
   },

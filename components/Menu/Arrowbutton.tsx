@@ -5,12 +5,20 @@ type ArrowbuttonProps = {
   text: string;
   onClick: () => void;
   clicked: boolean;
+  className?: string;
 };
-const Arrowbutton: FC<ArrowbuttonProps> = ({ text, onClick, clicked }) => {
+const Arrowbutton: FC<ArrowbuttonProps> = (props) => {
   const router = useRouter();
 
   const svgNotClicked = (
-    <svg width="153" height="75" viewBox="0 0 98 48" xmlns="http://www.w3.org/2000/svg" style={{ cursor: 'pointer' }}>
+    <svg
+      width="153"
+      height="75"
+      viewBox="0 0 96 39"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ cursor: 'pointer' }}
+      className={props?.className}
+    >
       <g filter="url(#filter0_d)">
         <path d="M4 0H77.6364L94 20L77.6364 40H4L19.8182 20L4 0Z" fill="#FF5C5F" />
       </g>
@@ -33,8 +41,8 @@ const Arrowbutton: FC<ArrowbuttonProps> = ({ text, onClick, clicked }) => {
           <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
         </filter>
       </defs>
-      <text textAnchor="middle" fontFamily="Roboto" fontSize="12" fontWeight="bold" x="54%" y="50%">
-        {text}
+      <text textAnchor="middle" fontFamily="Roboto" fontSize="12" fontWeight="bold" x="54%" y="59%">
+        {props.text}
       </text>
     </svg>
   );
@@ -42,10 +50,11 @@ const Arrowbutton: FC<ArrowbuttonProps> = ({ text, onClick, clicked }) => {
     <svg
       width="153"
       height="75"
-      viewBox="0 0 98 48"
+      viewBox="0 0 96 39"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ cursor: 'pointer' }}
+      className={props?.className}
     >
       <g filter="url(#filter1_i)">
         <path d="M4 0H77.6364L94 20L77.6364 40H4L19.8182 20L4 0Z" fill="#D1D2F9" />
@@ -60,7 +69,7 @@ const Arrowbutton: FC<ArrowbuttonProps> = ({ text, onClick, clicked }) => {
           filterUnits="userSpaceOnUse"
           colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
           <feColorMatrix
             in="SourceAlpha"
@@ -82,12 +91,12 @@ const Arrowbutton: FC<ArrowbuttonProps> = ({ text, onClick, clicked }) => {
         fontSize="12"
         fontWeight="bold"
         x="54%"
-        y="50%"
+        y="59%"
       >
-        {text}
+        {props.text}
       </text>
     </svg>
   );
-  return <span onClick={onClick}>{clicked ? svgClicked : svgNotClicked}</span>;
+  return <span onClick={props.onClick}>{props.clicked ? svgClicked : svgNotClicked}</span>;
 };
 export default Arrowbutton;

@@ -1,18 +1,53 @@
 import { AppBar } from '@material-ui/core';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { useRouter } from 'next/dist/client/router';
-import Image from 'next/image';
 import { FC, useState } from 'react';
-import { backgroundTheme } from '../../lib/themes';
+import { appBarTheme } from '../../lib/themes';
 import Arrowbutton from './Arrowbutton';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
     display: 'inline-flex',
     alignItems: 'center',
+    height: 80,
   },
   afterDiv: {
-    height: '90px',
+    height: 80,
+  },
+  contentDiv: {
+    display: 'flex',
+    alignItems: 'center',
+    height: 80,
+  },
+  arrowbutton: {
+    width: 153,
+  },
+  logo: {
+    width: 150,
+    height: 70,
+  },
+  '@media screen and (max-width: 750px)': {
+    arrowbutton: {
+      width: 90,
+    },
+    logo: {
+      width: 100,
+      height: 20,
+    },
+    appBar: {
+      height: 60,
+    },
+    contentDiv: {
+      height: '60px',
+    },
+    afterDiv: {
+      height: 60,
+    },
+  },
+  '@media screen and (max-width: 480px)': {
+    logo: {
+      display: 'none',
+    },
   },
 }));
 
@@ -27,9 +62,9 @@ const Menu: FC = () => {
   const classes = useStyles();
   return (
     <div>
-      <MuiThemeProvider theme={backgroundTheme}>
-        <AppBar position="fixed" color="secondary" className={classes.appBar}>
-          <div>
+      <MuiThemeProvider theme={appBarTheme}>
+        <AppBar position="fixed" color="primary" className={classes.appBar}>
+          <div className={classes.contentDiv}>
             <span
               style={{ cursor: 'pointer' }}
               onClick={() => {
@@ -37,7 +72,7 @@ const Menu: FC = () => {
                 setLastClicked({ population: false, successes: false, more: false, calculate: false });
               }}
             >
-              <Image width={120} height={80} src="/vercel.svg" />
+              <img alt="Logo" src="/vercel.svg" className={classes.logo} />
             </span>
             <Arrowbutton
               text="Deck"
@@ -46,6 +81,7 @@ const Menu: FC = () => {
                 router.push('/population');
               }}
               clicked={lastClicked.population}
+              className={classes.arrowbutton}
             />
             <Arrowbutton
               text="Combos"
@@ -54,6 +90,7 @@ const Menu: FC = () => {
                 router.push('/successes');
               }}
               clicked={lastClicked.successes}
+              className={classes.arrowbutton}
             />
             <Arrowbutton
               text="More"
@@ -62,6 +99,7 @@ const Menu: FC = () => {
                 router.push('/more');
               }}
               clicked={lastClicked.more}
+              className={classes.arrowbutton}
             />
             <Arrowbutton
               text="Calculate"
@@ -70,6 +108,7 @@ const Menu: FC = () => {
                 router.push('/calculate');
               }}
               clicked={lastClicked.calculate}
+              className={classes.arrowbutton}
             />
           </div>
         </AppBar>
