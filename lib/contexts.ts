@@ -1,9 +1,9 @@
 import { createContext, Dispatch, SetStateAction } from "react";
-import { Population } from "../lib/core";
+import { Element } from "../lib/core";
 
 type PopulationContextType =  {
-  population: Population;
-  setPopulation: Dispatch<SetStateAction<Population>>;
+  population: Element[];
+  setPopulation: Dispatch<SetStateAction<Element[]>>;
 }
 
-export const PopulationContext = createContext<PopulationContextType>({population: new Population(), setPopulation: () => {}});
+export const PopulationContext = createContext<PopulationContextType>({population: [], setPopulation: () => {}});

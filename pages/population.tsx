@@ -1,11 +1,11 @@
-import { createStyles, makeStyles, Theme, Button } from '@material-ui/core';
+import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 import { FC, useCallback, useContext, useState } from 'react';
 import ListView from '../components/ListView';
 import PageTemplate from '../components/PageTemplate';
+import PopulationForm from '../components/PopulationForm';
 import Popup from '../components/Popup';
 import { PopulationContext } from '../lib/contexts';
-import { Element, Population as Pop } from '../lib/core';
-import PopulationForm from '../components/PopulationForm';
+import { sortElements } from '../lib/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,19 +28,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Population: FC = () => {
-  const pop = new Pop()
-    .add(new Element('Test', 'test1', 'test2'))
-    .add(new Element('Hallo', 'noen der', 'noen her'))
-    .add(new Element('Monster reborn', 'extender'));
-  const thisInfoList: [string, string[]][] = pop.toArray().map((el) => [el.getName(), Array.from(el.getRoles())]);
-
   const [openPopup, setOpenPopup] = useState(false);
   const { population } = useContext(PopulationContext);
   const classes = useStyles();
 
   const handleAddClick = useCallback(() => {
     setOpenPopup(true);
-    console.log('Add knappen klikka');
   }, [setOpenPopup]);
 
   return (
@@ -53,14 +46,14 @@ const Population: FC = () => {
         >
           <div>
             <div className={classes.buttonDiv}>
-              <Popup open={openPopup} onClose={() => setOpenPopup(false)} title={'Hei'}>
-                <PopulationForm />
+              <Popup open={openPopup} onClose={() => setOpenPopup(false)} title={'Add card to deck'}>
+                <PopulationForm defaultName="" defaultRoles={[]} type="add" clearAllOnConfirm />
               </Popup>
               <Button variant="contained" color="default" className={classes.addButton} onClick={handleAddClick}>
                 Add
               </Button>
             </div>
-            <ListView infoList={thisInfoList} />
+            <ListView infoList={sortElements(population)} />
           </div>
         </PageTemplate>
       </div>
