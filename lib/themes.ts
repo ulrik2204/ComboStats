@@ -24,9 +24,11 @@ export const buttonTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#19A1B3',
+      contrastText: "#000000",
     },
     secondary: {
       main: '#EF3E36',
+      contrastText: "#000000",
     },
   },
 });

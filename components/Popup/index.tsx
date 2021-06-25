@@ -1,7 +1,7 @@
 import { createStyles, Dialog, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { FC } from 'react';
-import IconButton from '@material-ui/core/IconButton';
 
 type PopupProps = {
   children?: JSX.Element;
@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
       top: theme.spacing(1),
       color: theme.palette.grey[500],
     },
+    dialog: {
+      backgroundColor: theme.palette.primary.main,
+    },
   }),
 );
 
@@ -40,10 +43,9 @@ const Popup: FC<PopupProps> = (props) => {
       disableBackdropClick
       open={props.open}
       onClose={props.onClose}
-      aria-labelledby="dialogTitle"
-      aria-aria-describedby="descriptionTitle"
       fullWidth={true}
       fullScreen={fullScreen}
+      PaperProps={{ className: classes.dialog }}
     >
       <IconButton aria-label="close" className={classes.closeButton} onClick={props.onClose}>
         <CloseIcon />
