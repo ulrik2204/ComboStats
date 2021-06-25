@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     width: 153,
   },
   logo: {
-    width: 150,
+    width: 70,
     height: 70,
   },
   '@media screen and (max-width: 750px)': {
@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
       width: 90,
     },
     logo: {
-      width: 100,
-      height: 20,
+      width: 50,
+      height: 50,
     },
     appBar: {
       height: 60,
@@ -72,7 +72,7 @@ const Menu: FC = () => {
                 setLastClicked({ population: false, successes: false, more: false, calculate: false });
               }}
             >
-              <img alt="Logo" src="/vercel.svg" className={classes.logo} />
+              <img src="/ComboStatsBrownFade.svg" className={classes.logo} />
             </span>
             <Arrowbutton
               text="Deck"
