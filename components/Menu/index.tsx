@@ -11,9 +11,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     height: 80,
   },
-  afterDiv: {
-    height: 80,
-  },
   contentDiv: {
     display: 'flex',
     alignItems: 'center',
@@ -39,9 +36,6 @@ const useStyles = makeStyles((theme) => ({
     },
     contentDiv: {
       height: '60px',
-    },
-    afterDiv: {
-      height: 60,
     },
   },
   '@media screen and (max-width: 480px)': {
@@ -112,7 +106,6 @@ const Menu: FC = () => {
             />
           </div>
         </AppBar>
-        <div className={classes.afterDiv}></div>
       </MuiThemeProvider>
     </div>
   );

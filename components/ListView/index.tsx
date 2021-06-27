@@ -19,7 +19,13 @@ function requireTwoSameLengthArrays<T extends readonly [] | readonly any[]>(t: T
 const useStyles = makeStyles((theme: Theme) => ({
   viewDiv: {
     display: 'flex',
-    flexDirection: 'column',
+    flexFlow: 'column',
+    height: '100%',
+  },
+  list: {
+    flexGrow: 1,
+    flexBasis: 300,
+    overflow: 'auto',
   },
 }));
 
@@ -29,7 +35,7 @@ const ListView: FC<ListPresProps> = (props) => {
 
   return (
     <div className={classes.viewDiv}>
-      <List>
+      <List className={classes.list}>
         {(() => {
           const listElements: JSX.Element[] = [];
           for (let i = 0; i < props.infoList.length; i++) {

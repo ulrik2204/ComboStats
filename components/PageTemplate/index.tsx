@@ -12,23 +12,35 @@ const useStyles = makeStyles((theme) => ({
   overDiv: {
     width: '100vw',
     display: 'flex',
-    flexDirection: 'column',
+    flexFlow: 'column',
     alignItems: 'center',
+    height: '100vh',
+  },
+  afterMenuDiv: {
+    minHeight: 80,
   },
   contentDiv: {
     display: 'flex',
     justifyContent: 'center',
     width: '50em',
+    flexGrow: 2,
   },
   intro: {
     width: '50em',
   },
   column1: {
     width: '30em',
+    height: '100%',
   },
   column2: {
     marginLeft: 20,
     width: '20em',
+    height: '100%',
+  },
+  '@media screen and (max-width: 750px)': {
+    afterMenuDiv: {
+      minHeight: 60,
+    },
   },
   '@media screen and (max-width: 800px)': {
     column2: {
@@ -55,6 +67,7 @@ const PageTemplate: FC<PageTemplateProps> = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.overDiv}>
+      <div className={classes.afterMenuDiv}></div>
       <div className={classes.intro}>
         <h1>{props.title}</h1>
         <p>{props.description}</p>

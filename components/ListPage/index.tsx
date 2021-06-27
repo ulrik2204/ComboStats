@@ -3,7 +3,6 @@ import { FC, useState } from 'react';
 import { Element, sortElements } from '../../lib/core';
 import ListView from '../ListView';
 import PageTemplate from '../PageTemplate';
-import PopulationForm from '../PopulationForm';
 import Popup from '../Popup';
 
 type ListPageProps = {
@@ -11,6 +10,7 @@ type ListPageProps = {
   description: string;
   infoList: Element[];
   popupTitle: string;
+  addForm: JSX.Element;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -19,9 +19,15 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 'auto',
       display: 'flex',
       justifyContent: 'flex-end',
+      marginBottom: 15,
     },
     addButton: {
       width: 50,
+    },
+    listPageDiv: {
+      height: '100%',
+      display: 'flex',
+      flexFlow: 'column',
     },
   }),
 );
@@ -32,10 +38,10 @@ const ListPage: FC<ListPageProps> = (props) => {
 
   return (
     <PageTemplate title={props.title} description={props.description} column2={<div>Lorem ipsum dolor sit amet</div>}>
-      <div>
+      <div className={classes.listPageDiv}>
         <div className={classes.buttonDiv}>
           <Popup open={openPopup} onClose={() => setOpenPopup(false)} title={props.popupTitle}>
-            <PopulationForm defaultName="" defaultRoles={[]} type="add" clearAllOnConfirm />
+            {props.addForm}
           </Popup>
           <Button variant="contained" color="default" className={classes.addButton} onClick={() => setOpenPopup(true)}>
             Add
