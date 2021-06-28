@@ -4,9 +4,11 @@ export const backgroundTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#D1D2F9',
+      contrastText: "#000000",
     },
     secondary: {
       main: '#19A1B3',
+      contrastText: "#000000",
     },
     
   },
@@ -16,6 +18,7 @@ export const appBarTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#FFBE86',
+      contrastText: "#000000",
     },
   },
 });
