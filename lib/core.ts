@@ -94,6 +94,28 @@ export const removeByElement = (elements: Element[], element: Element): Element[
 };
 
 /**
+ * Removes all elements with a specific name in a list of elements.
+ * @param elements The list of elements to remove items from.
+ * @param elName The name of the elements to remove.
+ * @returns The list of elements in elements that do not have name elName
+ */
+export const removeAllByName = (elements: Element[], elName: string): Element[] => {
+  return elements.filter((el) => el.name !== elName);
+};
+
+/**
+ * Counts the amount of elements with given name in elements.
+ * @param elements The list of elements in which to count.
+ * @param elName The name of the element(s) to count for
+ * @returns The amount of elements with elName in elements.
+ */
+export const countElementName = (elements: Element[], elName: string): number => {
+  let count = 0;
+  for (const el of elements) if (el.name === elName) count++;
+  return count;
+};
+
+/**
  * Checks if an array of elements contains an element.
  * @param elements The array to check.
  * @param el The element to check for.
