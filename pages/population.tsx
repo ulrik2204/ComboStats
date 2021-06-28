@@ -1,19 +1,38 @@
 import { FC, useContext } from 'react';
-import ListPage from '../components/ListPage';
-import PopulationForm from '../components/PopulationForm/index';
+import ListView from '../components/ListView/index';
+import PageTemplate from '../components/PageTemplate/index';
+import PopulationForm from '../components/PopulationForm';
 import { PopulationContext } from '../lib/contexts';
+import { countElementName, sortElements } from '../lib/core';
 
 const Population: FC = () => {
   const { population } = useContext(PopulationContext);
 
   return (
-    <ListPage
+    <PageTemplate
       title="Deck"
       description="The group of cards that are drawn from."
-      popupTitle="Add card to deck"
-      infoList={population}
-      addForm={<PopulationForm defaultName="" defaultRoles={[]} type="add" clearAllOnConfirm />}
-    />
+      column2={<div>Lorem ipsum dolor sit amet</div>}
+    >
+      <ListView
+        infoList={sortElements(population)}
+        addItemTitle="Add card"
+        addItemForm={() => (
+          <PopulationForm defaultName="" defaultRoles={[]} defaultCount={1} type="add" clearAllOnConfirm />
+        )}
+        editItemTitle="Edit card(s)"
+        editItemForm={(defaultValue, setOpenEditPopup) => (
+          <PopulationForm
+            defaultName={defaultValue[0].name}
+            defaultRoles={defaultValue[0].roles}
+            defaultCount={countElementName(population, defaultValue[0].name)}
+            type="edit"
+            afterConfirm={() => setOpenEditPopup?.(false)}
+            afterDeleteAll={() => setOpenEditPopup?.(false)}
+          />
+        )}
+      />
+    </PageTemplate>
   );
 };
 

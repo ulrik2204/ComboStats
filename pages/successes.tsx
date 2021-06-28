@@ -1,21 +1,27 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { FC, useContext } from 'react';
-import ListPage from '../components/ListPage';
-import SuccessesForm from '../components/SuccessesForm/';
+import ListView from '../components/ListView/index';
+import PageTemplate from '../components/PageTemplate/index';
+import SuccessesForm from '../components/SuccessesForm/index';
 import { SuccessGroupsContext } from '../lib/contexts';
-
+import { sortElements } from '../lib/core';
 
 const Successes: FC = () => {
   const { successGroups } = useContext(SuccessGroupsContext);
 
   return (
-    <ListPage
+    <PageTemplate
       title="Combos"
-      description="Register combo when either of these scenarios occur."
-      popupTitle="Add combo"
-      infoList={successGroups.main}
-      addForm={<SuccessesForm />}
-    />
+      description="Register a combo/success when either of these scenarios occur."
+      column2={<div>Lorem ipsum dolor sit amet</div>}
+    >
+      <ListView
+        infoList={sortElements(successGroups.main)}
+        addItemTitle="Add card"
+        addItemForm={() => <SuccessesForm />}
+        editItemTitle="Edit card(s)"
+        editItemForm={(defaultValue) => <SuccessesForm />}
+      />
+    </PageTemplate>
   );
 };
 

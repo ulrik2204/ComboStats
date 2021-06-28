@@ -6,6 +6,7 @@ type ListElementProps = {
   infoList: string[];
   title2?: string;
   bulletList?: string[];
+  onClick?: () => void;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.secondary.main,
     width: 'auto',
     marginTop: 5,
+    cursor: 'pointer',
   },
 }));
 
@@ -24,10 +26,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 const ListElement: FC<ListElementProps> = (props) => {
   const classes = useStyles();
   return (
-    <ListItem className={classes.listElDiv} dense>
+    <ListItem className={classes.listElDiv} dense onClick={props.onClick}>
       <div>
         <ListItemText primary={<b>{props.title}</b>} secondary={props.infoList.join(', ')} />
-        {props.title2 && props.bulletList && <ListItemText primary={<b>{props.title2}</b>} secondary={<ul>{props.bulletList?.map(item => <li>{item}</li>)}</ul>} />}
+        {props.title2 && props.bulletList && (
+          <ListItemText
+            primary={<b>{props.title2}</b>}
+            secondary={
+              <ul>
+                {props.bulletList?.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            }
+          />
+        )}
       </div>
     </ListItem>
   );
