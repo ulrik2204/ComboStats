@@ -6,7 +6,7 @@ import { SuccessGroupsContext } from '../lib/contexts';
 import { sortElements } from '../lib/core';
 
 const Successes: FC = () => {
-  const { successGroups } = useContext(SuccessGroupsContext);
+  const { successGroups, setSuccessGroups } = useContext(SuccessGroupsContext);
 
   return (
     <PageTemplate
@@ -16,6 +16,7 @@ const Successes: FC = () => {
     >
       <ListView
         infoList={sortElements(successGroups.main)}
+        onDeleteAllClick={() => setSuccessGroups({ ...successGroups, main: [] })}
         addItemTitle="Add card"
         addItemForm={() => <SuccessesForm />}
         editItemTitle="Edit card(s)"

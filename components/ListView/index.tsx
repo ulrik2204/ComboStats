@@ -1,8 +1,10 @@
-import { Button, makeStyles, Theme } from '@material-ui/core';
+import { Button, makeStyles, MuiThemeProvider, Theme } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Element } from '../../lib/core';
+import { buttonTheme } from '../../lib/themes';
+import { useConfirmDialog } from '../../lib/util';
 import ListElement from '../ListElement';
 import Popup from '../Popup/index';
 
@@ -17,10 +19,14 @@ import Popup from '../Popup/index';
 type ListViewProps = {
   infoList: Element[];
   corrMoreInfoList?: Element[];
+  onDeleteAllClick: () => void;
   addItemTitle: string;
   addItemForm: (setOpenAddPopup?: Dispatch<SetStateAction<boolean>>) => JSX.Element;
   editItemTitle: string;
-  editItemForm: (defaultValue: [Element, Element | undefined], setOpenEditPopup?: Dispatch<SetStateAction<boolean>>) => JSX.Element;
+  editItemForm: (
+    defaultValue: [Element, Element | undefined],
+    setOpenEditPopup?: Dispatch<SetStateAction<boolean>>,
+  ) => JSX.Element;
 };
 
 function requireTwoSameLengthArrays<T extends readonly [] | readonly any[]>(t: T, u: { [K in keyof T]: any }): void {}
@@ -39,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonDiv: {
     width: 'auto',
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     marginBottom: 15,
   },
   addButton: {
@@ -55,6 +61,7 @@ const ListView: FC<ListViewProps> = (props) => {
     { name: '', roles: [] },
     undefined,
   ]);
+  const confirmAction = useConfirmDialog();
   const classes = useStyles();
 
   return (
@@ -63,9 +70,29 @@ const ListView: FC<ListViewProps> = (props) => {
         <Popup open={openAddPopup} onClose={() => setOpenAddPopup(false)} title={props.addItemTitle}>
           {props.addItemForm(setOpenAddPopup)}
         </Popup>
-        <Button variant="contained" color="default" className={classes.addButton} onClick={() => setOpenAddPopup(true)}>
-          Add
-        </Button>
+        <MuiThemeProvider theme={buttonTheme}>
+          <Button
+            variant="contained"
+            color="default"
+            onClick={() =>
+              confirmAction(
+                'Delete all cards in deck?',
+                props.onDeleteAllClick,
+                'This action is irreversible.',
+              )
+            }
+          >
+            Delete all
+          </Button>
+          <Button
+            variant="contained"
+            color="default"
+            className={classes.addButton}
+            onClick={() => setOpenAddPopup(true)}
+          >
+            Add
+          </Button>
+        </MuiThemeProvider>
       </div>
       <Popup open={openEditPopup} onClose={() => setOpenEditPopup(false)} title={props.editItemTitle}>
         {props.editItemForm(clickedElement, setOpenEditPopup)}

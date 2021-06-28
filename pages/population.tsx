@@ -6,7 +6,7 @@ import { PopulationContext } from '../lib/contexts';
 import { countElementName, sortElements } from '../lib/core';
 
 const Population: FC = () => {
-  const { population } = useContext(PopulationContext);
+  const { population, setPopulation } = useContext(PopulationContext);
 
   return (
     <PageTemplate
@@ -16,6 +16,7 @@ const Population: FC = () => {
     >
       <ListView
         infoList={sortElements(population)}
+        onDeleteAllClick={() => setPopulation([])}
         addItemTitle="Add card"
         addItemForm={() => (
           <PopulationForm defaultName="" defaultRoles={[]} defaultCount={1} type="add" clearAllOnConfirm />

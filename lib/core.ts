@@ -25,7 +25,6 @@ export const identifyEl = (element: Element): Element => {
  * @returns An array of sorted elements by name
  */
 export const sortElements = (elements: Element[]): Element[] => {
-  console.log(elements);
   return [...elements].sort((el1, el2) => {
     const ele1 = el1.name.toLowerCase();
     const ele2 = el2.name.toLowerCase();
