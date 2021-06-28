@@ -1,9 +1,10 @@
 import { FC } from 'react';
+import PageTemplate from '../components/PageTemplate/index';
 const Home: FC = () => {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <PageTemplate title="Home" description="Home">
+      <div>Lorem ipsum</div>
+    </PageTemplate>
   );
 };
 
