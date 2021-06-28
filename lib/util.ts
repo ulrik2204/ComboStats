@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
+import { ConfirmDialogContext } from './contexts';
 
 /**
  * Finds the default value for a variable based on the name of the variable
@@ -17,7 +18,6 @@ export const findDefaultValue = (variableName: string): any => {
       break;
     default:
       defaultValue = null;
-      console.log('Default value not found', variableName);
       break;
   }
   return defaultValue;
@@ -43,4 +43,19 @@ export const useUpdateLocalStorage = (value: any, valueName: string): void => {
   }, [value]);
 };
 
-console.log(findDefaultValue('successGroups'));
+export const useConfirmDialog = () => {
+  const { confirmDialogInfo, setConfirmDialogInfo } = useContext(ConfirmDialogContext);
+
+  return useCallback(
+    (title: string, onYes: () => void, description?: string) => {
+      setConfirmDialogInfo({
+        open: true,
+        title,
+        onYes,
+        description,
+        onClose: () => setConfirmDialogInfo({ ...confirmDialogInfo, open: false }),
+      });
+    },
+    [confirmDialogInfo, setConfirmDialogInfo],
+  );
+};

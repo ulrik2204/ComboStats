@@ -1,5 +1,16 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
+import { ConfirmDialogProps } from '../components/ConfirmDialog';
 import { Element } from '../lib/core';
+
+type ConfirmDialogContext = {
+  confirmDialogInfo: ConfirmDialogProps;
+  setConfirmDialogInfo: Dispatch<SetStateAction<ConfirmDialogProps>>;
+};
+
+export const ConfirmDialogContext = createContext<ConfirmDialogContext>({
+  confirmDialogInfo: { open: false, title: '', onClose: () => {}, onYes: () => {} },
+  setConfirmDialogInfo: () => {}
+});
 
 type PopulationContextType = {
   population: Element[];
