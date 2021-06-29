@@ -1,7 +1,7 @@
 import { ServerStyleSheets } from '@material-ui/styles'; // works with @material-ui/core/styles, if you prefer to use it.
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import React from 'react';
-import { appBarTheme as theme } from '../lib/themes'; // Adjust here as well
+import { backgroundTheme as theme } from '../lib/themes'; // Adjust here as well
 
 export default class MyDocument extends Document {
   render() {

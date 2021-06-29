@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(8),
     },
     finishingButtonsDiv: {},
+    deleteButton: {
+      marginLeft: theme.spacing(1),
+    },
   }),
 );
 
@@ -146,10 +149,16 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
           </Button>
           {props.type === 'edit' && (
             <Button
+              className={classes.deleteButton}
               variant="contained"
               color="secondary"
               onClick={() =>
-                confirmAction('Delete all copies of the card?', "confirm",handleDeleteAll, 'This action is irreversible.')
+                confirmAction(
+                  'Delete all copies of the card?',
+                  'confirm',
+                  handleDeleteAll,
+                  'This action is irreversible.',
+                )
               }
             >
               Delete all copies

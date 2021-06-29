@@ -98,32 +98,34 @@ const ListView: FC<ListViewProps> = (props) => {
       <Popup open={openEditPopup} onClose={() => setOpenEditPopup(false)} title={props.editItemTitle}>
         {props.editItemForm(clickedElement, setOpenEditPopup)}
       </Popup>
-      <List className={classes.list}>
-        {(() => {
-          const listElements: JSX.Element[] = [];
-          for (let i = 0; i < props.infoList.length; i++) {
-            const el = props.infoList[i];
-            const corrEl = props.corrMoreInfoList?.[i];
-            listElements.push(
-              <ListElement
-                title={el.name}
-                infoList={el.roles}
-                title2={corrEl?.name}
-                bulletList={corrEl?.roles}
-                key={uuidv4()}
-                onClick={() => {
-                  setOpenEditPopup(true);
-                  setClickedElement([
-                    { name: el.name, roles: el.roles },
-                    corrEl ? { name: corrEl.name, roles: corrEl.roles } : undefined,
-                  ]);
-                }}
-              />,
-            );
-          }
-          return listElements;
-        })()}
-      </List>
+      <MuiThemeProvider theme={buttonTheme}>
+        <List className={classes.list}>
+          {(() => {
+            const listElements: JSX.Element[] = [];
+            for (let i = 0; i < props.infoList.length; i++) {
+              const el = props.infoList[i];
+              const corrEl = props.corrMoreInfoList?.[i];
+              listElements.push(
+                <ListElement
+                  title={el.name}
+                  infoList={el.roles}
+                  title2={corrEl?.name}
+                  bulletList={corrEl?.roles}
+                  key={uuidv4()}
+                  onClick={() => {
+                    setOpenEditPopup(true);
+                    setClickedElement([
+                      { name: el.name, roles: el.roles },
+                      corrEl ? { name: corrEl.name, roles: corrEl.roles } : undefined,
+                    ]);
+                  }}
+                />,
+              );
+            }
+            return listElements;
+          })()}
+        </List>
+      </MuiThemeProvider>
     </div>
   );
 };

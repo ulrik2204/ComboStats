@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
   contentDiv: {
     display: 'flex',
     justifyContent: 'center',
-    width: '50em',
     flexGrow: 2,
+    width: '45em',
   },
   intro: {
-    width: '50em',
+    width: '45em',
   },
   column1: {
     width: '30em',
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
   column2: {
     marginLeft: 20,
-    width: '20em',
+    width: '15em',
     height: '100%',
   },
   '@media screen and (max-width: 750px)': {
@@ -47,14 +47,13 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
     column1: {
-      width: '100vw',
+      width: 'calc(100vw - 20px)',
     },
     contentDiv: {
       width: 'auto',
     },
     intro: {
       width: 'calc(100vw - 20px)',
-      marginLeft: 20,
     },
   },
 }));

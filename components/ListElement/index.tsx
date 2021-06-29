@@ -12,7 +12,7 @@ type ListElementProps = {
 const useStyles = makeStyles((theme: Theme) => ({
   listElDiv: {
     borderRadius: 5,
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
     width: 'auto',
     marginTop: 5,
     cursor: 'pointer',

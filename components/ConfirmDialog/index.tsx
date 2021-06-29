@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       minWidth: 300,
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.warning.main,
     },
   }),
 );

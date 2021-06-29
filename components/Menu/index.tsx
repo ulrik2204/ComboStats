@@ -2,7 +2,7 @@ import { AppBar } from '@material-ui/core';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { useRouter } from 'next/dist/client/router';
 import { FC, useState } from 'react';
-import { appBarTheme } from '../../lib/themes';
+import { backgroundTheme } from '../../lib/themes';
 import Arrowbutton from './Arrowbutton';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,20 +16,20 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     height: 80,
   },
-  arrowbutton: {
-    width: 153,
-  },
+  arrowbutton: {},
   logo: {
-    width: 70,
-    height: 70,
+    width: 200,
+    height: 80,
+    marginLeft: -100,
   },
-  '@media screen and (max-width: 750px)': {
+  '@media screen and (max-width: 800px)': {
     arrowbutton: {
       width: 90,
     },
     logo: {
-      width: 50,
+      width: 100,
       height: 50,
+      marginLeft: -50,
     },
     appBar: {
       height: 60,
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
       height: '60px',
     },
   },
-  '@media screen and (max-width: 480px)': {
+  '@media screen and (max-width: 520px)': {
     logo: {
       display: 'none',
     },
@@ -56,8 +56,8 @@ const Menu: FC = () => {
   const classes = useStyles();
   return (
     <div>
-      <MuiThemeProvider theme={appBarTheme}>
-        <AppBar position="fixed" color="primary" className={classes.appBar}>
+      <MuiThemeProvider theme={backgroundTheme}>
+        <AppBar position="fixed" color="secondary" className={classes.appBar}>
           <div className={classes.contentDiv}>
             <span
               style={{ cursor: 'pointer' }}
@@ -66,7 +66,7 @@ const Menu: FC = () => {
                 setLastClicked({ population: false, successes: false, more: false, calculate: false });
               }}
             >
-              <img src="/ComboStatsBrownFade.svg" className={classes.logo} />
+              <img src="/ComboStatsLogo.svg" className={classes.logo} />
             </span>
             <Arrowbutton
               text="Deck"
