@@ -18,7 +18,8 @@ export type ConfirmDialogProps = {
   title: string;
   description?: string;
   onClose: () => void;
-  onYes: () => void;
+  onYes?: () => void;
+  type: 'confirm' | 'alert';
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,18 +50,20 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
       <DialogActions>
         <MuiThemeProvider theme={buttonTheme}>
           <Button variant="contained" onClick={props.onClose}>
-            No
+            {props.type === 'confirm' ? 'No' : props.type === 'alert' ? 'Ok' : ''}
           </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              props.onYes();
-              props.onClose();
-            }}
-          >
-            Yes
-          </Button>
+          {props.type === 'confirm' && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                props.onYes?.();
+                props.onClose();
+              }}
+            >
+              Yes
+            </Button>
+          )}
         </MuiThemeProvider>
       </DialogActions>
     </Dialog>

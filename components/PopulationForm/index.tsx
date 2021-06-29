@@ -149,7 +149,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
               variant="contained"
               color="secondary"
               onClick={() =>
-                confirmAction('Delete all copies of the card?', handleDeleteAll, 'This action is irreversible.')
+                confirmAction('Delete all copies of the card?', "confirm",handleDeleteAll, 'This action is irreversible.')
               }
             >
               Delete all copies

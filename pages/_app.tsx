@@ -32,6 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     title: '',
     onYes: () => {},
     onClose: () => setConfirmDialogInfo({ ...confirmDialogInfo, open: false }),
+    type: 'confirm',
   });
   // Update localStorage with population when population changes
   useUpdateLocalStorage(population, 'population');
@@ -51,6 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               onYes={confirmDialogInfo.onYes}
               title={confirmDialogInfo.title}
               description={confirmDialogInfo.description}
+              type={confirmDialogInfo.type}
             />
             <ConfirmDialogContext.Provider value={{ confirmDialogInfo, setConfirmDialogInfo }}>
               <Component {...pageProps} />

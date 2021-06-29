@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useRef } from 'react';
+import { ConfirmDialogProps } from '../components/ConfirmDialog/index';
 import { ConfirmDialogContext } from './contexts';
 
 /**
@@ -47,13 +48,14 @@ export const useConfirmDialog = () => {
   const { confirmDialogInfo, setConfirmDialogInfo } = useContext(ConfirmDialogContext);
 
   return useCallback(
-    (title: string, onYes: () => void, description?: string) => {
+    (title: string, type: ConfirmDialogProps['type'], onYes: () => void, description?: string) => {
       setConfirmDialogInfo({
         open: true,
         title,
         onYes,
         description,
         onClose: () => setConfirmDialogInfo({ ...confirmDialogInfo, open: false }),
+        type,
       });
     },
     [confirmDialogInfo, setConfirmDialogInfo],

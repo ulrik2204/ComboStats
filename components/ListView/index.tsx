@@ -77,6 +77,7 @@ const ListView: FC<ListViewProps> = (props) => {
             onClick={() =>
               confirmAction(
                 'Delete all cards in deck?',
+                'confirm',
                 props.onDeleteAllClick,
                 'This action is irreversible.',
               )

@@ -8,8 +8,8 @@ type ConfirmDialogContext = {
 };
 
 export const ConfirmDialogContext = createContext<ConfirmDialogContext>({
-  confirmDialogInfo: { open: false, title: '', onClose: () => {}, onYes: () => {} },
-  setConfirmDialogInfo: () => {}
+  confirmDialogInfo: { open: false, type: 'confirm', title: '', onClose: () => {}, onYes: () => {} },
+  setConfirmDialogInfo: () => {},
 });
 
 type PopulationContextType = {
