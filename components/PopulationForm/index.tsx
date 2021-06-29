@@ -14,6 +14,7 @@ import { FC, useCallback, useContext, useState } from 'react';
 import { PopulationContext } from '../../lib/contexts';
 import { identifyEl, removeAllByName } from '../../lib/core';
 import { buttonTheme } from '../../lib/themes';
+import { useConfirmDialog } from '../../lib/util';
 
 type PopualtionFormProps = {
   defaultName: string;
@@ -48,6 +49,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
   const [elementCount, setElementCount] = useState(props.defaultCount);
   const [roles, setRoles] = useState(props.defaultRoles);
   const { population, setPopulation } = useContext(PopulationContext);
+  const confirmAction = useConfirmDialog();
   const classes = useStyles();
 
   /**
@@ -89,13 +91,13 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
       <div>
         <div>
           <TextField label="Name of card" value={name} onChange={(e) => setName(e.target.value)} />
-            <TextField
-              label="Count"
-              value={elementCount}
-              type="number"
-              className={classes.countBox}
-              onChange={(e) => setElementCount(parseInt(e.target.value))}
-            />
+          <TextField
+            label="Count"
+            value={elementCount}
+            type="number"
+            className={classes.countBox}
+            onChange={(e) => setElementCount(parseInt(e.target.value))}
+          />
         </div>
         <div className={classes.rolesOverDiv}>
           <FormLabel>Roles</FormLabel>
@@ -143,7 +145,13 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
             Confirm
           </Button>
           {props.type === 'edit' && (
-            <Button variant="contained" color="secondary" onClick={handleDeleteAll}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() =>
+                confirmAction('Delete all copies of the card?', handleDeleteAll, 'This action is irreversible.')
+              }
+            >
               Delete all copies
             </Button>
           )}

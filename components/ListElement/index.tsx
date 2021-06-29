@@ -2,8 +2,8 @@ import { ListItem, ListItemText, makeStyles, Theme } from '@material-ui/core';
 import { FC } from 'react';
 
 type ListElementProps = {
-  title?: string;
-  infoList: string[];
+  title: string;
+  infoList?: string[];
   title2?: string;
   bulletList?: string[];
   onClick?: () => void;
@@ -28,7 +28,7 @@ const ListElement: FC<ListElementProps> = (props) => {
   return (
     <ListItem className={classes.listElDiv} dense onClick={props.onClick}>
       <div>
-        <ListItemText primary={<b>{props.title}</b>} secondary={props.infoList.join(', ')} />
+        <ListItemText primary={<b>{props.title}</b>} secondary={props.infoList?.join(', ')} />
         {props.title2 && props.bulletList && (
           <ListItemText
             primary={<b>{props.title2}</b>}
