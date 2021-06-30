@@ -18,8 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
   arrowbutton: {},
   logo: {
-    width: 200,
-    height: 80,
+    height: 50,
     marginLeft: -100,
   },
   '@media screen and (max-width: 800px)': {
@@ -27,8 +26,7 @@ const useStyles = makeStyles((theme) => ({
       width: 90,
     },
     logo: {
-      width: 100,
-      height: 50,
+      height: 30,
       marginLeft: -50,
     },
     appBar: {
@@ -66,7 +64,7 @@ const Menu: FC = () => {
                 setLastClicked({ population: false, successes: false, more: false, calculate: false });
               }}
             >
-              <img src="/ComboStatsLogo.svg" className={classes.logo} />
+              <img src="/ComboStatsLavenderLogo.png" className={classes.logo} />
             </span>
             <Arrowbutton
               text="Deck"
