@@ -59,6 +59,11 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
    * Function to handle the press of the confirm button
    */
   const handleConfirm = useCallback(() => {
+    // If the name value is empty, alert the user
+    if (name === '') {
+      confirmAction('No name was entered.', 'alert', undefined, 'Please enter a name.');
+      return;
+    }
     let newPop = population;
     if (props.type === 'edit') {
       newPop = removeAllByName(newPop, props.defaultName);

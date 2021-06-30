@@ -9,7 +9,9 @@ import {
   makeStyles,
   Theme,
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
 import { FC } from 'react';
 import { buttonTheme } from '../../lib/themes';
 
@@ -19,7 +21,7 @@ export type ConfirmDialogProps = {
   description?: string;
   onClose: () => void;
   onYes?: () => void;
-  type: 'confirm' | 'alert';
+  type: 'confirm' | 'alert' | 'none';
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,6 +29,11 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       minWidth: 300,
       backgroundColor: theme.palette.warning.main,
+    },
+    closeButton: {
+      position: 'absolute',
+      right: theme.spacing(1),
+      color: theme.palette.grey[500],
     },
   }),
 );
@@ -41,6 +48,9 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
+      <IconButton aria-label="close" className={classes.closeButton} onClick={props.onClose}>
+        <CloseIcon />
+      </IconButton>
       <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
       {props.description && (
         <DialogContent>
@@ -49,9 +59,11 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
       )}
       <DialogActions>
         <MuiThemeProvider theme={buttonTheme}>
-          <Button variant="contained" onClick={props.onClose}>
-            {props.type === 'confirm' ? 'No' : props.type === 'alert' ? 'Ok' : ''}
-          </Button>
+          {props.type !== 'none' && (
+            <Button variant="contained" onClick={props.onClose}>
+              {props.type === 'confirm' ? 'No' : props.type === 'alert' ? 'Ok' : ''}
+            </Button>
+          )}
           {props.type === 'confirm' && (
             <Button
               variant="contained"

@@ -48,7 +48,7 @@ export const useConfirmDialog = () => {
   const { confirmDialogInfo, setConfirmDialogInfo } = useContext(ConfirmDialogContext);
 
   return useCallback(
-    (title: string, type: ConfirmDialogProps['type'], onYes: () => void, description?: string) => {
+    (title: string, type: ConfirmDialogProps['type'], onYes?: () => void, description?: string) => {
       setConfirmDialogInfo({
         open: true,
         title,

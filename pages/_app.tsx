@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     title: '',
     onYes: () => {},
     onClose: () => setConfirmDialogInfo({ ...confirmDialogInfo, open: false }),
-    type: 'confirm',
+    type: 'none',
   });
   // Update localStorage with population when population changes
   useUpdateLocalStorage(population, 'population');
