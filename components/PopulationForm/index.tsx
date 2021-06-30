@@ -71,8 +71,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
     // Filter out roles that are the emtpy string
     // The Element class will filter out duplicates of equal roles
     // Also convert all roles to all lower case
-    const usedRoles = roles.filter((role) => role.trim() !== '').map((role) => role.trim().toLowerCase());
-    const el = identifyEl({ name, roles: usedRoles });
+    const el = identifyEl({ name, roles });
     // Add elementCount of elements
     for (let i = 0; i < elementCount; i++) {
       newPop.push(el);

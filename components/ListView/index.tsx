@@ -2,11 +2,18 @@ import { Button, makeStyles, MuiThemeProvider, Theme } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Element } from '../../lib/core';
 import { buttonTheme } from '../../lib/themes';
 import { useConfirmDialog } from '../../lib/util';
 import ListElement from '../ListElement';
 import Popup from '../Popup/index';
+
+/**
+ *
+ */
+export type ListEl = {
+  title: string;
+  noteList?: string[];
+};
 
 /**
  * The props of the ListPres component.
@@ -17,14 +24,14 @@ import Popup from '../Popup/index';
  * and the optional corresponding element that can also be edited.
  */
 type ListViewProps = {
-  infoList: Element[];
-  corrMoreInfoList?: Element[];
+  infoList: ListEl[];
+  corrMoreInfoList?: ListEl[];
   onDeleteAllClick: () => void;
   addItemTitle: string;
   addItemForm: (setOpenAddPopup?: Dispatch<SetStateAction<boolean>>) => JSX.Element;
   editItemTitle: string;
   editItemForm: (
-    defaultValue: [Element, Element | undefined],
+    defaultValue: [ListEl, ListEl | undefined],
     setOpenEditPopup?: Dispatch<SetStateAction<boolean>>,
   ) => JSX.Element;
 };
@@ -57,8 +64,8 @@ const ListView: FC<ListViewProps> = (props) => {
   if (props.corrMoreInfoList) requireTwoSameLengthArrays(props.infoList, props.corrMoreInfoList);
   const [openAddPopup, setOpenAddPopup] = useState(false);
   const [openEditPopup, setOpenEditPopup] = useState(false);
-  const [clickedElement, setClickedElement] = useState<[Element, Element | undefined]>([
-    { name: '', roles: [] },
+  const [clickedElement, setClickedElement] = useState<[ListEl, ListEl | undefined]>([
+    { title: '', noteList: [] },
     undefined,
   ]);
   const confirmAction = useConfirmDialog();
@@ -76,7 +83,7 @@ const ListView: FC<ListViewProps> = (props) => {
             color="default"
             onClick={() =>
               confirmAction(
-                'Delete all cards in deck?',
+                'Delete all items in the list?',
                 'confirm',
                 props.onDeleteAllClick,
                 'This action is irreversible.',
@@ -107,16 +114,16 @@ const ListView: FC<ListViewProps> = (props) => {
               const corrEl = props.corrMoreInfoList?.[i];
               listElements.push(
                 <ListElement
-                  title={el.name}
-                  infoList={el.roles}
-                  title2={corrEl?.name}
-                  bulletList={corrEl?.roles}
+                  title={el.title}
+                  noteList={el.noteList}
+                  title2={corrEl?.title}
+                  noteList2={corrEl?.noteList}
                   key={uuidv4()}
                   onClick={() => {
                     setOpenEditPopup(true);
                     setClickedElement([
-                      { name: el.name, roles: el.roles },
-                      corrEl ? { name: corrEl.name, roles: corrEl.roles } : undefined,
+                      { title: el.title, noteList: el.noteList },
+                      corrEl ? { title: corrEl.title, noteList: corrEl.noteList } : undefined,
                     ]);
                   }}
                 />,

@@ -14,8 +14,11 @@ export const identifyEl = (element: Element): Element => {
   const resultEl: Element = { name: element.name, roles: [] };
   // Remove duplicates and make copy
   for (const role of element.roles) if (resultEl.roles.indexOf(role) === -1) resultEl.roles.push(role);
-  // Sort roles alphabetically
-  resultEl.roles.sort((a, b) => (a === b ? 0 : a > b ? 1 : -1));
+  // Sort roles alphabetically, filter out empty string roles and make all roles lower case.
+  resultEl.roles
+    .sort((a, b) => (a === b ? 0 : a > b ? 1 : -1))
+    .filter((role) => role.trim() !== '')
+    .map((role) => role.trim().toLowerCase());
   return resultEl;
 };
 
