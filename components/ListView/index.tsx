@@ -83,7 +83,7 @@ const ListView: FC<ListViewProps> = (props) => {
             color="default"
             onClick={() =>
               confirmAction(
-                'Delete all items in the list?',
+                'Delete all items in list?',
                 'confirm',
                 props.onDeleteAllClick,
                 'This action is irreversible.',

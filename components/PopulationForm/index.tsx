@@ -36,11 +36,18 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       marginTop: 30,
     },
+    nameBox: {
+      width: '50%',
+    },
     countBox: {
       marginLeft: 30,
       width: theme.spacing(8),
     },
-    finishingButtonsDiv: {},
+    finishingButtonsDiv: {
+      display: 'flex',
+      flexFlow: 'row',
+      justifyContent: 'flex-end',
+    },
     deleteButton: {
       marginLeft: theme.spacing(1),
     },
@@ -97,7 +104,12 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
     <MuiThemeProvider theme={buttonTheme}>
       <div>
         <div>
-          <TextField label="Name of card" value={name} onChange={(e) => setName(e.target.value)} />
+          <TextField
+            label="Name of card"
+            className={classes.nameBox}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <TextField
             label="Count"
             value={elementCount}
