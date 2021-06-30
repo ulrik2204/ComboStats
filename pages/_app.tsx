@@ -23,7 +23,7 @@ const findLocalStartValue = (key: string): any => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [population, setPopulation] = useState<Element[]>(findLocalStartValue('population'));
-  const [successGroups, setSuccessGroups] = useState<{ [sucessGroupName: string]: Element[] }>(
+  const [successGroups, setSuccessGroups] = useState<{ [sucessGroupName: string]: Element[][] }>(
     findLocalStartValue('successGroups'),
   );
   // The context state for creating a ConfirmDialog

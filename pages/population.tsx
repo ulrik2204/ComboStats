@@ -15,7 +15,7 @@ const Population: FC = () => {
       column2={<div>Lorem ipsum dolor sit amet</div>}
     >
       <ListView
-        infoList={sortElements(population).map(el => ({title: el.name, noteList: el.roles}))}
+        infoList={sortElements(population).map((el) => ({ boldNotes: [el.name], fadedNotes: el.roles }))}
         onDeleteAllClick={() => setPopulation([])}
         addItemTitle="Add card"
         addItemForm={() => (
@@ -24,9 +24,9 @@ const Population: FC = () => {
         editItemTitle="Edit card(s)"
         editItemForm={(defaultValue, setOpenEditPopup) => (
           <PopulationForm
-            defaultName={defaultValue[0].title}
-            defaultRoles={defaultValue[0].noteList ?? []}
-            defaultCount={countElementName(population, defaultValue[0].title)}
+            defaultName={defaultValue[0].boldNotes[0]}
+            defaultRoles={defaultValue[0].fadedNotes ?? []}
+            defaultCount={countElementName(population, defaultValue[0].boldNotes[0])}
             type="edit"
             afterConfirm={() => setOpenEditPopup?.(false)}
             afterDeleteAll={() => setOpenEditPopup?.(false)}

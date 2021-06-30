@@ -4,16 +4,8 @@ import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { buttonTheme } from '../../lib/themes';
 import { useConfirmDialog } from '../../lib/util';
-import ListElement from '../ListElement';
+import ListElement, { ListEl } from '../ListElement';
 import Popup from '../Popup/index';
-
-/**
- *
- */
-export type ListEl = {
-  title: string;
-  noteList?: string[];
-};
 
 /**
  * The props of the ListPres component.
@@ -65,7 +57,7 @@ const ListView: FC<ListViewProps> = (props) => {
   const [openAddPopup, setOpenAddPopup] = useState(false);
   const [openEditPopup, setOpenEditPopup] = useState(false);
   const [clickedElement, setClickedElement] = useState<[ListEl, ListEl | undefined]>([
-    { title: '', noteList: [] },
+    { boldNotes: [''], fadedNotes: [] },
     undefined,
   ]);
   const confirmAction = useConfirmDialog();
@@ -112,19 +104,16 @@ const ListView: FC<ListViewProps> = (props) => {
             for (let i = 0; i < props.infoList.length; i++) {
               const el = props.infoList[i];
               const corrEl = props.corrMoreInfoList?.[i];
+              const elItem = { boldNotes: el.boldNotes, fadedNotes: el.fadedNotes };
+              const corrElItem = corrEl ? { boldNotes: corrEl.boldNotes, fadedNotes: corrEl.fadedNotes } : undefined;
               listElements.push(
                 <ListElement
-                  title={el.title}
-                  noteList={el.noteList}
-                  title2={corrEl?.title}
-                  noteList2={corrEl?.noteList}
+                  item={elItem}
+                  item2={corrElItem}
                   key={uuidv4()}
                   onClick={() => {
                     setOpenEditPopup(true);
-                    setClickedElement([
-                      { title: el.title, noteList: el.noteList },
-                      corrEl ? { title: corrEl.title, noteList: corrEl.noteList } : undefined,
-                    ]);
+                    setClickedElement([elItem, corrElItem]);
                   }}
                 />,
               );

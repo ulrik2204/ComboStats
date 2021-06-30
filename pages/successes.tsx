@@ -15,12 +15,12 @@ const Successes: FC = () => {
       column2={<div>Lorem ipsum dolor sit amet</div>}
     >
       <ListView
-        infoList={sortElements(successGroups.main)}
+        infoList={successGroups.main.map((els) => ({ boldNotes: sortElements(els).map((el) => el.name) }))}
         onDeleteAllClick={() => setSuccessGroups({ ...successGroups, main: [] })}
         addItemTitle="Add card"
-        addItemForm={() => <SuccessesForm />}
+        addItemForm={() => <SuccessesForm defaultSuccesses={[]} />}
         editItemTitle="Edit card(s)"
-        editItemForm={(defaultValue) => <SuccessesForm />}
+        editItemForm={(defaultValue) => <SuccessesForm defaultSuccesses={defaultValue[0].boldNotes} />}
       />
     </PageTemplate>
   );

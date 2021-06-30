@@ -20,7 +20,7 @@ type PopulationContextType = {
 export const PopulationContext = createContext<PopulationContextType>({ population: [], setPopulation: () => {} });
 
 type SuccessGroups = {
-  [successGroupName: string]: Element[];
+  [successGroupName: string]: Element[][];
 };
 
 type SuccessGroupsContextType = {
