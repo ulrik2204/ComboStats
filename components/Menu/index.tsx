@@ -64,7 +64,7 @@ const Menu: FC = () => {
                 setLastClicked({ population: false, successes: false, more: false, calculate: false });
               }}
             >
-              <img src="/ComboStatsLavenderLogo.png" className={classes.logo} />
+              <img src="/ComboStatsRoundedLogo.png" className={classes.logo} />
             </span>
             <Arrowbutton
               text="Deck"
