@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model UserKey {
+  userId String @id @default(uuid())
+  profile Profile?
+  populations Population[]
+  scenarioGroups ScenarioGroup[]
+}
+
+model Profile {
+  username String @id
+  userId String
+  user UserKey @relation(fields: [userId], references: [userId])
+}
+
+model Element {
+  elementId String @id @default(uuid())
+  name String 
+  roles String[]
+  populationId String 
+  inPopulation Population @relation(fields: [populationId], references: [populationId])
+}
+
+model Population {
+  populationId String @id @default(uuid())
+  ownerId String
+  owner UserKey @relation(fields: [ownerId], references: [userId])
+  elements Element[]
+}
+
+model ScenarioGroup {
+  scenarioGroupId String @id @default(uuid())
+  scenarios Scenario[]
+  type ScenarioGroupType
+  ownerId String
+  owner UserKey @relation(fields: [ownerId], references: [userId])
+  // Here type can be either "successes", "failures" or "actions". This will be checked in the REST API
+}
+
+enum ScenarioGroupType {
+  SUCCESSES
+  FAILURES
+  ACTIONS
+}
+
+model Scenario {
+  scenarioId String @id @default(uuid())
+  scenarioGroupId String
+  scenarioGroup ScenarioGroup @relation(fields: [scenarioGroupId], references: [scenarioGroupId])
+}
