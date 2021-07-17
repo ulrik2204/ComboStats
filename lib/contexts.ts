@@ -1,6 +1,6 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 import { ConfirmDialogProps } from '../components/ConfirmDialog';
-import { Element } from '../lib/core';
+import { Element } from '.prisma/client';
 
 type ConfirmDialogContext = {
   confirmDialogInfo: ConfirmDialogProps;

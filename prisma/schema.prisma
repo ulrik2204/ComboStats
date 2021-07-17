@@ -11,7 +11,7 @@ generator client {
 }
 
 model UserKey {
-  userId         String          @id @default(uuid())
+  userId         String          @id @default(cuid())
   profile        Profile?
   populations    Population[]
   scenarioGroups ScenarioGroup[]
@@ -25,15 +25,17 @@ model Profile {
 }
 
 model Element {
-  elementId    String     @id @default(uuid())
+  elementId    String     @id @default(cuid())
   name         String
   roles        String[]
   populationId String
   inPopulation Population @relation(fields: [populationId], references: [populationId])
+  scenarioId   String?
+  inScenario   Scenario?   @relation(fields: [scenarioId], references: [scenarioId])
 }
 
 model Population {
-  populationId String    @id @default(uuid())
+  populationId String    @id @default(cuid())
   name         String
   ownerId      String
   owner        UserKey   @relation(fields: [ownerId], references: [userId])
@@ -41,7 +43,7 @@ model Population {
 }
 
 model ScenarioGroup {
-  scenarioGroupId String            @id @default(uuid())
+  scenarioGroupId String            @id @default(cuid())
   scenarios       Scenario[]
   type            ScenarioGroupType
   ownerId         String
@@ -56,7 +58,8 @@ enum ScenarioGroupType {
 }
 
 model Scenario {
-  scenarioId      String        @id @default(uuid())
-  scenarioGroupId String
-  scenarioGroup   ScenarioGroup @relation(fields: [scenarioGroupId], references: [scenarioGroupId])
+  scenarioId       String        @id @default(cuid())
+  scenarioGroupId  String
+  scenarioGroup    ScenarioGroup @relation(fields: [scenarioGroupId], references: [scenarioGroupId])
+  requiredElements Element[]
 }

@@ -1,13 +1,15 @@
 import { MuiThemeProvider } from '@material-ui/core';
 import type { AppProps } from 'next/app';
 import { useState } from 'react';
+import { Provider } from 'react-redux';
 import ConfirmDialog, { ConfirmDialogProps } from '../components/ConfirmDialog/index';
 import Menu from '../components/Menu';
 import { ConfirmDialogContext, PopulationContext, SuccessGroupsContext } from '../lib/contexts';
-import { Element } from '../lib/core';
 import { backgroundTheme } from '../lib/themes';
 import { findDefaultValue, useUpdateLocalStorage } from '../lib/util';
+import store from '../store';
 import '../styles/globals.css';
+import { Element } from '.prisma/client';
 
 const findLocalStartValue = (key: string): any => {
   const defaultValue = findDefaultValue(key);
@@ -42,24 +44,26 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <div className="root">
-      <Menu />
-      <MuiThemeProvider theme={backgroundTheme}>
-        <PopulationContext.Provider value={{ population, setPopulation }}>
-          <SuccessGroupsContext.Provider value={{ successGroups, setSuccessGroups }}>
-            <ConfirmDialog
-              open={confirmDialogInfo.open}
-              onClose={confirmDialogInfo.onClose}
-              onYes={confirmDialogInfo.onYes}
-              title={confirmDialogInfo.title}
-              description={confirmDialogInfo.description}
-              type={confirmDialogInfo.type}
-            />
-            <ConfirmDialogContext.Provider value={{ confirmDialogInfo, setConfirmDialogInfo }}>
-              <Component {...pageProps} />
-            </ConfirmDialogContext.Provider>
-          </SuccessGroupsContext.Provider>
-        </PopulationContext.Provider>
-      </MuiThemeProvider>
+      <Provider store={store}>
+        <Menu />
+        <MuiThemeProvider theme={backgroundTheme}>
+          <PopulationContext.Provider value={{ population, setPopulation }}>
+            <SuccessGroupsContext.Provider value={{ successGroups, setSuccessGroups }}>
+              <ConfirmDialog
+                open={confirmDialogInfo.open}
+                onClose={confirmDialogInfo.onClose}
+                onYes={confirmDialogInfo.onYes}
+                title={confirmDialogInfo.title}
+                description={confirmDialogInfo.description}
+                type={confirmDialogInfo.type}
+              />
+              <ConfirmDialogContext.Provider value={{ confirmDialogInfo, setConfirmDialogInfo }}>
+                <Component {...pageProps} />
+              </ConfirmDialogContext.Provider>
+            </SuccessGroupsContext.Provider>
+          </PopulationContext.Provider>
+        </MuiThemeProvider>
+      </Provider>
     </div>
   );
 }
