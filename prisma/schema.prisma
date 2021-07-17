@@ -11,39 +11,41 @@ generator client {
 }
 
 model UserKey {
-  userId String @id @default(uuid())
-  profile Profile?
-  populations Population[]
+  userId         String          @id @default(uuid())
+  profile        Profile?
+  populations    Population[]
   scenarioGroups ScenarioGroup[]
 }
 
 model Profile {
-  username String @id
-  userId String
-  user UserKey @relation(fields: [userId], references: [userId])
+  username     String  @id
+  passwordhash String
+  userId       String
+  user         UserKey @relation(fields: [userId], references: [userId])
 }
 
 model Element {
-  elementId String @id @default(uuid())
-  name String 
-  roles String[]
-  populationId String 
+  elementId    String     @id @default(uuid())
+  name         String
+  roles        String[]
+  populationId String
   inPopulation Population @relation(fields: [populationId], references: [populationId])
 }
 
 model Population {
-  populationId String @id @default(uuid())
-  ownerId String
-  owner UserKey @relation(fields: [ownerId], references: [userId])
-  elements Element[]
+  populationId String    @id @default(uuid())
+  name         String
+  ownerId      String
+  owner        UserKey   @relation(fields: [ownerId], references: [userId])
+  elements     Element[]
 }
 
 model ScenarioGroup {
-  scenarioGroupId String @id @default(uuid())
-  scenarios Scenario[]
-  type ScenarioGroupType
-  ownerId String
-  owner UserKey @relation(fields: [ownerId], references: [userId])
+  scenarioGroupId String            @id @default(uuid())
+  scenarios       Scenario[]
+  type            ScenarioGroupType
+  ownerId         String
+  owner           UserKey           @relation(fields: [ownerId], references: [userId])
   // Here type can be either "successes", "failures" or "actions". This will be checked in the REST API
 }
 
@@ -54,7 +56,7 @@ enum ScenarioGroupType {
 }
 
 model Scenario {
-  scenarioId String @id @default(uuid())
+  scenarioId      String        @id @default(uuid())
   scenarioGroupId String
-  scenarioGroup ScenarioGroup @relation(fields: [scenarioGroupId], references: [scenarioGroupId])
+  scenarioGroup   ScenarioGroup @relation(fields: [scenarioGroupId], references: [scenarioGroupId])
 }

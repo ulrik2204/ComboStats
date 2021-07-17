@@ -1,5 +1,9 @@
+import { UserKey } from '@prisma/client';
+import { verify } from 'jsonwebtoken';
+import { NextApiRequest } from 'next';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { ConfirmDialogProps } from '../components/ConfirmDialog/index';
+import { USER_KEY_COOKIE } from './constants';
 import { ConfirmDialogContext } from './contexts';
 
 /**
@@ -60,4 +64,40 @@ export const useConfirmDialog = () => {
     },
     [confirmDialogInfo, setConfirmDialogInfo],
   );
+};
+
+/**
+ * Gets the environmental variable with envName and throws error if not found.
+ * @param envName The envinmental varaible to get.
+ * @returns The value of the environmental varaible.
+ * @throws Error if the environmental variable is not found.
+ */
+export const getEnv = (envName: string): string => {
+  const variable = process.env[envName];
+  if (!variable) throw new Error(`Environmental variable ${envName} not found`);
+  return variable;
+};
+
+/**
+ * Extracts the UserKey object from the jwt
+ * @param jwtCookie The string from the cookie containing the jwt.
+ * @returns The UserKey object
+ */
+export const getJwtFromCookie = (req: NextApiRequest): string | undefined => {
+  const jwtCookie = req.cookies[USER_KEY_COOKIE];
+  if (jwtCookie == undefined) return undefined;
+  const token = jwtCookie.split(' ')[1];
+  return token;
+};
+
+/**
+ * Autheitcates the user based on the request cookies.
+ * @param req The request in which the request Cookies are attached.
+ * @returns The UserKey contained in the jwt token in the req.cookies or undefined if it is not there.
+ */
+export const authenticateToken = (req: NextApiRequest): UserKey | undefined => {
+  const jwtToken = getJwtFromCookie(req);
+  if (!jwtToken) return undefined;
+  const userKey = verify(jwtToken, getEnv('ACCESS_TOKEN_SECRET'));
+  return userKey as UserKey;
 };
