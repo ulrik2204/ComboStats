@@ -1,3 +1,4 @@
+import { Element } from '.prisma/client';
 import { MuiThemeProvider } from '@material-ui/core';
 import type { AppProps } from 'next/app';
 import { useState } from 'react';
@@ -6,10 +7,9 @@ import ConfirmDialog, { ConfirmDialogProps } from '../components/ConfirmDialog/i
 import Menu from '../components/Menu';
 import { ConfirmDialogContext, PopulationContext, SuccessGroupsContext } from '../lib/contexts';
 import { backgroundTheme } from '../lib/themes';
-import { findDefaultValue, useUpdateLocalStorage } from '../lib/util';
+import { findDefaultValue, useLoginTempUser, useUpdateLocalStorage } from '../lib/util';
 import store from '../store';
 import '../styles/globals.css';
-import { Element } from '.prisma/client';
 
 const findLocalStartValue = (key: string): any => {
   const defaultValue = findDefaultValue(key);
@@ -41,6 +41,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   // Update localStorage with successGroups when successGroups changes
   useUpdateLocalStorage(successGroups, 'successGroups');
+
+  // Create a temp user and log in with that user.
+  useLoginTempUser();
 
   return (
     <div className="root">
