@@ -1,4 +1,4 @@
-import { Element } from ".prisma/client";
+import { Element } from '.prisma/client';
 /**
  * Making an element's appearence consistent by
  * sorting the roles aphabetically and removing
@@ -11,11 +11,27 @@ export const identifyEl = (element: Element): Element => {
   // Remove duplicates and make copy
   for (const role of element.roles) if (resultEl.roles.indexOf(role) === -1) resultEl.roles.push(role);
   // Sort roles alphabetically, filter out empty string roles and make all roles lower case.
-  resultEl.roles
+  resultEl.roles = resultEl.roles
     .sort((a, b) => (a === b ? 0 : a > b ? 1 : -1))
     .filter((role) => role.trim() !== '')
     .map((role) => role.trim().toLowerCase());
   return resultEl;
+};
+
+/**
+ * Sort roles alphabetically, filter out empty string roles and make all roles lower case.
+ * @param roles The roles to fix.
+ * @returns A new list of fixed roles
+ */
+export const fixRoles = (roles: string[]) => {
+  const resultRoles: string[] = [];
+  // Remove duplicates
+  for (const role of roles) if (resultRoles.indexOf(role) === -1) resultRoles.push(role);
+  // Sort roles alphabetically, filter out empty string roles and make all roles lower case.
+  return resultRoles
+    .sort((a, b) => (a === b ? 0 : a > b ? 1 : -1))
+    .filter((role) => role.trim() !== '')
+    .map((role) => role.trim().toLowerCase());
 };
 
 /**
