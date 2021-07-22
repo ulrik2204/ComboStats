@@ -19,6 +19,6 @@
     "jsx": "preserve",
     "types": ["node"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/element/delete.ts'"],
   "exclude": ["node_modules"]
 }
