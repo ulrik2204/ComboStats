@@ -61,7 +61,6 @@ export const Toast: FC<ToastProps> = (props) => {
       PaperProps={{ className: classes.paper }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      disableBackdropClick={!!props.disableClose}
     >
       {!props.disableClose && (
         <IconButton aria-label="close" className={classes.closeButton} onClick={props.onClose}>
