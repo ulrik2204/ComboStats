@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { RES_MSG } from '../../../lib/constants';
 import prisma from '../../../lib/prisma';
 import { ErrorResponse } from '../../../lib/types';
-import { authenticateToken, isPopulationOwner, isValidRequestBody, populationExists } from '../../../lib/util';
+import { authenticateToken, isPopulationOwner, isValidRequestBody, populationExists } from '../../../lib/utils-server';
 
 export type DeletePopulationResponse = {
   population: Population;

@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { RES_MSG } from '../../../lib/constants';
 import prisma from '../../../lib/prisma';
 import { ErrorResponse } from '../../../lib/types';
-import { authenticateToken } from '../../../lib/util';
+import { authenticateToken } from '../../../lib/utils-server';
 
 export type GetAllPopulationsResponse = {
   allUserPopulations: Population[];

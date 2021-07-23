@@ -7,7 +7,7 @@ import ConfirmDialog, { ConfirmDialogProps } from '../components/ConfirmDialog/i
 import Menu from '../components/Menu';
 import { ConfirmDialogContext, PopulationContext, SuccessGroupsContext } from '../lib/contexts';
 import { backgroundTheme } from '../lib/themes';
-import { findDefaultValue, useLoginTempUser, useUpdateLocalStorage } from '../lib/util';
+import { findDefaultValue, useLoginTempUser, useUpdateLocalStorage } from '../lib/utils-frontend';
 import store from '../store';
 import '../styles/globals.css';
 
@@ -59,6 +59,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                 title={confirmDialogInfo.title}
                 description={confirmDialogInfo.description}
                 type={confirmDialogInfo.type}
+                children={confirmDialogInfo.children}
+                disableClose={confirmDialogInfo.disableClose}
               />
               <ConfirmDialogContext.Provider value={{ confirmDialogInfo, setConfirmDialogInfo }}>
                 <Component {...pageProps} />

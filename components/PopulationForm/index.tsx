@@ -14,7 +14,7 @@ import { FC, useCallback, useContext, useState } from 'react';
 import { PopulationContext } from '../../lib/contexts';
 import { identifyEl, removeAllByName } from '../../lib/core';
 import { buttonTheme } from '../../lib/themes';
-import { useConfirmDialog } from '../../lib/util';
+import { useConfirmDialog } from '../../lib/utils-frontend';
 
 type PopualtionFormProps = {
   defaultName: string;

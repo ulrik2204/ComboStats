@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { authenticateToken } from '../../../lib/util';
+import { authenticateToken } from '../../../lib/utils-server';
 
 export type IsLoggedInResponse = {
   isLoggedIn: boolean;

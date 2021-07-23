@@ -1,6 +1,6 @@
-import { createMuiTheme } from '@material-ui/core';
+import { createTheme } from '@material-ui/core';
 
-export const backgroundTheme = createMuiTheme({
+export const backgroundTheme = createTheme({
   palette: {
     primary: {
       main: '#D1D2F9',
@@ -17,7 +17,7 @@ export const backgroundTheme = createMuiTheme({
   },
 });
 
-export const buttonTheme = createMuiTheme({
+export const buttonTheme = createTheme({
   palette: {
     primary: {
       main: '#19A1B3',

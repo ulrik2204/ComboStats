@@ -5,7 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { RES_MSG } from '../../../lib/constants';
 import prisma from '../../../lib/prisma';
 import { ErrorResponse } from '../../../lib/types';
-import { authenticateToken, checkScenarioGroupType, isPopulationOwner, isValidRequestBody } from '../../../lib/util';
+import { authenticateToken, checkScenarioGroupType, isPopulationOwner, isValidRequestBody } from '../../../lib/utils-server';
 
 export type GetScenariGroupsResponse = {
   scenarioGroups: ScenarioGroup[];

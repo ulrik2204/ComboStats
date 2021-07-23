@@ -18,10 +18,12 @@ import { buttonTheme } from '../../lib/themes';
 export type ConfirmDialogProps = {
   open: boolean;
   title: string;
-  description?: string;
   onClose: () => void;
-  onYes?: () => void;
   type: 'confirm' | 'alert' | 'none';
+  description?: string;
+  onYes?: () => void;
+  disableClose?: boolean;
+  children?: JSX.Element;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,18 +45,24 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
   return (
     <Dialog
       open={props.open}
-      onClose={props.onClose}
+      onClose={(_event, reason) => {
+        if (reason === 'backdropClick') return !props.disableClose && props.onClose();
+        props.onClose();
+      }}
       PaperProps={{ className: classes.paper }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      disableBackdropClick={!!props.disableClose}
     >
-      <IconButton aria-label="close" className={classes.closeButton} onClick={props.onClose}>
-        <CloseIcon />
-      </IconButton>
+      {!props.disableClose && (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={props.onClose}>
+          <CloseIcon />
+        </IconButton>
+      )}
       <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
       {props.description && (
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">{props.description}</DialogContentText>
+          <DialogContentText id="alert-dialog-description">{props.description}</DialogContentText> {props.children}
         </DialogContent>
       )}
       <DialogActions>

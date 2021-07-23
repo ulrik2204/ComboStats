@@ -4,7 +4,8 @@ import { sign } from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { USER_KEY_COOKIE } from '../../../lib/constants';
 import prisma from '../../../lib/prisma';
-import { authenticateToken, getEnv } from '../../../lib/util';
+import { getEnv } from '../../../lib/utils';
+import { authenticateToken } from '../../../lib/utils-server';
 
 export type CreateTempUserResponse = {
   createdUser: boolean;

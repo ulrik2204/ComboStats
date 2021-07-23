@@ -6,7 +6,7 @@ const useFetch = (url: string, method: string, body?: any) => {
 
 /**
  * Sending a POST request to the api creating a temp user.
- * The token for the temp useris set using the Set-Cookie header server side.
+ * The token for the temp user is set using the Set-Cookie header server side.
  */
 export const createTempUser = async (): Promise<Response> => {
   const response = await useFetch('/api/user/create-temp-user', 'POST');
@@ -19,5 +19,6 @@ export const createTempUser = async (): Promise<Response> => {
  */
 export const isLoggedIn = async (): Promise<boolean> => {
   const response: IsLoggedInResponse = await useFetch('/api/user/is-logged-in', 'GET').then((res) => res.json());
+  console.log(response);
   return response.isLoggedIn;
 };

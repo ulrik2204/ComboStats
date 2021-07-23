@@ -4,7 +4,7 @@ import { RES_MSG } from '../../../lib/constants';
 import { fixRoles } from '../../../lib/core';
 import prisma from '../../../lib/prisma';
 import { ErrorResponse } from '../../../lib/types';
-import { authenticateToken, isPopulationOwner, isValidRequestBody } from '../../../lib/util';
+import { authenticateToken, isPopulationOwner, isValidRequestBody } from '../../../lib/utils-server';
 
 export type CreateElementResponse = {
   element: Element;
