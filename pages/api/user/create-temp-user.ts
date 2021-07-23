@@ -4,13 +4,20 @@ import { sign } from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { USER_KEY_COOKIE } from '../../../lib/constants';
 import prisma from '../../../lib/prisma';
-import { getEnv } from '../../../lib/util';
+import { authenticateToken, getEnv } from '../../../lib/util';
+
+export type CreateTempUserResponse = {
+  createdUser: boolean;
+};
 
 /**
  * Creates a temp user and sends the jwt with the id for that user with the Set-Cookie header.
  */
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse<CreateTempUserResponse>) => {
   if (req.method !== 'POST') return res.status(405).end();
+  // Check if the user is already logged in, then no new user should be made.
+  const userKey = await authenticateToken(req);
+  if (userKey) return res.status(200).json({ createdUser: false });
   // Create new userKey
   const newUserKey: UserKey = await prisma.userKey.create({ data: {} });
   const secret = getEnv('ACCESS_TOKEN_SECRET');
@@ -28,5 +35,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       path: '/',
     }),
   );
-  res.status(201).end();
+  res.status(201).json({ createdUser: true });
 };

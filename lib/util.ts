@@ -115,7 +115,7 @@ export const authenticateToken = async (req: NextApiRequest): Promise<UserKey | 
       userId: userKey.userId,
     },
   });
-  return userKeyDb == null ? undefined : userKey;
+  return userKeyDb == null ? undefined : userKeyDb;
 };
 
 export const useLoginTempUser = () => {
