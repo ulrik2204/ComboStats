@@ -1,15 +1,15 @@
-import { createContext, Dispatch, SetStateAction } from 'react';
-import { ConfirmDialogProps } from '../components/ConfirmDialog';
 import { Element } from '.prisma/client';
+import { createContext, Dispatch, SetStateAction } from 'react';
+import { ToastProps } from '../components/Toast';
 
-type ConfirmDialogContext = {
-  confirmDialogInfo: ConfirmDialogProps;
-  setConfirmDialogInfo: Dispatch<SetStateAction<ConfirmDialogProps>>;
+type ToastContext = {
+  toastData: ToastProps;
+  setToastData: Dispatch<SetStateAction<ToastProps>>;
 };
 
-export const ConfirmDialogContext = createContext<ConfirmDialogContext>({
-  confirmDialogInfo: { open: false, type: 'none', title: '', onClose: () => {}, onYes: () => {} },
-  setConfirmDialogInfo: () => {},
+export const ToastContext = createContext<ToastContext>({
+  toastData: { open: false, type: 'none', title: '', onClose: () => {} },
+  setToastData: () => {},
 });
 
 type PopulationContextType = {

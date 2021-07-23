@@ -3,9 +3,9 @@ import { MuiThemeProvider } from '@material-ui/core';
 import type { AppProps } from 'next/app';
 import { useState } from 'react';
 import { Provider } from 'react-redux';
-import ConfirmDialog, { ConfirmDialogProps } from '../components/ConfirmDialog/index';
 import Menu from '../components/Menu';
-import { ConfirmDialogContext, PopulationContext, SuccessGroupsContext } from '../lib/contexts';
+import Toast, { ToastProps } from '../components/Toast/index';
+import { PopulationContext, SuccessGroupsContext, ToastContext } from '../lib/contexts';
 import { backgroundTheme } from '../lib/themes';
 import { findDefaultValue, useLoginTempUser, useUpdateLocalStorage } from '../lib/utils-frontend';
 import store from '../store';
@@ -28,12 +28,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [successGroups, setSuccessGroups] = useState<{ [sucessGroupName: string]: Element[][] }>(
     findLocalStartValue('successGroups'),
   );
-  // The context state for creating a ConfirmDialog
-  const [confirmDialogInfo, setConfirmDialogInfo] = useState<ConfirmDialogProps>({
+  // The context state for creating a Toast
+  const [toastData, setToastData] = useState<ToastProps>({
     open: false,
     title: '',
-    onYes: () => {},
-    onClose: () => setConfirmDialogInfo({ ...confirmDialogInfo, open: false }),
+    onClose: () => setToastData({ ...toastData, open: false }),
     type: 'none',
   });
   // Update localStorage with population when population changes
@@ -52,19 +51,20 @@ function MyApp({ Component, pageProps }: AppProps) {
         <MuiThemeProvider theme={backgroundTheme}>
           <PopulationContext.Provider value={{ population, setPopulation }}>
             <SuccessGroupsContext.Provider value={{ successGroups, setSuccessGroups }}>
-              <ConfirmDialog
-                open={confirmDialogInfo.open}
-                onClose={confirmDialogInfo.onClose}
-                onYes={confirmDialogInfo.onYes}
-                title={confirmDialogInfo.title}
-                description={confirmDialogInfo.description}
-                type={confirmDialogInfo.type}
-                children={confirmDialogInfo.children}
-                disableClose={confirmDialogInfo.disableClose}
+              <Toast
+                open={toastData.open}
+                onClose={toastData.onClose}
+                onYes={toastData.onYes}
+                title={toastData.title}
+                description={toastData.description}
+                type={toastData.type}
+                children={toastData.children}
+                disableClose={toastData.disableClose}
+                color={toastData.color}
               />
-              <ConfirmDialogContext.Provider value={{ confirmDialogInfo, setConfirmDialogInfo }}>
+              <ToastContext.Provider value={{ toastData, setToastData }}>
                 <Component {...pageProps} />
-              </ConfirmDialogContext.Provider>
+              </ToastContext.Provider>
             </SuccessGroupsContext.Provider>
           </PopulationContext.Provider>
         </MuiThemeProvider>

@@ -3,7 +3,7 @@ import List from '@material-ui/core/List';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { buttonTheme } from '../../lib/themes';
-import { useConfirmDialog } from '../../lib/utils-frontend';
+import { useToast } from '../../lib/utils-frontend';
 import ListElement, { ListEl } from '../ListElement';
 import Popup from '../Popup/index';
 
@@ -60,7 +60,7 @@ const ListView: FC<ListViewProps> = (props) => {
     { boldNotes: [''], fadedNotes: [] },
     undefined,
   ]);
-  const confirmAction = useConfirmDialog();
+  const confirmAction = useToast();
   const classes = useStyles();
 
   return (

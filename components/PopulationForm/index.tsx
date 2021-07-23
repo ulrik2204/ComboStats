@@ -14,7 +14,7 @@ import { FC, useCallback, useContext, useState } from 'react';
 import { PopulationContext } from '../../lib/contexts';
 import { identifyEl, removeAllByName } from '../../lib/core';
 import { buttonTheme } from '../../lib/themes';
-import { useConfirmDialog } from '../../lib/utils-frontend';
+import { useToast } from '../../lib/utils-frontend';
 
 type PopualtionFormProps = {
   defaultName: string;
@@ -59,7 +59,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
   const [elementCount, setElementCount] = useState(props.defaultCount);
   const [roles, setRoles] = useState(props.defaultRoles);
   const { population, setPopulation } = useContext(PopulationContext);
-  const confirmAction = useConfirmDialog();
+  const confirmAction = useToast();
   const classes = useStyles();
 
   /**
@@ -68,7 +68,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
   const handleConfirm = useCallback(() => {
     // If the name value is empty, alert the user
     if (name === '') {
-      confirmAction('No name was entered.', 'alert', undefined, 'Please enter a name.');
+      confirmAction('No name was entered.', 'alert', undefined, 'Please enter a name.', 'info');
       return;
     }
     let newPop = population;
@@ -78,7 +78,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
     // Filter out roles that are the emtpy string
     // The Element class will filter out duplicates of equal roles
     // Also convert all roles to all lower case
-    const el = identifyEl({ name, roles, count: 1, elementId: '', populationId: ''});
+    const el = identifyEl({ name, roles, count: 1, elementId: '', populationId: '' });
     // Add elementCount of elements
     for (let i = 0; i < elementCount; i++) {
       newPop.push(el);

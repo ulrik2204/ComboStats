@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useRef } from 'react';
-import { ConfirmDialogProps } from '../components/ConfirmDialog/index';
+import { ToastColors, ToastProps } from '../components/Toast/index';
 import { CreateTempUserResponse } from '../pages/api/user/create-temp-user';
 import { createTempUser } from './api-calls';
-import { ConfirmDialogContext } from './contexts';
+import { ToastContext as ToastContext } from './contexts';
 
 /**
  * Finds the default value for a variable based on the name of the variable
@@ -46,35 +46,37 @@ export const useUpdateLocalStorage = (value: any, valueName: string): void => {
   }, [value]);
 };
 
-export const useConfirmDialog = () => {
-  const { confirmDialogInfo, setConfirmDialogInfo } = useContext(ConfirmDialogContext);
+export const useToast = () => {
+  const { toastData, setToastData } = useContext(ToastContext);
 
   return useCallback(
     (
       title: string,
-      type: ConfirmDialogProps['type'],
+      type: ToastProps['type'],
       onYes?: () => void,
       description?: string,
+      color?: ToastColors,
       disableClose?: boolean,
       children?: JSX.Element,
     ) => {
-      setConfirmDialogInfo({
+      setToastData({
         open: true,
         title,
-        onClose: () => setConfirmDialogInfo({ ...confirmDialogInfo, open: false }),
+        onClose: () => setToastData({ ...toastData, open: false }),
         type,
         description,
         onYes,
+        color,
         disableClose,
         children,
       });
     },
-    [confirmDialogInfo, setConfirmDialogInfo],
+    [toastData, setToastData],
   );
 };
 
 export const useLoginTempUser = () => {
-  const errorPopup = useConfirmDialog();
+  const errorPopup = useToast();
   const overFunc = async () => {
     const resData: CreateTempUserResponse = await createTempUser().then((res) => {
       if (!res.ok)

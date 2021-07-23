@@ -40,9 +40,8 @@ const Popup: FC<PopupProps> = (props) => {
   const classes = useStyles();
   return (
     <Dialog
-      disableBackdropClick
       open={props.open}
-      onClose={props.onClose}
+      onClose={(_event, reason) => reason !== 'backdropClick' && props.onClose()}
       fullWidth={true}
       fullScreen={fullScreen}
       PaperProps={{ className: classes.dialog }}

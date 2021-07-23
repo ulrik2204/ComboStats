@@ -15,33 +15,42 @@ import CloseIcon from '@material-ui/icons/Close';
 import { FC } from 'react';
 import { buttonTheme } from '../../lib/themes';
 
-export type ConfirmDialogProps = {
+/**
+ * Props of the Toast component.
+ * @remarks
+ * onYes is only used if type='confirm'.
+ */
+export type ToastProps = {
   open: boolean;
   title: string;
   onClose: () => void;
   type: 'confirm' | 'alert' | 'none';
   description?: string;
-  onYes?: () => void;
+  onYes?: () => void; // Only used if type='confirm'
+  color?: ToastColors;
   disableClose?: boolean;
   children?: JSX.Element;
 };
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      minWidth: 300,
-      backgroundColor: theme.palette.warning.main,
-    },
-    closeButton: {
-      position: 'absolute',
-      right: theme.spacing(1),
-      color: theme.palette.grey[500],
-    },
-  }),
-);
+export type ToastColors = 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success' | undefined;
 
-export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
-  const classes = useStyles();
+const useStyles = (color: ToastColors) =>
+  makeStyles((theme: Theme) =>
+    createStyles({
+      paper: {
+        minWidth: 300,
+        backgroundColor: color ? theme.palette[color].main : theme.palette.warning.main,
+      },
+      closeButton: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        color: theme.palette.grey[500],
+      },
+    }),
+  )();
+
+export const Toast: FC<ToastProps> = (props) => {
+  const classes = useStyles(props.color);
   return (
     <Dialog
       open={props.open}
@@ -90,4 +99,4 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
   );
 };
 
-export default ConfirmDialog;
+export default Toast;
