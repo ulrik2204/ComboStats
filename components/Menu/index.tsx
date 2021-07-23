@@ -3,6 +3,7 @@ import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { useRouter } from 'next/dist/client/router';
 import { FC, useState } from 'react';
 import { backgroundTheme } from '../../lib/themes';
+import { useLoginTempUser } from '../../lib/utils-frontend';
 import Arrowbutton from './Arrowbutton';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,6 +53,7 @@ const Menu: FC = () => {
     calculate: router.pathname === '/calculate',
   });
   const classes = useStyles();
+  useLoginTempUser();
   return (
     <div>
       <MuiThemeProvider theme={backgroundTheme}>

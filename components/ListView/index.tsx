@@ -74,12 +74,12 @@ const ListView: FC<ListViewProps> = (props) => {
             variant="contained"
             color="default"
             onClick={() =>
-              confirmAction(
-                'Delete all items in list?',
-                'confirm',
-                props.onDeleteAllClick,
-                'This action is irreversible.',
-              )
+              confirmAction({
+                title: 'Delete all items in list?',
+                type: 'confirm',
+                onYes: props.onDeleteAllClick,
+                description: 'This action is irreversible.',
+              })
             }
           >
             Delete all

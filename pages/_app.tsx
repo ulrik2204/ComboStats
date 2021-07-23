@@ -7,7 +7,7 @@ import Menu from '../components/Menu';
 import Toast, { ToastProps } from '../components/Toast/index';
 import { PopulationContext, SuccessGroupsContext, ToastContext } from '../lib/contexts';
 import { backgroundTheme } from '../lib/themes';
-import { findDefaultValue, useLoginTempUser, useUpdateLocalStorage } from '../lib/utils-frontend';
+import { findDefaultValue, useUpdateLocalStorage } from '../lib/utils-frontend';
 import store from '../store';
 import '../styles/globals.css';
 
@@ -42,12 +42,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   useUpdateLocalStorage(successGroups, 'successGroups');
 
   // Create a temp user and log in with that user.
-  useLoginTempUser();
+  //useLoginTempUser();
 
   return (
     <div className="root">
       <Provider store={store}>
-        <Menu />
         <MuiThemeProvider theme={backgroundTheme}>
           <PopulationContext.Provider value={{ population, setPopulation }}>
             <SuccessGroupsContext.Provider value={{ successGroups, setSuccessGroups }}>
@@ -63,6 +62,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 color={toastData.color}
               />
               <ToastContext.Provider value={{ toastData, setToastData }}>
+                <Menu />
                 <Component {...pageProps} />
               </ToastContext.Provider>
             </SuccessGroupsContext.Provider>

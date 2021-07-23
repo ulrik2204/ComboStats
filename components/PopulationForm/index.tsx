@@ -59,7 +59,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
   const [elementCount, setElementCount] = useState(props.defaultCount);
   const [roles, setRoles] = useState(props.defaultRoles);
   const { population, setPopulation } = useContext(PopulationContext);
-  const confirmAction = useToast();
+  const toast = useToast();
   const classes = useStyles();
 
   /**
@@ -68,7 +68,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
   const handleConfirm = useCallback(() => {
     // If the name value is empty, alert the user
     if (name === '') {
-      confirmAction('No name was entered.', 'alert', undefined, 'Please enter a name.');
+      toast({ title: 'No name was entered.', type: 'alert', description: 'Please enter a name.' });
       return;
     }
     let newPop = population;
@@ -169,12 +169,12 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
               variant="contained"
               color="secondary"
               onClick={() =>
-                confirmAction(
-                  'Delete all copies of the card?',
-                  'confirm',
-                  handleDeleteAll,
-                  'This action is irreversible.',
-                )
+                toast({
+                  title: 'Delete all copies of the card?',
+                  type: 'confirm',
+                  onYes: handleDeleteAll,
+                  description: 'This action is irreversible.',
+                })
               }
             >
               Delete all copies

@@ -24,17 +24,17 @@ export type ToastProps = {
   open: boolean;
   title: string;
   onClose: () => void;
-  type: 'confirm' | 'alert' | 'none';
+  type: ToastType;
   description?: string;
   onYes?: () => void; // Only used if type='confirm'
-  color?: ToastColors;
-  disableClose?: boolean;
+  color?: ToastColor;
+  disableClose?: boolean; // Disables backdrop click and x (corner close) button.
   children?: JSX.Element;
 };
+export type ToastType = 'confirm' | 'alert' | 'none';
+export type ToastColor = 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success' | undefined;
 
-export type ToastColors = 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success' | undefined;
-
-const useStyles = (color: ToastColors) =>
+const useStyles = (color: ToastColor) =>
   makeStyles((theme: Theme) =>
     createStyles({
       paper: {
@@ -49,7 +49,7 @@ const useStyles = (color: ToastColors) =>
     }),
   )();
 
-export const Toast: FC<ToastProps> = (props) => {
+const Toast: FC<ToastProps> = (props) => {
   const classes = useStyles(props.color);
   return (
     <Dialog
