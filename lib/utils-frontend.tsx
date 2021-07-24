@@ -125,9 +125,7 @@ export const useLoginTempUser = () => {
         return res.json();
       })
       .then((res: CreateTempUserResponse) => {
-        setTimeout(() => {
-          setIsLogged(true);
-        }, 2000);
+        setIsLogged(true);
         console.log(res);
       });
   }, [setIsLogged]);

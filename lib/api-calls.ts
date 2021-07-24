@@ -19,6 +19,5 @@ export const createTempUser = async (): Promise<Response> => {
  */
 export const isLoggedIn = async (): Promise<boolean> => {
   const response: GetIsLoggedInResponse = await useFetch('/api/user', 'GET').then((res) => res.json());
-  console.log(response);
   return response.isLoggedIn;
 };
