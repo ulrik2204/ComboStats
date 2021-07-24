@@ -1,4 +1,4 @@
-import { IsLoggedInResponse } from '../pages/api/user/is-logged-in';
+import { GetIsLoggedInResponse } from './types';
 
 const useFetch = (url: string, method: string, body?: any) => {
   return fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body });
@@ -9,7 +9,7 @@ const useFetch = (url: string, method: string, body?: any) => {
  * The token for the temp user is set using the Set-Cookie header server side.
  */
 export const createTempUser = async (): Promise<Response> => {
-  const response = await useFetch('/api/user/create-temp-user', 'POST');
+  const response = await useFetch('/api/user/temp-user', 'POST');
   return response;
 };
 
@@ -18,7 +18,7 @@ export const createTempUser = async (): Promise<Response> => {
  * @return True if the user is logged in with a valid token and
  */
 export const isLoggedIn = async (): Promise<boolean> => {
-  const response: IsLoggedInResponse = await useFetch('/api/user/is-logged-in', 'GET').then((res) => res.json());
+  const response: GetIsLoggedInResponse = await useFetch('/api/user', 'GET').then((res) => res.json());
   console.log(response);
   return response.isLoggedIn;
 };

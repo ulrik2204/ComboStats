@@ -1,9 +1,9 @@
-import { ScenarioGroupType, UserKey } from "@prisma/client";
-import { USER_KEY_COOKIE } from "./constants";
-import prisma from "./prisma";
+import { ScenarioGroupType, UserKey } from '@prisma/client';
+import { verify } from 'jsonwebtoken';
 import { NextApiRequest } from 'next';
-import { getEnv, isValidType } from "./utils";
-import { verify } from "jsonwebtoken";
+import { USER_KEY_COOKIE } from './constants';
+import prisma from './prisma';
+import { getEnv, isValidType } from './utils';
 
 /**
  * Extracts the UserKey object from the jwt
@@ -121,4 +121,27 @@ export const checkScenarioGroupType = (checkString: string): ScenarioGroupType |
     default:
       return undefined;
   }
+};
+
+/**
+ * Check if a scenario group of a certain type can be added to a population.
+ * @param populationId The id of the population to check.
+ * @param type The type of the scenario group that wants to be added to the population.
+ * @returns True if the scenario group of that type can be added to the population
+ * and false otherwise
+ */
+export const checkPopulationToScenarioGroups = async (
+  populationId: string,
+  type: ScenarioGroupType,
+): Promise<boolean> => {
+  // If the type is successes, then it can always be added.
+  if (type === ScenarioGroupType.SUCCESSES) return true;
+  // Get the scenarioGroups related to the provided population
+  const scenarioGroups = await prisma.scenarioGroup.findMany({
+    where: {
+      populationId,
+    },
+  });
+  // There cannot be more than one ScenarioGroup of type action and failures related to a population.
+  return scenarioGroups.find((sg) => sg.type === type) == undefined;
 };

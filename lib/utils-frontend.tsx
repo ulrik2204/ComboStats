@@ -2,9 +2,9 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import LoadSpinner from '../components/LoadSpinner';
 import { ToastType } from '../components/Toast';
 import { ToastColor as ToastColor } from '../components/Toast/index';
-import { CreateTempUserResponse } from '../pages/api/user/create-temp-user';
 import { createTempUser } from './api-calls';
 import { ToastContext as ToastContext } from './contexts';
+import { CreateTempUserResponse } from './types';
 
 /**
  * Finds the default value for a variable based on the name of the variable
