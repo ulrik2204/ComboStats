@@ -1,6 +1,73 @@
-import { Element, ElementInScenario, Population, RoleInScenario, Scenario, ScenarioGroup } from '@prisma/client';
+import {
+  Element,
+  ElementInScenario,
+  Population,
+  RoleInScenario,
+  Scenario,
+  ScenarioGroup,
+  ScenarioGroupType,
+} from '@prisma/client';
 
 // Some global types.
+
+export type CreatePopulationBody = {
+  name: string;
+};
+
+export type EditPopulationBody = {
+  newName: string;
+};
+
+export type CreateElementBody = {
+  name: string;
+  roles: string[];
+  count: number;
+  popualtionId: string;
+};
+
+export type EditElementBody = {
+  newName: string;
+  newRoles: string[];
+  newCount: number;
+};
+
+export type CreateScenarioGroupBody = {
+  name: string;
+  popualtionId: string;
+  type: ScenarioGroupType;
+};
+
+export type EditScenarioGroupBody = {
+  newName: string;
+};
+
+export type GetScenarioGroupsBody = {
+  populationId: string;
+  type: ScenarioGroupType | 'ALL';
+};
+
+export type RequiredElement = { elementId: string; minCount: number };
+
+export type RequiredRole = { requiredRole: string; minCount: number };
+
+export type CreateScenarioBody = {
+  scenarioName: string;
+  scenarioGroupId: string;
+  requiredElements: RequiredElement[];
+  requiredRoles: RequiredRole[];
+};
+
+export type EditScenarioBody = {
+  newScenarioName: string;
+  newRequiredElements: RequiredElement[];
+  newRequiredRoles: RequiredRole[];
+};
+
+export type APIResponse<T> = {
+  status: number;
+  ok: boolean;
+  data: T;
+};
 
 export type ErrorResponse = {
   errorMsg: string;

@@ -58,7 +58,9 @@ export const createPopulation = async (
   });
   if (sameNamePop) return res.status(400).json({ errorMsg: RES_MSG.SAME_NAME_POPULATION });
   // Create the population and send result.
-  const population = await prisma.population.create({ data: { name: popName, ownerId: ownerKey.userId } });
+  const population = await prisma.population.create({
+    data: { name: popName, ownerId: ownerKey.userId },
+  });
   res.status(201).json({
     population,
   });
@@ -187,7 +189,10 @@ export const getPopulationElements = async (
  * @remarks Requires that the user sends a cookie with its jwt token.
  * Required json body attributes: name, roles (as a list of strings), count, populationId.
  */
-export const createElement = async (req: NextApiRequest, res: NextApiResponse<CUDElementResponse | ErrorResponse>) => {
+export const createElement = async (
+  req: NextApiRequest,
+  res: NextApiResponse<CUDElementResponse | ErrorResponse>,
+) => {
   const requestBody = {
     name: 'string',
     roles: ['string'],
@@ -328,7 +333,7 @@ export const createScenarioGroup = async (
   const requestBody = {
     name: 'string',
     populationId: 'string',
-    type: 'string',
+    type: 'string', // Can be "successes", "failures" or "actions"
   };
   if (!isValidRequestBody(req.body, requestBody))
     return res.status(400).json({ errorMsg: RES_MSG.INVALID_REQUEST_BODY(requestBody) });
@@ -360,7 +365,8 @@ export const createScenarioGroup = async (
       populationId,
     },
   });
-  if (sameNameScenarioGroup) return res.status(400).json({ errorMsg: RES_MSG.SAME_NAME_SCENARIO_GROUP });
+  if (sameNameScenarioGroup)
+    return res.status(400).json({ errorMsg: RES_MSG.SAME_NAME_SCENARIO_GROUP });
 
   // Create scenarioGroup based on provided information.
   const scenarioGroup = await prisma.scenarioGroup.create({
@@ -499,8 +505,8 @@ export const getScenarioGroups = async (
   if (!isValidRequestBody(req.body, requestBody))
     return res.status(400).json({ errorMsg: RES_MSG.INVALID_REQUEST_BODY(requestBody) });
 
-  const populationId = req.body.populationId;
-  const reqTypeOrAll = req.body.type;
+  const populationId: string = req.body.populationId;
+  const reqTypeOrAll: string = req.body.type;
   // Find ownerId based on the jwt token sent in cookie
   const ownerKey = await authenticateToken(req);
   if (!ownerKey) return res.status(401).json({ errorMsg: RES_MSG.INVALID_CREDENTIALS });
@@ -511,7 +517,7 @@ export const getScenarioGroups = async (
   if (!isPopOwner) return res.status(403).json({ errorMsg: RES_MSG.NOT_POPULATION_OWNER });
 
   // If the type request parameter is "all", find all scenario groups in population
-  if (reqTypeOrAll === 'all') {
+  if (reqTypeOrAll.toLowerCase() === 'all') {
     const allScenarioGroups = await prisma.scenarioGroup.findMany({
       where: {
         populationId,
@@ -541,7 +547,10 @@ export const getScenarioGroups = async (
  * requiredElements ({elementId, minCount}[]),
  * requiredRoles ({requiredRole, minCount}).
  */
-export const createScenario = async (req: NextApiRequest, res: NextApiResponse<CUScenarioResponse | ErrorResponse>) => {
+export const createScenario = async (
+  req: NextApiRequest,
+  res: NextApiResponse<CUScenarioResponse | ErrorResponse>,
+) => {
   const requestBody = {
     scenarioName: 'string',
     scenarioGroupId: 'string',
@@ -646,8 +655,10 @@ export const editScenarioById = async (
 
   const scenarioId = req.query.id as string;
   const newName = req.body.newScenarioName;
-  const newRequiredElementsData: { elementId: string; minCount: number }[] = req.body.newRequiredElements;
-  const newRequiredRolesData: { requiredRole: string; minCount: number }[] = req.body.newRequiredRoles;
+  const newRequiredElementsData: { elementId: string; minCount: number }[] =
+    req.body.newRequiredElements;
+  const newRequiredRolesData: { requiredRole: string; minCount: number }[] =
+    req.body.newRequiredRoles;
 
   // Find ownerId based on the jwt token sent in cookie
   const ownerKey = await authenticateToken(req);
@@ -705,7 +716,10 @@ export const editScenarioById = async (
 /**
  * Creates a temp user and sends the jwt with the id for that user with the Set-Cookie header.
  */
-export const createTempUser = async (req: NextApiRequest, res: NextApiResponse<CreateTempUserResponse>) => {
+export const createTempUser = async (
+  req: NextApiRequest,
+  res: NextApiResponse<CreateTempUserResponse>,
+) => {
   // Check if the user is already logged in, then no new user should be made.
   const userKey = await authenticateToken(req);
   if (userKey) return res.status(200).json({ createdUser: false });
@@ -732,7 +746,10 @@ export const createTempUser = async (req: NextApiRequest, res: NextApiResponse<C
 /**
  * Checks if a user is logged in by checking the sent jwt token in cookies.
  */
-export const getIsLoggedIn = async (req: NextApiRequest, res: NextApiResponse<GetIsLoggedInResponse>) => {
+export const getIsLoggedIn = async (
+  req: NextApiRequest,
+  res: NextApiResponse<GetIsLoggedInResponse>,
+) => {
   const userKey = await authenticateToken(req);
   // The user is logged in if the userKey is not undefined.
   res.status(200).json({ isLoggedIn: userKey !== undefined });

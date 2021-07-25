@@ -2,9 +2,8 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import LoadSpinner from '../components/LoadSpinner';
 import { ToastType } from '../components/Toast';
 import { ToastColor as ToastColor } from '../components/Toast/index';
-import { createTempUser } from './api-calls';
+import { createTempUserFromAPI } from './api-calls';
 import { ToastContext as ToastContext } from './contexts';
-import { CreateTempUserResponse } from './types';
 
 /**
  * Finds the default value for a variable based on the name of the variable
@@ -114,19 +113,16 @@ export const useLoginTempUser = () => {
 
   useEffect(() => {
     startLoading();
-    createTempUser()
-      .then((res) => {
-        if (!res.ok)
-          return toast({
-            title: 'Not able to log in',
-            type: 'alert',
-            description: 'There was an error creating a temporary user.',
-          });
-        return res.json();
-      })
-      .then((res: CreateTempUserResponse) => {
-        setIsLogged(true);
-        console.log(res);
-      });
+    createTempUserFromAPI().then((res) => {
+      if (!res.ok)
+        return toast({
+          title: 'Not able to log in',
+          type: 'alert',
+          description: 'There was an error creating a temporary user.',
+        });
+      // Else the user has either become logged in, or is already logged in.
+      setIsLogged(true);
+      console.log(res);
+    });
   }, [setIsLogged]);
 };
