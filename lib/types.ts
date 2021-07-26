@@ -10,6 +10,34 @@ import {
 
 // Some global types.
 
+type AsyncState = {
+  loading: boolean;
+  errorMsg?: string;
+};
+
+export type PopulationState = AsyncState & {
+  population: PopulationData;
+};
+
+export type ScenarioGroupState = AsyncState & {
+  scenarioGroup: ScenarioGroupData;
+};
+
+export type PopulationData = Population & {
+  elements: Element[];
+};
+
+export type ScenarioGroupData = ScenarioGroup & {
+  scenarios: ScenarioData[];
+};
+
+export type ScenarioData = Scenario & {
+  requiredRoles: RoleInScenario[];
+  requiredElements: (ElementInScenario & {
+    element: Element;
+  })[];
+};
+
 export type CreatePopulationBody = {
   name: string;
 };
@@ -22,7 +50,7 @@ export type CreateElementBody = {
   name: string;
   roles: string[];
   count: number;
-  popualtionId: string;
+  populationId: string;
 };
 
 export type EditElementBody = {
@@ -33,7 +61,7 @@ export type EditElementBody = {
 
 export type CreateScenarioGroupBody = {
   name: string;
-  popualtionId: string;
+  populationId: string;
   type: ScenarioGroupType;
 };
 
@@ -63,25 +91,14 @@ export type EditScenarioBody = {
   newRequiredRoles: RequiredRole[];
 };
 
-export type APIResponse<T> = {
+export type APIResponse<ResponseType> = {
   status: number;
   ok: boolean;
-  data: T;
+  data: ResponseType & ErrorResponse;
 };
 
 export type ErrorResponse = {
-  errorMsg: string;
-};
-
-export type PopulationData = Population & {
-  elements: Element[];
-};
-
-export type ScenarioData = Scenario & {
-  requiredRoles: RoleInScenario[];
-  requiredElements: (ElementInScenario & {
-    element: Element;
-  })[];
+  errorMsg?: string;
 };
 
 export type CreateTempUserResponse = {
@@ -120,9 +137,7 @@ export type GetScenarioGroupsResponse = {
 };
 
 export type GetScenarioGroupScenariosResponse = {
-  scenarioGroup: ScenarioGroup & {
-    scenarios: ScenarioData[];
-  };
+  scenarioGroup: ScenarioGroupData;
 };
 
 // The response when creating and updating a scenario.
