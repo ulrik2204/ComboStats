@@ -1,8 +1,8 @@
 import { AnyAction, Reducer } from 'redux';
-import { NULL_FAILURES_STATE, NULL_SUCCESSES_STATE } from '../../lib/constants';
-import { ScenarioGroupData, ScenarioGroupState } from '../../lib/types';
+import { NULL_FAILURES_STATE, NULL_SUCCESSES_STATE } from '../../lib/constants-frontend';
+import { ScenarioGroupState } from '../../lib/types-frontend';
 
-const scenarioGroupReducer: Reducer = (state: ScenarioGroupData, action: AnyAction) => {
+const scenarioGroupReducer: Reducer = (state: ScenarioGroupState, action: AnyAction) => {
   switch (action.type) {
     default:
       return state;

@@ -8,20 +8,7 @@ import {
   ScenarioGroupType,
 } from '@prisma/client';
 
-// Some global types.
-
-type AsyncState = {
-  loading: boolean;
-  errorMsg?: string;
-};
-
-export type PopulationState = AsyncState & {
-  population: PopulationData;
-};
-
-export type ScenarioGroupState = AsyncState & {
-  scenarioGroup: ScenarioGroupData;
-};
+// Some types used in both frontend and on server.
 
 export type PopulationData = Population & {
   elements: Element[];

@@ -1,7 +1,7 @@
 import { ScenarioGroupType, UserKey } from '@prisma/client';
 import { verify } from 'jsonwebtoken';
 import { NextApiRequest } from 'next';
-import { USER_KEY_COOKIE } from './constants';
+import { USER_KEY_COOKIE } from './constants-server';
 import prisma from './prisma';
 import { getEnv, isValidType } from './utils';
 

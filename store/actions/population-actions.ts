@@ -9,28 +9,17 @@ import {
 } from '../../lib/api-calls';
 import {
   CreateElementBody,
-  CUDElementResponse,
-  CUDPopulationResponse,
   EditElementBody,
   EditPopulationBody,
   GetPopulationElementsResponse,
 } from '../../lib/types';
-import { GetRootState, RootState } from '../index';
-import { PopulationDispatch, POPULATION_ACTIONS } from './action-types';
-
-type CUDPopulationAction = ThunkAction<
-  void,
-  RootState,
-  unknown,
-  PopulationDispatch<CUDPopulationResponse>
->;
-
-type CUDElementAction = ThunkAction<
-  void,
-  RootState,
-  unknown,
-  PopulationDispatch<CUDElementResponse>
->;
+import { RootState } from '../../lib/types-frontend';
+import {
+  CUDElementAction,
+  CUDPopulationAction,
+  PopulationDispatch,
+  POPULATION_ACTIONS,
+} from './action-types';
 
 export const getPopulation = (): ThunkAction<
   void,
@@ -38,7 +27,7 @@ export const getPopulation = (): ThunkAction<
   unknown,
   PopulationDispatch<GetPopulationElementsResponse>
 > => {
-  return async (dispatch, getState: GetRootState) => {
+  return async (dispatch, getState) => {
     dispatch({ type: POPULATION_ACTIONS.LOADING });
     const res = await getPopulationElementsFromAPI(getState().population.population.populationId);
     if (res.ok) {
@@ -52,7 +41,7 @@ export const getPopulation = (): ThunkAction<
 export const editPopulation = (body: EditPopulationBody): CUDPopulationAction => {
   return async (
     dispatch, // Dispatch<PopulationDispatch<CUDPopulationResponse>>,
-    getState: GetRootState,
+    getState,
   ) => {
     // Declare loading
     dispatch({ type: POPULATION_ACTIONS.LOADING });
@@ -67,7 +56,7 @@ export const editPopulation = (body: EditPopulationBody): CUDPopulationAction =>
 };
 
 export const deletePopulation = (): CUDPopulationAction => {
-  return async (dispatch, getState: GetRootState) => {
+  return async (dispatch, getState) => {
     dispatch({ type: POPULATION_ACTIONS.LOADING });
     const res = await deletePopulationFromAPI(getState().population.population.populationId);
     if (res.ok) {

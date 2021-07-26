@@ -1,12 +1,8 @@
 import { Reducer } from 'redux';
-import { NULL_POPULATION_STATE } from '../../lib/constants';
+import { NULL_POPULATION_STATE } from '../../lib/constants-frontend';
 import { sortElements } from '../../lib/core';
-import {
-  CUDElementResponse,
-  CUDPopulationResponse,
-  ErrorResponse,
-  PopulationState,
-} from '../../lib/types';
+import { CUDElementResponse, CUDPopulationResponse, ErrorResponse } from '../../lib/types';
+import { PopulationState } from '../../lib/types-frontend';
 import { PopulationAction, PopulationDispatch, POPULATION_ACTIONS } from '../actions/action-types';
 
 export const populationReducer: Reducer<PopulationState, PopulationAction<object>> = (
@@ -36,6 +32,7 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
     case POPULATION_ACTIONS.ADD_ELEMENT_SUCCESS:
       return {
         ...state,
+        loading: false,
         errorMsg: undefined,
         population: {
           ...state.population,
@@ -54,6 +51,7 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
       newElements.push(editedEl);
       return {
         ...state,
+        loading: false,
         errorMsg: undefined,
         population: {
           ...state.population,
@@ -66,6 +64,7 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
       const newEls = state.population.elements.filter((el) => el.elementId !== deletedEl.elementId);
       return {
         ...state,
+        loading: false,
         errorMsg: undefined,
         population: {
           ...state.population,

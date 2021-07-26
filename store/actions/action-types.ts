@@ -1,5 +1,7 @@
 import { Action } from 'redux';
-import { ErrorResponse } from '../../lib/types';
+import { CUDElementResponse, CUDPopulationResponse, ErrorResponse } from '../../lib/types';
+import { ThunkAction } from 'redux-thunk';
+import { RootState } from '../../lib/types-frontend';
 
 export type GenericAction<ActionType, PayloadType = undefined> = Action<ActionType> &
   (PayloadType extends undefined ? {} : { payload: PayloadType });
@@ -35,3 +37,16 @@ export type PopulationDispatch<PayloadType> =
   | PopulationFailure
   | PopulationSuccess<PayloadType>;
 
+export type CUDPopulationAction = ThunkAction<
+  void,
+  RootState,
+  unknown,
+  PopulationDispatch<CUDPopulationResponse>
+>;
+
+export type CUDElementAction = ThunkAction<
+  void,
+  RootState,
+  unknown,
+  PopulationDispatch<CUDElementResponse>
+>;

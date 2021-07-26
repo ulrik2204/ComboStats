@@ -1,6 +1,7 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
-import thunk, { ThunkDispatch } from 'redux-thunk';
+import thunk from 'redux-thunk';
+import { AppDispatch, RootState } from '../lib/types-frontend';
 import rootReducer from './reducers/index';
 
 const composeEnhancers =
@@ -8,10 +9,6 @@ const composeEnhancers =
   compose;
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 export default store;
-
-export type RootState = ReturnType<typeof store.getState>;
-export type GetRootState = typeof store.getState;
-export type AppDispatch = ThunkDispatch<RootState, unknown, any>; // was: typeof store.dispatch
 
 // Use throughout app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = () => useDispatch<AppDispatch>();

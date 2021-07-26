@@ -2,7 +2,7 @@ import { Element, UserKey } from '@prisma/client';
 import cookie from 'cookie';
 import { sign } from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { RES_MSG, USER_KEY_COOKIE } from './constants';
+import { RES_MSG, USER_KEY_COOKIE } from './constants-server';
 import { fixRoles } from './core';
 import prisma from './prisma';
 import {
