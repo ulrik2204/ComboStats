@@ -152,6 +152,9 @@ export const getPopulationsOnUser = async (
     where: {
       ownerId: ownerKey.userId,
     },
+    orderBy: {
+      name: 'desc',
+    },
   });
   res.status(200).json({ allUserPopulations });
 };
@@ -177,7 +180,11 @@ export const getPopulationElements = async (
       populationId,
     },
     include: {
-      elements: true,
+      elements: {
+        orderBy: {
+          name: 'desc',
+        },
+      },
     },
   });
   if (!population) return res.status(404).json({ errorMsg: RES_MSG.NO_POPULATION_WITH_ID });
@@ -522,6 +529,9 @@ export const getScenarioGroups = async (
       where: {
         populationId,
       },
+      orderBy: {
+        name: 'desc',
+      },
     });
     return res.status(200).json({ scenarioGroups: allScenarioGroups });
   }
@@ -535,6 +545,9 @@ export const getScenarioGroups = async (
     where: {
       populationId,
       type,
+    },
+    orderBy: {
+      name: 'desc',
     },
   });
   return res.status(200).json({ scenarioGroups });
@@ -596,7 +609,11 @@ export const createScenario = async (
           element: true,
         },
       },
-      requiredRoles: true,
+      requiredRoles: {
+        orderBy: {
+          requiredRole: 'desc',
+        },
+      },
     },
   });
 
