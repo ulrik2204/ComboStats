@@ -17,7 +17,10 @@ type PopulationContextType = {
   setPopulation: Dispatch<SetStateAction<Element[]>>;
 };
 
-export const PopulationContext = createContext<PopulationContextType>({ population: [], setPopulation: () => {} });
+export const PopulationContext = createContext<PopulationContextType>({
+  population: [],
+  setPopulation: () => {},
+});
 
 type SuccessGroups = {
   [successGroupName: string]: Element[][];

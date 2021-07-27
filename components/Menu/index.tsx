@@ -47,10 +47,10 @@ const useStyles = makeStyles((theme) => ({
 const Menu: FC = () => {
   const router = useRouter();
   const [lastClicked, setLastClicked] = useState({
-    population: router.pathname === '/population',
-    successes: router.pathname === '/successes',
-    more: router.pathname === '/more',
-    calculate: router.pathname === '/calculate',
+    population: router.pathname === '/populationpage',
+    successes: router.pathname === '/successespage',
+    more: router.pathname === '/morepage',
+    calculate: router.pathname === '/calculatepage',
   });
   const classes = useStyles();
   useLoginTempUser();
@@ -63,7 +63,12 @@ const Menu: FC = () => {
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 router.push('/');
-                setLastClicked({ population: false, successes: false, more: false, calculate: false });
+                setLastClicked({
+                  population: false,
+                  successes: false,
+                  more: false,
+                  calculate: false,
+                });
               }}
             >
               <img src="/ComboStatsRoundedLogo.png" className={classes.logo} />
@@ -71,8 +76,13 @@ const Menu: FC = () => {
             <Arrowbutton
               text="Deck"
               onClick={() => {
-                setLastClicked({ population: true, successes: false, more: false, calculate: false });
-                router.push('/population');
+                setLastClicked({
+                  population: true,
+                  successes: false,
+                  more: false,
+                  calculate: false,
+                });
+                router.push('/populationpage');
               }}
               clicked={lastClicked.population}
               className={classes.arrowbutton}
@@ -80,8 +90,13 @@ const Menu: FC = () => {
             <Arrowbutton
               text="Combos"
               onClick={() => {
-                setLastClicked({ population: false, successes: true, more: false, calculate: false });
-                router.push('/successes');
+                setLastClicked({
+                  population: false,
+                  successes: true,
+                  more: false,
+                  calculate: false,
+                });
+                router.push('/successespage');
               }}
               clicked={lastClicked.successes}
               className={classes.arrowbutton}
@@ -89,8 +104,13 @@ const Menu: FC = () => {
             <Arrowbutton
               text="More"
               onClick={() => {
-                setLastClicked({ population: false, successes: false, more: true, calculate: false });
-                router.push('/more');
+                setLastClicked({
+                  population: false,
+                  successes: false,
+                  more: true,
+                  calculate: false,
+                });
+                router.push('/morepage');
               }}
               clicked={lastClicked.more}
               className={classes.arrowbutton}
@@ -98,8 +118,13 @@ const Menu: FC = () => {
             <Arrowbutton
               text="Calculate"
               onClick={() => {
-                setLastClicked({ population: false, successes: false, more: false, calculate: true });
-                router.push('/calculate');
+                setLastClicked({
+                  population: false,
+                  successes: false,
+                  more: false,
+                  calculate: true,
+                });
+                router.push('/calculatepage');
               }}
               clicked={lastClicked.calculate}
               className={classes.arrowbutton}

@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import LoadSpinner from '../components/LoadSpinner';
 import { ToastType } from '../components/Toast';
-import { ToastColor as ToastColor } from '../components/Toast/index';
+import { ToastColor as ToastColor, ToastProps } from '../components/Toast/index';
 import { createTempUserFromAPI } from './api-calls';
 import { ToastContext as ToastContext } from './contexts';
 
@@ -61,38 +61,58 @@ export type ToastOptions = {
 
 export const useToast = () => {
   const { toastData, setToastData } = useContext(ToastContext);
+  console.log(toastData);
 
   return useCallback(
-    ({ title, onClose, open, type, description, onYes, color, disableClose, children }: ToastOptions) => {
-      return setToastData({
+    ({
+      title,
+      onClose,
+      open,
+      type,
+      description,
+      onYes,
+      color,
+      disableClose,
+      children,
+    }: ToastOptions) => {
+      const newToastData: ToastProps = {
         open: open ?? true,
         title,
-        onClose: onClose ?? (() => setToastData({ ...toastData, open: false })),
+        onClose: onClose ?? (() => setToastData({ ...newToastData, open: false })),
         type,
         description,
         onYes,
         color,
         disableClose,
         children,
-      });
+      };
+      return setToastData(newToastData);
     },
     [toastData, setToastData],
   );
 };
 
 export const useLoading = (waitForState: any, title: string, description: string): (() => void) => {
+  const { toastData } = useContext(ToastContext);
   const stateChanged = useRef(false);
   const [startLoading, setStartLoading] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
     if (startLoading && !stateChanged.current) {
-      toast({ title, type: 'none', description, color: 'secondary', disableClose: true, children: <LoadSpinner /> });
+      toast({
+        title,
+        type: 'none',
+        description,
+        color: 'primary',
+        disableClose: true,
+        children: <LoadSpinner />,
+      });
       stateChanged.current = true;
       return;
     } else if (startLoading && stateChanged.current) {
       // Close the loading and reset.
-      toast({ title, type: 'none', color: 'secondary', open: false });
+      toast({ ...toastData, open: false });
       console.log('End loading');
       stateChanged.current = false;
       setStartLoading(false);
@@ -109,7 +129,11 @@ export const useLoading = (waitForState: any, title: string, description: string
 export const useLoginTempUser = () => {
   const toast = useToast();
   const [isLogged, setIsLogged] = useState(false);
-  const startLoading = useLoading(isLogged, 'Logging in as temporary user...', 'Waiting for database.');
+  const startLoading = useLoading(
+    isLogged,
+    'Logging in as temporary user...',
+    'Waiting for database.',
+  );
 
   useEffect(() => {
     startLoading();
@@ -122,7 +146,6 @@ export const useLoginTempUser = () => {
         });
       // Else the user has either become logged in, or is already logged in.
       setIsLogged(true);
-      console.log(res);
     });
   }, [setIsLogged]);
 };
