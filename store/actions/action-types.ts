@@ -1,6 +1,6 @@
 import { Action } from 'redux';
-import { CUDElementResponse, CUDPopulationResponse, ErrorResponse } from '../../lib/types';
 import { ThunkAction } from 'redux-thunk';
+import { CUDElementResponse, CUDPopulationResponse, ErrorResponse } from '../../lib/types';
 import { RootState } from '../../lib/types-frontend';
 
 export type GenericAction<ActionType, PayloadType = undefined> = Action<ActionType> &
@@ -9,6 +9,7 @@ export type GenericAction<ActionType, PayloadType = undefined> = Action<ActionTy
 export enum POPULATION_ACTIONS {
   LOADING = 'LOADING',
   FAILURE = 'FAILURE',
+  SET_POPULATION = 'SET_POPULATION',
   GET_SUCCESS = 'GET_SUCCESS',
   EDIT_SUCCESS = 'EDIT_SUCCESS',
   DELETE_SUCCESS = 'DELETE_SUCCESS',

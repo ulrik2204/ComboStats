@@ -1,3 +1,4 @@
+import { Population } from '@prisma/client';
 import { ThunkAction } from 'redux-thunk';
 import {
   createElementFromAPI,
@@ -20,6 +21,14 @@ import {
   PopulationDispatch,
   POPULATION_ACTIONS,
 } from './action-types';
+
+export const setPopulation = (
+  population: Population,
+): ThunkAction<void, RootState, unknown, PopulationDispatch<Population>> => {
+  return (dispatch) => {
+    dispatch({ type: POPULATION_ACTIONS.SET_POPULATION, payload: population });
+  };
+};
 
 export const getPopulation = (): ThunkAction<
   void,

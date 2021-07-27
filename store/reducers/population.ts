@@ -1,3 +1,4 @@
+import { Population } from '@prisma/client';
 import { Reducer } from 'redux';
 import { NULL_POPULATION_STATE } from '../../lib/constants-frontend';
 import { sortElements } from '../../lib/core';
@@ -84,6 +85,16 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
         errorMsg: undefined,
         population: {
           ...(action.payload as GetPopulationElementsResponse).population,
+        },
+      } as PopulationState;
+    case POPULATION_ACTIONS.SET_POPULATION:
+      return {
+        loading: false,
+        errorMsg: undefined,
+        population: {
+          ...state.population,
+          ...(action.payload as Population),
+          elements: [],
         },
       } as PopulationState;
     case POPULATION_ACTIONS.DELETE_SUCCESS:
