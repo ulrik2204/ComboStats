@@ -18,7 +18,7 @@ import Popup from '../Popup/index';
 type ListViewProps = {
   infoList: ListEl[];
   corrMoreInfoList?: ListEl[];
-  onDeleteAllClick: () => void;
+  // onDeleteAllClick: () => void;
   addItemTitle: string;
   addItemForm: (setOpenAddPopup?: Dispatch<SetStateAction<boolean>>) => JSX.Element;
   editItemTitle: string;
@@ -28,7 +28,10 @@ type ListViewProps = {
   ) => JSX.Element;
 };
 
-function requireTwoSameLengthArrays<T extends readonly [] | readonly any[]>(t: T, u: { [K in keyof T]: any }): void {}
+function requireTwoSameLengthArrays<T extends readonly [] | readonly any[]>(
+  t: T,
+  u: { [K in keyof T]: any },
+): void {}
 
 const useStyles = makeStyles((theme: Theme) => ({
   viewDiv: {
@@ -66,11 +69,15 @@ const ListView: FC<ListViewProps> = (props) => {
   return (
     <div className={classes.viewDiv}>
       <div className={classes.buttonDiv}>
-        <Popup open={openAddPopup} onClose={() => setOpenAddPopup(false)} title={props.addItemTitle}>
+        <Popup
+          open={openAddPopup}
+          onClose={() => setOpenAddPopup(false)}
+          title={props.addItemTitle}
+        >
           {props.addItemForm(setOpenAddPopup)}
         </Popup>
         <MuiThemeProvider theme={buttonTheme}>
-          <Button
+          {/* <Button
             variant="contained"
             color="default"
             onClick={() =>
@@ -83,7 +90,7 @@ const ListView: FC<ListViewProps> = (props) => {
             }
           >
             Delete all
-          </Button>
+          </Button> */}
           <Button
             variant="contained"
             color="default"
@@ -94,7 +101,11 @@ const ListView: FC<ListViewProps> = (props) => {
           </Button>
         </MuiThemeProvider>
       </div>
-      <Popup open={openEditPopup} onClose={() => setOpenEditPopup(false)} title={props.editItemTitle}>
+      <Popup
+        open={openEditPopup}
+        onClose={() => setOpenEditPopup(false)}
+        title={props.editItemTitle}
+      >
         {props.editItemForm(clickedElement, setOpenEditPopup)}
       </Popup>
       <MuiThemeProvider theme={buttonTheme}>
@@ -105,7 +116,9 @@ const ListView: FC<ListViewProps> = (props) => {
               const el = props.infoList[i];
               const corrEl = props.corrMoreInfoList?.[i];
               const elItem = { boldNotes: el.boldNotes, fadedNotes: el.fadedNotes };
-              const corrElItem = corrEl ? { boldNotes: corrEl.boldNotes, fadedNotes: corrEl.fadedNotes } : undefined;
+              const corrElItem = corrEl
+                ? { boldNotes: corrEl.boldNotes, fadedNotes: corrEl.fadedNotes }
+                : undefined;
               listElements.push(
                 <ListElement
                   item={elItem}
