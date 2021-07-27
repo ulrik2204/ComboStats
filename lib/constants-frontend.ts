@@ -4,6 +4,7 @@ import { PopulationState, ScenarioGroupState } from './types-frontend';
 
 export const NULL_POPULATION_STATE: PopulationState = {
   loading: false,
+  errorMsg: undefined,
   population: {
     populationId: 'ckrjtocix00950745zrvans2v',
     name: '',
@@ -14,6 +15,7 @@ export const NULL_POPULATION_STATE: PopulationState = {
 
 export const NULL_SUCCESSES_STATE: ScenarioGroupState = {
   loading: false,
+  errorMsg: undefined,
   scenarioGroup: {
     scenarioGroupId: '',
     name: '',
@@ -25,6 +27,7 @@ export const NULL_SUCCESSES_STATE: ScenarioGroupState = {
 
 export const NULL_FAILURES_STATE: ScenarioGroupState = {
   loading: false,
+  errorMsg: undefined,
   scenarioGroup: {
     scenarioGroupId: '',
     name: '',

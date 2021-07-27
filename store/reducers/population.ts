@@ -1,7 +1,12 @@
 import { Reducer } from 'redux';
 import { NULL_POPULATION_STATE } from '../../lib/constants-frontend';
 import { sortElements } from '../../lib/core';
-import { CUDElementResponse, CUDPopulationResponse, ErrorResponse } from '../../lib/types';
+import {
+  CUDElementResponse,
+  CUDPopulationResponse,
+  ErrorResponse,
+  GetPopulationElementsResponse,
+} from '../../lib/types';
 import { PopulationState } from '../../lib/types-frontend';
 import { PopulationAction, PopulationDispatch, POPULATION_ACTIONS } from '../actions/action-types';
 
@@ -15,20 +20,22 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
         ...state,
         loading: true,
         errorMsg: undefined,
-      };
+      } as PopulationState;
     case POPULATION_ACTIONS.FAILURE:
       return {
         ...state,
         loading: false,
         errorMsg: (action.payload as ErrorResponse).errorMsg,
-      };
+      } as PopulationState;
     case POPULATION_ACTIONS.EDIT_SUCCESS:
       return {
         ...state,
-        ...(action.payload as CUDPopulationResponse).population,
         loading: false,
         errorMsg: undefined,
-      };
+        population: {
+          ...(action.payload as CUDPopulationResponse).population,
+        },
+      } as PopulationState;
     case POPULATION_ACTIONS.ADD_ELEMENT_SUCCESS:
       return {
         ...state,
@@ -41,7 +48,7 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
             (action.payload as CUDElementResponse).element,
           ]),
         },
-      };
+      } as PopulationState;
     case POPULATION_ACTIONS.EDIT_ELEMENT_SUCCESS:
       // Remove the element that was edited (with the same id) from the array, and push the new one.
       const editedEl = (action.payload as CUDElementResponse).element;
@@ -57,7 +64,7 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
           ...state.population,
           elements: sortElements(newElements),
         },
-      };
+      } as PopulationState;
     case POPULATION_ACTIONS.DELETE_ELEMENT_SUCCESS:
       // Remove the element that was deleted (with the same id) from the array
       const deletedEl = (action.payload as CUDElementResponse).element;
@@ -70,7 +77,17 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
           ...state.population,
           elements: sortElements(newEls),
         },
-      };
+      } as PopulationState;
+    case POPULATION_ACTIONS.GET_SUCCESS:
+      return {
+        loading: false,
+        errorMsg: undefined,
+        population: {
+          ...(action.payload as GetPopulationElementsResponse).population,
+        },
+      } as PopulationState;
+    case POPULATION_ACTIONS.DELETE_SUCCESS:
+      return NULL_POPULATION_STATE;
     default:
       return state;
   }
