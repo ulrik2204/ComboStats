@@ -50,18 +50,18 @@ function MyApp({ Component, pageProps }: AppProps) {
         <MuiThemeProvider theme={backgroundTheme}>
           <PopulationContext.Provider value={{ population, setPopulation }}>
             <SuccessGroupsContext.Provider value={{ successGroups, setSuccessGroups }}>
+              <Toast
+                open={toastData.open}
+                onClose={toastData.onClose}
+                onYes={toastData.onYes}
+                title={toastData.title}
+                description={toastData.description}
+                type={toastData.type}
+                children={toastData.children}
+                disableClose={toastData.disableClose}
+                color={toastData.color}
+              />
               <ToastContext.Provider value={{ toastData, setToastData }}>
-                <Toast
-                  open={toastData.open}
-                  onClose={toastData.onClose}
-                  onYes={toastData.onYes}
-                  title={toastData.title}
-                  description={toastData.description}
-                  type={toastData.type}
-                  children={toastData.children}
-                  disableClose={toastData.disableClose}
-                  color={toastData.color}
-                />
                 <Menu />
                 <Component {...pageProps} />
               </ToastContext.Provider>
