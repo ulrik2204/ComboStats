@@ -14,17 +14,12 @@ import {
   EditPopulationBody,
   GetPopulationElementsResponse,
 } from '../../lib/types';
-import { RootState } from '../../lib/types-frontend';
-import {
-  CUDElementAction,
-  CUDPopulationAction,
-  PopulationDispatch,
-  POPULATION_ACTIONS,
-} from './action-types';
+import { CUDElementAction, CUDPopulationAction, PopulationActionTypes, POPULATION_ACTIONS, RootState } from '../../lib/types-frontend';
+;
 
 export const setPopulation = (
   population: Population,
-): ThunkAction<void, RootState, unknown, PopulationDispatch<Population>> => {
+): ThunkAction<void, RootState, unknown, PopulationActionTypes<Population>> => {
   return (dispatch) => {
     dispatch({ type: POPULATION_ACTIONS.SET_POPULATION, payload: population });
   };
@@ -34,7 +29,7 @@ export const getPopulation = (): ThunkAction<
   void,
   RootState,
   unknown,
-  PopulationDispatch<GetPopulationElementsResponse>
+  PopulationActionTypes<GetPopulationElementsResponse>
 > => {
   return async (dispatch, getState) => {
     dispatch({ type: POPULATION_ACTIONS.LOADING });

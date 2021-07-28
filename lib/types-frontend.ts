@@ -1,7 +1,7 @@
-import { ThunkDispatch } from 'redux-thunk';
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
 import store from '../store';
-import { GenericAction } from '../store/actions/action-types';
-import { ErrorResponse, PopulationData, ScenarioGroupData } from './types';
+import { CUDElementResponse, CUDPopulationResponse, ErrorResponse, PopulationData, ScenarioGroupData } from './types';
+import { Action } from 'redux';
 
 // Some types specific to the frontend
 
@@ -22,6 +22,56 @@ export type ScenarioGroupState = AsyncState & {
 export type RootState = ReturnType<typeof store.getState>;
 export type GetRootState = typeof store.getState;
 export type AppDispatch = ThunkDispatch<RootState, unknown, any>; // was: typeof store.dispatch
+
+export type GenericAction<ActionType, PayloadType = undefined> = Action<ActionType> &
+  (PayloadType extends undefined ? {} : { payload: PayloadType });
+
+export enum POPULATION_ACTIONS {
+  LOADING = 'LOADING',
+  FAILURE = 'FAILURE',
+  SET_POPULATION = 'SET_POPULATION',
+  GET_SUCCESS = 'GET_SUCCESS',
+  EDIT_SUCCESS = 'EDIT_SUCCESS',
+  DELETE_SUCCESS = 'DELETE_SUCCESS',
+  ADD_ELEMENT_SUCCESS = 'ADD_ELEMENT_SUCCESS',
+  EDIT_ELEMENT_SUCCESS = 'EDIT_ELEMENT_SUCCESS',
+  DELETE_ELEMENT_SUCCESS = 'DELETE_ELEMENT_SUCCESS',
+}
+
+export type PopulationAction<PayloadType = undefined> = GenericAction<
+  POPULATION_ACTIONS,
+  PayloadType
+>;
+
+export type PopulationLoading = PopulationAction & {
+  type: typeof POPULATION_ACTIONS.LOADING;
+};
+
+export type PopulationFailure = PopulationAction<ErrorResponse> & {
+  type: typeof POPULATION_ACTIONS.FAILURE;
+};
+
+export type PopulationSuccess<PayloadType> = PopulationAction<PayloadType>;
+
+export type PopulationActionTypes<PayloadType> =
+  | PopulationLoading
+  | PopulationFailure
+  | PopulationSuccess<PayloadType>;
+
+export type CUDPopulationAction = ThunkAction<
+  void,
+  RootState,
+  unknown,
+  PopulationActionTypes<CUDPopulationResponse>
+>;
+
+export type CUDElementAction = ThunkAction<
+  void,
+  RootState,
+  unknown,
+  PopulationActionTypes<CUDElementResponse>
+>;
+
 
 // For FormTemplate
 export type InputForm = {

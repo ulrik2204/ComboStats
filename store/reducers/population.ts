@@ -8,12 +8,11 @@ import {
   ErrorResponse,
   GetPopulationElementsResponse,
 } from '../../lib/types';
-import { PopulationState } from '../../lib/types-frontend';
-import { PopulationAction, PopulationDispatch, POPULATION_ACTIONS } from '../actions/action-types';
+import { PopulationAction, PopulationActionTypes, PopulationState, POPULATION_ACTIONS } from '../../lib/types-frontend';
 
 export const populationReducer: Reducer<PopulationState, PopulationAction<object>> = (
   state: PopulationState = NULL_POPULATION_STATE,
-  action: PopulationDispatch<CUDPopulationResponse | ErrorResponse>,
+  action: PopulationActionTypes<CUDPopulationResponse | ErrorResponse>,
 ) => {
   switch (action.type) {
     case POPULATION_ACTIONS.LOADING:
