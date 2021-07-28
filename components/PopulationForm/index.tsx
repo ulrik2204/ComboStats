@@ -172,7 +172,7 @@ const PopulationForm: FC<PopualtionFormProps> = (props) => {
                 toast({
                   title: 'Delete all copies of the card?',
                   type: 'confirm',
-                  onYes: handleDeleteAll,
+                  onConfirm: handleDeleteAll,
                   description: 'This action is irreversible.',
                 })
               }

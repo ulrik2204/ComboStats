@@ -1,36 +1,40 @@
 import { Button } from '@material-ui/core';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
+import FormTemplate from '../components/FormTemplate/index';
 import PageTemplate from '../components/PageTemplate/index';
-import { createPopulationFromAPI } from '../lib/api-calls';
-import { useLoading } from '../lib/utils-frontend';
+import { FormState } from '../lib/types-frontend';
+import { useForm, useLoading } from '../lib/utils-frontend';
 import { useAppDispatch, useAppSelector } from '../store';
 import { editPopulation, getPopulation } from '../store/actions/population-actions';
 
 const Home: FC = () => {
-  const [count, setCount] = useState(0);
-  const startLoading = useLoading(count, 'Hei', 'somehing');
+  const [load, setLoad] = useState(false);
+  const startLoading = useLoading(load, 'Hei', 'somehing');
   const population = useAppSelector((state) => state.population);
   const dispatch = useAppDispatch();
   const [populationId, setPopualtionId] = useState('');
-  // const [isLogged, setIsLogged] = useState(false);
-  // const startLoadingLogging = useLoading(isLogged, 'Logging in as temporary user...', 'Waiting for database.');
-
-  // useEffect(() => {
-  //   startLoadingLogging();
-  // }, []);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     isLoggedIn().then((is) => setIsLogged(is));
-  //   }, 2000);
-  // });
-  //useLoginTempUser();
-  useEffect(() => {
-    createPopulationFromAPI({ name: '' }).then((res) => {
-      if (res.ok) {
-        setPopualtionId(res.data.population.populationId);
-      }
-    });
-  }, []);
+  const initialState = {
+    submitFinished: false,
+    loading: false,
+    form: [
+      [
+        {
+          value: '',
+          label: 'Firstname',
+        },
+        {
+          value: '',
+          label: 'Lastname',
+        },
+        {
+          value: 0,
+          label: 'Age',
+        },
+      ],
+      [{ value: [], label: 'Dognames' }],
+    ],
+  } as FormState;
+  const [state, stateDispatch] = useForm(initialState);
 
   return (
     <PageTemplate title="Home" description="Home">
@@ -38,13 +42,14 @@ const Home: FC = () => {
         Lorem ipsum
         <Button
           onClick={() => {
+            setLoad(true);
             startLoading();
             setTimeout(() => {
-              setCount(count + 1);
+              setLoad(false);
             }, 1000);
           }}
         >
-          {count}
+          Loading {load}
         </Button>
         <div>PopulationId {populationId}</div>
         <div>
@@ -53,7 +58,17 @@ const Home: FC = () => {
             Change name
           </Button>
           <Button onClick={() => dispatch(getPopulation())}>Get population els</Button>
-          <div>{JSON.stringify(population)}</div>
+          <div>
+            <FormTemplate
+              formState={state}
+              formDispatch={stateDispatch}
+              onSubmit={() => {
+                return new Promise((resolve, reject) => resolve({}));
+              }}
+            >
+              <div>Hei</div>
+            </FormTemplate>
+          </div>
         </div>
       </div>
     </PageTemplate>

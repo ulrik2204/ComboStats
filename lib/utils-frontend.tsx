@@ -1,9 +1,11 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Dispatch, useCallback, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import LoadSpinner from '../components/LoadSpinner';
 import { ToastType } from '../components/Toast';
 import { ToastColor as ToastColor, ToastProps } from '../components/Toast/index';
 import { createTempUserFromAPI } from './api-calls';
 import { ToastContext as ToastContext } from './contexts';
+import { ErrorResponse } from './types';
+import { FormActionTypes, FormInputChange, FormState, FORM_ACTION } from './types-frontend';
 
 /**
  * Finds the default value for a variable based on the name of the variable
@@ -53,7 +55,7 @@ export type ToastOptions = {
   open?: boolean;
   type: ToastType;
   description?: string;
-  onYes?: () => void;
+  onConfirm?: () => void;
   color?: ToastColor;
   disableClose?: boolean;
   children?: JSX.Element;
@@ -61,7 +63,6 @@ export type ToastOptions = {
 
 export const useToast = () => {
   const { toastData, setToastData } = useContext(ToastContext);
-  console.log(toastData);
 
   return useCallback(
     ({
@@ -70,7 +71,7 @@ export const useToast = () => {
       open,
       type,
       description,
-      onYes,
+      onConfirm,
       color,
       disableClose,
       children,
@@ -81,7 +82,7 @@ export const useToast = () => {
         onClose: onClose ?? (() => setToastData({ ...newToastData, open: false })),
         type,
         description,
-        onYes,
+        onConfirm,
         color,
         disableClose,
         children,
@@ -92,14 +93,13 @@ export const useToast = () => {
   );
 };
 
-export const useLoading = (waitForState: any, title: string, description: string): (() => void) => {
+export const useLoading = (loading: boolean, title: string, description: string): (() => void) => {
   const { toastData } = useContext(ToastContext);
-  const stateChanged = useRef(false);
   const [startLoading, setStartLoading] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    if (startLoading && !stateChanged.current) {
+    if (startLoading && loading) {
       toast({
         title,
         type: 'none',
@@ -108,17 +108,15 @@ export const useLoading = (waitForState: any, title: string, description: string
         disableClose: true,
         children: <LoadSpinner />,
       });
-      stateChanged.current = true;
       return;
-    } else if (startLoading && stateChanged.current) {
+    } else if (startLoading && !loading) {
       // Close the loading and reset.
       toast({ ...toastData, open: false });
       console.log('End loading');
-      stateChanged.current = false;
       setStartLoading(false);
       return;
     }
-  }, [waitForState, startLoading]);
+  }, [loading, startLoading]);
 
   return useCallback(() => {
     setStartLoading(true);
@@ -128,14 +126,15 @@ export const useLoading = (waitForState: any, title: string, description: string
 
 export const useLoginTempUser = () => {
   const toast = useToast();
-  const [isLogged, setIsLogged] = useState(false);
+  const [loading, setLoading] = useState(false);
   const startLoading = useLoading(
-    isLogged,
+    loading,
     'Logging in as temporary user...',
     'Waiting for database.',
   );
 
   useEffect(() => {
+    setLoading(true);
     startLoading();
     createTempUserFromAPI().then((res) => {
       if (!res.ok)
@@ -145,7 +144,66 @@ export const useLoginTempUser = () => {
           description: 'There was an error creating a temporary user.',
         });
       // Else the user has either become logged in, or is already logged in.
-      setIsLogged(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     });
-  }, [setIsLogged]);
+  }, [setLoading]);
+};
+
+/**
+ * Reducer for a FormState.
+ * @param state The FormState
+ * @param action 
+ * @returns 
+ */
+export const formReducer = (state: FormState, action: FormActionTypes) => {
+  switch (action.type) {
+    case FORM_ACTION.FIELD:
+      // Update the respoective field.
+      const newState = { ...state };
+      newState.form[(action.payload as FormInputChange).position[0]][
+        (action.payload as FormInputChange).position[1]
+      ].value = (action.payload as FormInputChange).value;
+      return newState;
+    case FORM_ACTION.SUBMIT_LOADING:
+      // Set all input values to empty
+      const newStat = { ...state, loading: true, errorMsg: undefined, submitFinished: false };
+      newStat.form.forEach((row) =>
+        row.forEach((el) => {
+          if (typeof el.value === 'number') el.value = 0;
+          else el.value = '';
+        }),
+      );
+      return newStat;
+    case FORM_ACTION.SUBMIT_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        submitFinished: false,
+        errorMsg: (action.payload as ErrorResponse).errorMsg,
+      };
+    case FORM_ACTION.SUBMIT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        submitFinished: true,
+        errorMsg: undefined,
+      };
+    default:
+      return state;
+  }
+};
+
+export const useForm = (initialState: FormState): [FormState, Dispatch<FormActionTypes>] => {
+  const [formState, formDispatch] = useReducer(formReducer, initialState);
+  const startLoading = useLoading(formState.loading, 'Loading...', 'Waiting for database.');
+  console.log('formState.loading', formState.loading);
+
+  useEffect(() => {
+    if (formState.loading) {
+      startLoading();
+    }
+  }, [formState]);
+  return [formState, formDispatch];
 };
