@@ -26,13 +26,20 @@ export type ToastProps = {
   onClose: () => void;
   type: ToastType;
   description?: string;
-  onYes?: () => void; // Only used if type='confirm'
+  onConfirm?: () => void; // Function on "Ok" or "Yes"
   color?: ToastColor;
   disableClose?: boolean; // Disables backdrop click and x (corner close) button.
   children?: JSX.Element;
 };
 export type ToastType = 'confirm' | 'alert' | 'none';
-export type ToastColor = 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success' | undefined;
+export type ToastColor =
+  | 'primary'
+  | 'secondary'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'success'
+  | undefined;
 
 const useStyles = (color: ToastColor) =>
   makeStyles((theme: Theme) =>
@@ -70,26 +77,27 @@ const Toast: FC<ToastProps> = (props) => {
       <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
       {props.description && (
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">{props.description}</DialogContentText> {props.children}
+          <DialogContentText id="alert-dialog-description">{props.description}</DialogContentText> 
+          {props.children}
         </DialogContent>
       )}
       <DialogActions>
         <MuiThemeProvider theme={buttonTheme}>
-          {props.type !== 'none' && (
+          {props.type === 'confirm' && (
             <Button variant="contained" onClick={props.onClose}>
-              {props.type === 'confirm' ? 'No' : props.type === 'alert' ? 'Ok' : ''}
+              No
             </Button>
           )}
-          {props.type === 'confirm' && (
+          {props.type !== 'none' && (
             <Button
               variant="contained"
-              color="secondary"
+              color={props.type === 'confirm' ? 'secondary' : 'default'}
               onClick={() => {
-                props.onYes?.();
+                props.onConfirm?.();
                 props.onClose();
               }}
             >
-              Yes
+              {props.type === 'confirm' ? 'Yes' : props.type === 'alert' ? 'Ok' : ''}
             </Button>
           )}
         </MuiThemeProvider>
