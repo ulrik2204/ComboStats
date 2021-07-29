@@ -1,8 +1,8 @@
 import { Population } from '@prisma/client';
 import { ThunkAction } from 'redux-thunk';
-import { APIResponse } from '../../lib/types';
 import {
   createElementFromAPI,
+  createPopulationFromAPI,
   deleteElementFromAPI,
   deletePopulationFromAPI,
   editElementFromAPI,
@@ -10,6 +10,7 @@ import {
   getPopulationElementsFromAPI,
 } from '../../lib/api-calls';
 import {
+  APIResponse,
   CreateElementBody,
   EditElementBody,
   EditPopulationBody,
@@ -27,6 +28,19 @@ export const setPopulation = (
 ): ThunkAction<void, RootState, unknown, PopulationActionTypes<Population>> => {
   return (dispatch) => {
     dispatch({ type: POPULATION_ACTIONS.SET_POPULATION, payload: population });
+  };
+};
+
+export const createPopulation = (name: string): CUDPopulationAction => {
+  return async (dispatch) => {
+    dispatch({ type: POPULATION_ACTIONS.LOADING });
+    const res = await createPopulationFromAPI({ name });
+    if (res.ok) {
+      dispatch({ type: POPULATION_ACTIONS.CU_SUCCESS, payload: res.data });
+      return res;
+    }
+    dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    return res;
   };
 };
 
@@ -58,7 +72,7 @@ export const editPopulation = (body: EditPopulationBody): CUDPopulationAction =>
     // Edit population
     const res = await editPopulationFromAPI(getState().population.population.populationId, body);
     if (res.ok) {
-      dispatch({ type: POPULATION_ACTIONS.EDIT_SUCCESS, payload: res.data });
+      dispatch({ type: POPULATION_ACTIONS.CU_SUCCESS, payload: res.data });
       return res;
     }
     dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });

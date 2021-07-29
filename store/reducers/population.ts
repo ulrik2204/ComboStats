@@ -8,7 +8,12 @@ import {
   ErrorResponse,
   GetPopulationElementsResponse,
 } from '../../lib/types';
-import { PopulationAction, PopulationActionTypes, PopulationState, POPULATION_ACTIONS } from '../../lib/types-frontend';
+import {
+  PopulationAction,
+  PopulationActionTypes,
+  PopulationState,
+  POPULATION_ACTIONS,
+} from '../../lib/types-frontend';
 
 export const populationReducer: Reducer<PopulationState, PopulationAction<object>> = (
   state: PopulationState = NULL_POPULATION_STATE,
@@ -27,13 +32,14 @@ export const populationReducer: Reducer<PopulationState, PopulationAction<object
         loading: false,
         errorMsg: (action.payload as ErrorResponse).errorMsg,
       } as PopulationState;
-    case POPULATION_ACTIONS.EDIT_SUCCESS:
+    case POPULATION_ACTIONS.CU_SUCCESS:
       return {
         ...state,
         loading: false,
         errorMsg: undefined,
         population: {
           ...(action.payload as CUDPopulationResponse).population,
+          elements: [],
         },
       } as PopulationState;
     case POPULATION_ACTIONS.ADD_ELEMENT_SUCCESS:
