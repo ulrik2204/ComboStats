@@ -1,4 +1,4 @@
-import { createStyles, Dialog, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core';
+import { createStyles, Dialog, makeStyles, Theme, useTheme } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { FC } from 'react';
@@ -36,14 +36,13 @@ const useStyles = makeStyles((theme: Theme) =>
  */
 const Popup: FC<PopupProps> = (props) => {
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const classes = useStyles();
   return (
     <Dialog
       open={props.open}
       onClose={(_event, reason) => reason !== 'backdropClick' && props.onClose()}
       fullWidth={true}
-      fullScreen={fullScreen}
+      maxWidth="xs"
       PaperProps={{ className: classes.dialog }}
     >
       <IconButton aria-label="close" className={classes.closeButton} onClick={props.onClose}>
