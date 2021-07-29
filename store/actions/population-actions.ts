@@ -1,5 +1,4 @@
 import { Population } from '@prisma/client';
-import { ThunkAction } from 'redux-thunk';
 import {
   createElementFromAPI,
   createPopulationFromAPI,
@@ -16,121 +15,117 @@ import {
   EditPopulationBody,
   GetPopulationElementsResponse,
 } from '../../lib/types';
+import { AppThunk, CUDElementThunk, CUDPopulationThunk } from '../../lib/types-frontend';
 import {
-  CUDElementAction,
-  CUDPopulationAction,
-  PopulationActionTypes,
-  POPULATION_ACTIONS,
-  RootState,
-} from '../../lib/types-frontend';
-export const setPopulation = (
-  population: Population,
-): ThunkAction<void, RootState, unknown, PopulationActionTypes<Population>> => {
+  addElementSuccess,
+  cuSuccess,
+  deleteElementSuccess,
+  deleteSuccess,
+  editElementSuccess,
+  failure,
+  getSuccess,
+  loading,
+  setPopulationAction,
+} from '../reducers/population';
+
+export const setPopulation = (population: Population): AppThunk => {
   return (dispatch) => {
-    dispatch({ type: POPULATION_ACTIONS.SET_POPULATION, payload: population });
+    dispatch(setPopulationAction(population));
   };
 };
 
-export const createPopulation = (name: string): CUDPopulationAction => {
+export const createPopulation = (name: string): CUDPopulationThunk => {
   return async (dispatch) => {
-    dispatch({ type: POPULATION_ACTIONS.LOADING });
+    dispatch(loading());
     const res = await createPopulationFromAPI({ name });
     if (res.ok) {
-      dispatch({ type: POPULATION_ACTIONS.CU_SUCCESS, payload: res.data });
+      dispatch(cuSuccess(res.data));
       return res;
     }
-    dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    dispatch(failure(res.data));
     return res;
   };
 };
 
-export const getPopulation = (): ThunkAction<
-  Promise<APIResponse<GetPopulationElementsResponse>>,
-  RootState,
-  unknown,
-  PopulationActionTypes<GetPopulationElementsResponse>
-> => {
+export const getPopulation = (): AppThunk<Promise<APIResponse<GetPopulationElementsResponse>>> => {
   return async (dispatch, getState) => {
-    dispatch({ type: POPULATION_ACTIONS.LOADING });
+    dispatch(loading());
     const res = await getPopulationElementsFromAPI(getState().population.population.populationId);
     if (res.ok) {
-      dispatch({ type: POPULATION_ACTIONS.GET_SUCCESS, payload: res.data });
+      dispatch(getSuccess(res.data));
       return res;
     }
-    dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    dispatch(failure(res.data));
     return res;
   };
 };
 
-export const editPopulation = (body: EditPopulationBody): CUDPopulationAction => {
-  return async (
-    dispatch, // Dispatch<PopulationDispatch<CUDPopulationResponse>>,
-    getState,
-  ) => {
+export const editPopulation = (body: EditPopulationBody): CUDPopulationThunk => {
+  return async (dispatch, getState) => {
     // Declare loading
-    dispatch({ type: POPULATION_ACTIONS.LOADING });
+    dispatch(loading());
     // Edit population
     const res = await editPopulationFromAPI(getState().population.population.populationId, body);
     if (res.ok) {
-      dispatch({ type: POPULATION_ACTIONS.CU_SUCCESS, payload: res.data });
+      dispatch(cuSuccess(res.data));
       return res;
     }
-    dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    dispatch(failure(res.data));
     return res;
   };
 };
 
-export const deletePopulation = (): CUDPopulationAction => {
+export const deletePopulation = (): CUDPopulationThunk => {
   return async (dispatch, getState) => {
-    dispatch({ type: POPULATION_ACTIONS.LOADING });
+    dispatch(loading());
     const res = await deletePopulationFromAPI(getState().population.population.populationId);
     if (res.ok) {
-      dispatch({ type: POPULATION_ACTIONS.DELETE_ELEMENT_SUCCESS, payload: res.data });
+      dispatch(deleteSuccess());
       return res;
     }
-    dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    dispatch(failure(res.data));
     return res;
   };
 };
 
-export const addElement = (body: Omit<CreateElementBody, 'populationId'>): CUDElementAction => {
+export const addElement = (body: Omit<CreateElementBody, 'populationId'>): CUDElementThunk => {
   return async (dispatch, getState) => {
-    dispatch({ type: POPULATION_ACTIONS.LOADING });
+    dispatch(loading());
     const res = await createElementFromAPI({
       ...body,
       populationId: getState().population.population.populationId,
     });
     if (res.ok) {
-      dispatch({ type: POPULATION_ACTIONS.ADD_ELEMENT_SUCCESS, payload: res.data });
+      dispatch(addElementSuccess(res.data));
       return res;
     }
-    dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    dispatch(failure(res.data));
     return res;
   };
 };
 
-export const editElement = (elementId: string, body: EditElementBody): CUDElementAction => {
+export const editElement = (elementId: string, body: EditElementBody): CUDElementThunk => {
   return async (dispatch) => {
-    dispatch({ type: POPULATION_ACTIONS.LOADING });
+    dispatch(loading());
     const res = await editElementFromAPI(elementId, body);
     if (res.ok) {
-      dispatch({ type: POPULATION_ACTIONS.EDIT_ELEMENT_SUCCESS, payload: res.data });
+      dispatch(editElementSuccess(res.data));
       return res;
     }
-    dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    dispatch(failure(res.data));
     return res;
   };
 };
 
-export const deleteElement = (elementId: string): CUDElementAction => {
+export const deleteElement = (elementId: string): CUDElementThunk => {
   return async (dispatch) => {
-    dispatch({ type: POPULATION_ACTIONS.LOADING });
+    dispatch(loading());
     const res = await deleteElementFromAPI(elementId);
     if (res.ok) {
-      dispatch({ type: POPULATION_ACTIONS.DELETE_ELEMENT_SUCCESS, payload: res.data });
+      dispatch(deleteElementSuccess(res.data));
       return res;
     }
-    dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    dispatch(failure(res.data));
     return res;
   };
 };

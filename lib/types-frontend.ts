@@ -1,5 +1,5 @@
-import { Action } from 'redux';
-import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { Action, AnyAction } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 import store from '../store';
 import {
   APIResponse,
@@ -28,56 +28,15 @@ export type ScenarioGroupState = AsyncState & {
 // Redux types
 export type RootState = ReturnType<typeof store.getState>;
 export type GetRootState = typeof store.getState;
-export type AppDispatch = ThunkDispatch<RootState, unknown, any>; // was: typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;
 
-export type GenericAction<ActionType, PayloadType = undefined> = Action<ActionType> &
-  (PayloadType extends undefined ? {} : { payload: PayloadType });
+// Generic thunk type
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, AnyAction>;
 
-export enum POPULATION_ACTIONS {
-  LOADING = 'LOADING',
-  FAILURE = 'FAILURE',
-  SET_POPULATION = 'SET_POPULATION',
-  GET_SUCCESS = 'GET_SUCCESS',
-  CU_SUCCESS = 'CU_SUCCESS',
-  DELETE_SUCCESS = 'DELETE_SUCCESS',
-  ADD_ELEMENT_SUCCESS = 'ADD_ELEMENT_SUCCESS',
-  EDIT_ELEMENT_SUCCESS = 'EDIT_ELEMENT_SUCCESS',
-  DELETE_ELEMENT_SUCCESS = 'DELETE_ELEMENT_SUCCESS',
-}
+// Specific thunk types
+export type CUDPopulationThunk = AppThunk<Promise<APIResponse<CUDPopulationResponse>>>;
 
-export type PopulationAction<PayloadType = undefined> = GenericAction<
-  POPULATION_ACTIONS,
-  PayloadType
->;
-
-export type PopulationLoading = PopulationAction & {
-  type: typeof POPULATION_ACTIONS.LOADING;
-};
-
-export type PopulationFailure = PopulationAction<ErrorResponse> & {
-  type: typeof POPULATION_ACTIONS.FAILURE;
-};
-
-export type PopulationSuccess<PayloadType> = PopulationAction<PayloadType>;
-
-export type PopulationActionTypes<PayloadType> =
-  | PopulationLoading
-  | PopulationFailure
-  | PopulationSuccess<PayloadType>;
-
-export type CUDPopulationAction = ThunkAction<
-  Promise<APIResponse<CUDPopulationResponse>>,
-  RootState,
-  unknown,
-  PopulationActionTypes<CUDPopulationResponse>
->;
-
-export type CUDElementAction = ThunkAction<
-  Promise<APIResponse<CUDElementResponse>>,
-  RootState,
-  unknown,
-  PopulationActionTypes<CUDElementResponse>
->;
+export type CUDElementThunk = AppThunk<Promise<APIResponse<CUDElementResponse>>>;
 
 // For FormTemplate
 export type InputForm = {
@@ -104,6 +63,9 @@ export type FormInputChange = {
   position: [number, number];
   value: any;
 };
+
+export type GenericAction<ActionType, PayloadType = undefined> = Action<ActionType> &
+  (PayloadType extends undefined ? {} : { payload: PayloadType });
 
 type FormAction<PayloadType = undefined> = GenericAction<FORM_ACTION, PayloadType>;
 
