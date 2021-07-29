@@ -1,7 +1,14 @@
-import { ThunkDispatch, ThunkAction } from 'redux-thunk';
-import store from '../store';
-import { CUDElementResponse, CUDPopulationResponse, ErrorResponse, PopulationData, ScenarioGroupData } from './types';
 import { Action } from 'redux';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import store from '../store';
+import {
+  APIResponse,
+  CUDElementResponse,
+  CUDPopulationResponse,
+  ErrorResponse,
+  PopulationData,
+  ScenarioGroupData,
+} from './types';
 
 // Some types specific to the frontend
 
@@ -59,19 +66,18 @@ export type PopulationActionTypes<PayloadType> =
   | PopulationSuccess<PayloadType>;
 
 export type CUDPopulationAction = ThunkAction<
-  void,
+  Promise<APIResponse<CUDPopulationResponse>>,
   RootState,
   unknown,
   PopulationActionTypes<CUDPopulationResponse>
 >;
 
 export type CUDElementAction = ThunkAction<
-  void,
+  Promise<APIResponse<CUDElementResponse>>,
   RootState,
   unknown,
   PopulationActionTypes<CUDElementResponse>
 >;
-
 
 // For FormTemplate
 export type InputForm = {

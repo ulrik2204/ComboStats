@@ -1,5 +1,6 @@
 import { Population } from '@prisma/client';
 import { ThunkAction } from 'redux-thunk';
+import { APIResponse } from '../../lib/types';
 import {
   createElementFromAPI,
   deleteElementFromAPI,
@@ -14,9 +15,13 @@ import {
   EditPopulationBody,
   GetPopulationElementsResponse,
 } from '../../lib/types';
-import { CUDElementAction, CUDPopulationAction, PopulationActionTypes, POPULATION_ACTIONS, RootState } from '../../lib/types-frontend';
-;
-
+import {
+  CUDElementAction,
+  CUDPopulationAction,
+  PopulationActionTypes,
+  POPULATION_ACTIONS,
+  RootState,
+} from '../../lib/types-frontend';
 export const setPopulation = (
   population: Population,
 ): ThunkAction<void, RootState, unknown, PopulationActionTypes<Population>> => {
@@ -26,7 +31,7 @@ export const setPopulation = (
 };
 
 export const getPopulation = (): ThunkAction<
-  void,
+  Promise<APIResponse<GetPopulationElementsResponse>>,
   RootState,
   unknown,
   PopulationActionTypes<GetPopulationElementsResponse>
@@ -36,9 +41,10 @@ export const getPopulation = (): ThunkAction<
     const res = await getPopulationElementsFromAPI(getState().population.population.populationId);
     if (res.ok) {
       dispatch({ type: POPULATION_ACTIONS.GET_SUCCESS, payload: res.data });
-      return;
+      return res;
     }
     dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    return res;
   };
 };
 
@@ -53,9 +59,10 @@ export const editPopulation = (body: EditPopulationBody): CUDPopulationAction =>
     const res = await editPopulationFromAPI(getState().population.population.populationId, body);
     if (res.ok) {
       dispatch({ type: POPULATION_ACTIONS.EDIT_SUCCESS, payload: res.data });
-      return;
+      return res;
     }
     dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    return res;
   };
 };
 
@@ -65,9 +72,10 @@ export const deletePopulation = (): CUDPopulationAction => {
     const res = await deletePopulationFromAPI(getState().population.population.populationId);
     if (res.ok) {
       dispatch({ type: POPULATION_ACTIONS.DELETE_ELEMENT_SUCCESS, payload: res.data });
-      return;
+      return res;
     }
     dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    return res;
   };
 };
 
@@ -80,9 +88,10 @@ export const addElement = (body: Omit<CreateElementBody, 'populationId'>): CUDEl
     });
     if (res.ok) {
       dispatch({ type: POPULATION_ACTIONS.ADD_ELEMENT_SUCCESS, payload: res.data });
-      return;
+      return res;
     }
     dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    return res;
   };
 };
 
@@ -92,9 +101,10 @@ export const editElement = (elementId: string, body: EditElementBody): CUDElemen
     const res = await editElementFromAPI(elementId, body);
     if (res.ok) {
       dispatch({ type: POPULATION_ACTIONS.EDIT_ELEMENT_SUCCESS, payload: res.data });
-      return;
+      return res;
     }
     dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    return res;
   };
 };
 
@@ -104,8 +114,9 @@ export const deleteElement = (elementId: string): CUDElementAction => {
     const res = await deleteElementFromAPI(elementId);
     if (res.ok) {
       dispatch({ type: POPULATION_ACTIONS.DELETE_ELEMENT_SUCCESS, payload: res.data });
-      return;
+      return res;
     }
     dispatch({ type: POPULATION_ACTIONS.FAILURE, payload: res.data });
+    return res;
   };
 };
