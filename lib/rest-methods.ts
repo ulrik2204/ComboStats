@@ -94,6 +94,9 @@ export const editPopulationById = async (
   // Check if the the user is the owner of the population with the provided populatiId.
   const isPopOwner = await isPopulationOwner(ownerKey.userId, populationId);
   if (!isPopOwner) return res.status(403).json({ errorMsg: RES_MSG.NOT_POPULATION_OWNER });
+  // Check if there is a population with the newName
+  const sameNamePopulation = await prisma.population.findFirst({ where: { name: newName } });
+  if (sameNamePopulation) return res.status(400).json({ errorMsg: RES_MSG.SAME_NAME_POPULATION });
   // Update the population and send it.
   const population = await prisma.population.update({
     where: {
@@ -520,7 +523,6 @@ export const getScenarioGroups = async (
 
   // Check that the user owns the population with the provided populationId.
   const isPopOwner = await isPopulationOwner(ownerKey.userId, populationId);
-  console.log(isPopOwner);
   if (!isPopOwner) return res.status(403).json({ errorMsg: RES_MSG.NOT_POPULATION_OWNER });
 
   // If the type request parameter is "all", find all scenario groups in population
