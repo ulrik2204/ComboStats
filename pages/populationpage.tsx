@@ -1,13 +1,22 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import GlobalStateDropdown from '../components/GlobalStateDropdown/index';
 import ListView from '../components/ListView/index';
 import PageTemplate from '../components/PageTemplate/index';
 import PopulationForm from '../components/PopulationForm';
 import { countElementName, sortElements } from '../lib/core';
-import { useAppSelector } from '../store/index';
+import { getPopulation } from '../store/actions/population-actions';
+import { useAppDispatch, useAppSelector } from '../store/index';
 
 const PopulationPage: FC = () => {
-  const population = useAppSelector((state) => state.population.population);
+  const populationData = useAppSelector((state) => state.population.population);
+  const appDispatch = useAppDispatch();
+
+  // When the population data is set, update it with its elements
+  useEffect(() => {
+    // Do not fetch data if the name is empty.
+    if (populationData.name === '') return;
+    appDispatch(getPopulation());
+  }, [populationData]);
 
   return (
     <PageTemplate
@@ -18,7 +27,7 @@ const PopulationPage: FC = () => {
       <div>
         <GlobalStateDropdown type="Population" />
         <ListView
-          infoList={sortElements(population.elements).map((el) => ({
+          infoList={sortElements(populationData.elements).map((el) => ({
             boldNotes: [el.name],
             fadedNotes: el.roles,
           }))}
@@ -37,7 +46,7 @@ const PopulationPage: FC = () => {
             <PopulationForm
               defaultName={defaultValue[0].boldNotes[0]}
               defaultRoles={defaultValue[0].fadedNotes ?? []}
-              defaultCount={countElementName(population.elements, defaultValue[0].boldNotes[0])}
+              defaultCount={countElementName(populationData.elements, defaultValue[0].boldNotes[0])}
               type="edit"
               afterConfirm={() => setOpenEditPopup?.(false)}
               afterDeleteAll={() => setOpenEditPopup?.(false)}
