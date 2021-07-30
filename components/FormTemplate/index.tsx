@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'flex-end',
     },
     secondButton: {
-      marginLeft: theme.spacing(3),
+      marginLeft: theme.spacing(2),
     },
   }),
 );
@@ -134,7 +134,6 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                       startIcon={<AddIcon />}
                       onClick={() => {
                         const newItems = [...input.value];
-                        console.log(newItems);
                         newItems.push('');
                         return setField([outerIndex, innerIndex], newItems);
                       }}
@@ -154,12 +153,8 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
             onClick={async () => {
               props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
               const errorResponse = await props.onConfirm();
-              console.log('Onclick from FormTemplate');
               setTimeout(() => {
-                console.log(errorResponse);
                 if (!errorResponse.errorMsg) {
-                  console.log('success from FormTemplate');
-
                   return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
                 }
                 return props.formDispatch({

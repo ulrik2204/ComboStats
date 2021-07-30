@@ -118,7 +118,6 @@ export const useLoading = (loading: boolean, title: string, description: string)
     } else if (startLoading && !loading) {
       // Close the loading and reset.
       toast({ ...toastData, open: false });
-      console.log('End loading');
       setStartLoading(false);
       return;
     }
@@ -126,7 +125,6 @@ export const useLoading = (loading: boolean, title: string, description: string)
 
   return useCallback(() => {
     setStartLoading(true);
-    console.log('Start loading');
   }, [setStartLoading, startLoading]);
 };
 
@@ -182,7 +180,6 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
         errorMsg: (action.payload as ErrorResponse).errorMsg,
         submitFinished: true,
       };
-      console.log('Failure', newStatt);
 
       // newStatt.form.forEach((row) =>
       //   row.forEach((el) => {
@@ -246,8 +243,9 @@ export const useForm = (initialForm: InputForm[][]): [FormState, Dispatch<FormAc
         description: formState.errorMsg,
         type: 'alert',
       });
+      // Error is now handled, continue as if it was a success.
+      formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
     }
-    console.log('FormState from useForm', formState);
   }, [formState]);
   return [formState, formDispatch];
 };
