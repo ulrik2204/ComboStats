@@ -5,6 +5,7 @@ import PageTemplate from '../components/PageTemplate/index';
 import { useForm, useLoading } from '../lib/utils-frontend';
 import { useAppDispatch, useAppSelector } from '../store';
 import { editPopulation, getPopulation } from '../store/actions/population-actions';
+import GlobalStateDropdown from '../components/GlobalStateDropdown/index';
 
 const Home: FC = () => {
   const [load, setLoad] = useState(false);
@@ -65,6 +66,7 @@ const Home: FC = () => {
             </FormTemplate>
           </div>
         </div>
+        <GlobalStateDropdown type="Population"/>
       </div>
     </PageTemplate>
   );

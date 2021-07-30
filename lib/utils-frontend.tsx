@@ -148,9 +148,7 @@ export const useLoginTempUser = () => {
           description: 'There was an error creating a temporary user.',
         });
       // Else the user has either become logged in, or is already logged in.
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+      setLoading(false);
     });
   }, [setLoading]);
 };

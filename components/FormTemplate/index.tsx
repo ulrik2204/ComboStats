@@ -153,15 +153,13 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
             onClick={async () => {
               props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
               const errorResponse = await props.onConfirm();
-              setTimeout(() => {
-                if (!errorResponse.errorMsg) {
-                  return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
-                }
-                return props.formDispatch({
-                  type: FORM_ACTION.SUBMIT_FAILURE,
-                  payload: errorResponse,
-                });
-              }, 2000);
+              if (!errorResponse.errorMsg) {
+                return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
+              }
+              return props.formDispatch({
+                type: FORM_ACTION.SUBMIT_FAILURE,
+                payload: errorResponse,
+              });
             }}
           >
             Confirm
