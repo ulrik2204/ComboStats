@@ -8,8 +8,10 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
-import { FC } from 'react';
+import EditIcon from '@material-ui/icons/Edit';
+import React, { FC } from 'react';
 
 type DropdownProps = {
   inputLabel: string;
@@ -17,6 +19,7 @@ type DropdownProps = {
   value: string;
   setValue: (s: string) => void;
   addButtonOnClick?: () => void;
+  editButtonOnClick?: () => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,6 +29,23 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     formDiv: {
       margin: '1em 0em 1em 0em',
+      display: 'inline-flex',
+      alignItems: 'bottom',
+    },
+    menuItemDiv: {
+      display: 'flex',
+      flexFlow: 'row',
+      width: '100%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    editButton: {
+      padding: 6,
+    },
+    editButtonDiv: {
+      display: 'flex',
+      alignItems: 'flex-end',
+      marginLeft: '0.7em',
     },
   }),
 );
@@ -51,7 +71,7 @@ const Dropdown: FC<DropdownProps> = (props) => {
         >
           {props.itemList.map((item) => (
             <MenuItem key={item} value={item}>
-              {item}
+              <div className={classes.menuItemDiv}>{item}</div>
             </MenuItem>
           ))}
           {props.addButtonOnClick && (
@@ -62,6 +82,13 @@ const Dropdown: FC<DropdownProps> = (props) => {
           )}
         </Select>
       </FormControl>
+      {props.editButtonOnClick && props.value !== '' && (
+        <div className={classes.editButtonDiv}>
+          <IconButton className={classes.editButton} onClick={() => props.editButtonOnClick?.()}>
+            <EditIcon fontSize="small" />
+          </IconButton>
+        </div>
+      )}
     </div>
   );
 };
