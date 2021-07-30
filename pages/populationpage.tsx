@@ -22,7 +22,7 @@ const PopulationPage: FC = () => {
     getPopulationsOnUserFromAPI().then((res) => {
       if (!res.ok) {
         toast({
-          title: 'Unable to retrieve your decks/populations',
+          title: 'Unable to retrieve data from server.',
           description: `Error getting data from the server: ${res.status}.`,
           type: 'alert',
           color: 'error',

@@ -18,7 +18,9 @@ import { FormActionTypes, FormState, FORM_ACTION } from '../../lib/types-fronten
 type FormTemplateProps = {
   formState: FormState;
   formDispatch: Dispatch<FormActionTypes>;
-  onSubmit: () => Promise<ErrorResponse>; // An error response with an error message if there was an error and errorMsg being undefined otherwise.
+  onConfirm: () => Promise<ErrorResponse>; // An error response with an error message if there was an error and errorMsg being undefined otherwise.
+  onSecondButtonClick?: () => Promise<ErrorResponse>;
+  secondButtonText?: string;
   children?: JSX.Element;
 };
 
@@ -41,23 +43,14 @@ const useStyles = makeStyles((theme: Theme) =>
     arrayOverDiv: {
       marginTop: '0.8em',
     },
-    rolesOverDiv: {
-      display: 'flex',
-      flexDirection: 'column',
-      marginTop: 30,
-    },
-    countBox: {
-      marginLeft: 30,
-      width: theme.spacing(8),
-    },
-    submitButtonDiv: {
+    buttonsDiv: {
       display: 'flex',
       flexFlow: 'row',
       justifyContent: 'flex-end',
     },
-    // deleteButton: {
-    //   marginLeft: theme.spacing(1),
-    // },
+    secondButton: {
+      marginLeft: theme.spacing(3),
+    },
   }),
 );
 
@@ -154,23 +147,52 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
             </div>
           );
         })}
-        <div className={classes.submitButtonDiv}>
+        <div className={classes.buttonsDiv}>
           <Button
             variant="contained"
             color="primary"
             onClick={async () => {
               props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
-              const errorResponse = await props.onSubmit();
-              if (!errorResponse.errorMsg)
-                return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
-              return props.formDispatch({
-                type: FORM_ACTION.SUBMIT_FAILURE,
-                payload: errorResponse,
-              });
+              const errorResponse = await props.onConfirm();
+              console.log('Onclick from FormTemplate');
+              setTimeout(() => {
+                console.log(errorResponse);
+                if (!errorResponse.errorMsg) {
+                  console.log('success from FormTemplate');
+
+                  return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
+                }
+                return props.formDispatch({
+                  type: FORM_ACTION.SUBMIT_FAILURE,
+                  payload: errorResponse,
+                });
+              }, 2000);
             }}
           >
-            Submit
+            Confirm
           </Button>
+          {props.onSecondButtonClick && (
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.secondButton}
+              onClick={async () => {
+                props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
+                // Check that onSecondButtonClick is not undefined (which it is not at this point)
+                const onClick =
+                  props.onSecondButtonClick ?? (() => new Promise((res, rej) => res({})));
+                const errorResponse = await onClick();
+                if (!errorResponse.errorMsg)
+                  return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
+                return props.formDispatch({
+                  type: FORM_ACTION.SUBMIT_FAILURE,
+                  payload: errorResponse,
+                });
+              }}
+            >
+              {props.secondButtonText ?? 'Delete'}
+            </Button>
+          )}
         </div>
         {props.children}
       </MuiThemeProvider>

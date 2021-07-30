@@ -2,7 +2,6 @@ import { Button } from '@material-ui/core';
 import { FC, useState } from 'react';
 import FormTemplate from '../components/FormTemplate/index';
 import PageTemplate from '../components/PageTemplate/index';
-import { FormState } from '../lib/types-frontend';
 import { useForm, useLoading } from '../lib/utils-frontend';
 import { useAppDispatch, useAppSelector } from '../store';
 import { editPopulation, getPopulation } from '../store/actions/population-actions';
@@ -13,28 +12,24 @@ const Home: FC = () => {
   const population = useAppSelector((state) => state.population);
   const dispatch = useAppDispatch();
   const [populationId, setPopualtionId] = useState('');
-  const initialState = {
-    submitFinished: false,
-    loading: false,
-    form: [
-      [
-        {
-          value: '',
-          label: 'Firstname',
-        },
-        {
-          value: '',
-          label: 'Lastname',
-        },
-        {
-          value: 0,
-          label: 'Age',
-        },
-      ],
-      [{ value: [], label: 'Dognames' }],
+  const initialForm = [
+    [
+      {
+        value: '',
+        label: 'Firstname',
+      },
+      {
+        value: '',
+        label: 'Lastname',
+      },
+      {
+        value: 0,
+        label: 'Age',
+      },
     ],
-  } as FormState;
-  const [state, stateDispatch] = useForm(initialState);
+    [{ value: [], label: 'Dognames' }],
+  ];
+  const [state, stateDispatch] = useForm(initialForm);
 
   return (
     <PageTemplate title="Home" description="Home">
@@ -62,7 +57,7 @@ const Home: FC = () => {
             <FormTemplate
               formState={state}
               formDispatch={stateDispatch}
-              onSubmit={() => {
+              onConfirm={() => {
                 return new Promise((resolve, reject) => resolve({}));
               }}
             >

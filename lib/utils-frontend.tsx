@@ -5,7 +5,13 @@ import { ToastColor as ToastColor, ToastProps } from '../components/Toast/index'
 import { createTempUserFromAPI } from './api-calls';
 import { ToastContext as ToastContext } from './contexts';
 import { ErrorResponse } from './types';
-import { FormActionTypes, FormInputChange, FormState, FORM_ACTION } from './types-frontend';
+import {
+  FormActionTypes,
+  FormInputChange,
+  FormState,
+  FORM_ACTION,
+  InputForm,
+} from './types-frontend';
 
 /**
  * Finds the default value for a variable based on the name of the variable
@@ -154,8 +160,8 @@ export const useLoginTempUser = () => {
 /**
  * Reducer for a FormState.
  * @param state The FormState
- * @param action 
- * @returns 
+ * @param action
+ * @returns
  */
 export const formReducer = (state: FormState, action: FormActionTypes) => {
   switch (action.type) {
@@ -167,8 +173,27 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
       ].value = (action.payload as FormInputChange).value;
       return newState;
     case FORM_ACTION.SUBMIT_LOADING:
+      return { ...state, loading: true, errorMsg: undefined, submitFinished: false };
+    case FORM_ACTION.SUBMIT_FAILURE:
       // Set all input values to empty
-      const newStat = { ...state, loading: true, errorMsg: undefined, submitFinished: false };
+      const newStatt = {
+        ...state,
+        loading: false,
+        errorMsg: (action.payload as ErrorResponse).errorMsg,
+        submitFinished: true,
+      };
+      console.log('Failure', newStatt);
+
+      // newStatt.form.forEach((row) =>
+      //   row.forEach((el) => {
+      //     if (typeof el.value === 'number') el.value = 0;
+      //     else el.value = '';
+      //   }),
+      // );
+      return newStatt;
+    case FORM_ACTION.SUBMIT_SUCCESS:
+      // Set all input values to empty
+      const newStat = { ...state, loading: false, errorMsg: undefined, submitFinished: true };
       newStat.form.forEach((row) =>
         row.forEach((el) => {
           if (typeof el.value === 'number') el.value = 0;
@@ -176,34 +201,53 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
         }),
       );
       return newStat;
-    case FORM_ACTION.SUBMIT_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        submitFinished: false,
-        errorMsg: (action.payload as ErrorResponse).errorMsg,
-      };
-    case FORM_ACTION.SUBMIT_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        submitFinished: true,
-        errorMsg: undefined,
-      };
     default:
       return state;
   }
 };
 
-export const useForm = (initialState: FormState): [FormState, Dispatch<FormActionTypes>] => {
+/**
+ * Function that finds a the value of an input in a FormState by their label.
+ * @param formState The FormState to find the value in.
+ * @param label The label of the input field to find.
+ * @returns The value of the input field with the provided label or undefined if none are found.
+ */
+const findValueInForm = (formState: FormState, label: string): string | undefined => {
+  for (const row of formState.form) {
+    for (const input of row) {
+      if (input.label === label) return input.value;
+    }
+  }
+};
+
+/**
+ * Hook to provide basic form functionality. Desingned to be used together with FormTemplate.
+ * @param initialForm The initial state of the form (as InputForm[][]) used to create the form.
+ * @returns The formState and the dispatch function to change it.
+ */
+export const useForm = (initialForm: InputForm[][]): [FormState, Dispatch<FormActionTypes>] => {
+  const initialState: FormState = {
+    loading: false,
+    submitFinished: false,
+    form: initialForm,
+    findValue: (label: string) => findValueInForm(formState, label),
+  };
   const [formState, formDispatch] = useReducer(formReducer, initialState);
+  const toast = useToast();
   const startLoading = useLoading(formState.loading, 'Loading...', 'Waiting for database.');
-  console.log('formState.loading', formState.loading);
 
   useEffect(() => {
     if (formState.loading) {
       startLoading();
     }
+    if (formState.submitFinished && formState.errorMsg) {
+      toast({
+        title: 'Error submitting form.',
+        description: formState.errorMsg,
+        type: 'alert',
+      });
+    }
+    console.log('FormState from useForm', formState);
   }, [formState]);
   return [formState, formDispatch];
 };

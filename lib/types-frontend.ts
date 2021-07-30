@@ -56,6 +56,7 @@ export type FormState = {
   form: InputForm[][];
   loading: boolean;
   submitFinished: boolean;
+  findValue: (label: string) => string | undefined;
   errorMsg?: string;
 };
 
