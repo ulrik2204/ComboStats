@@ -1,4 +1,3 @@
-import { Population } from '@prisma/client';
 import {
   createElementFromAPI,
   createPopulationFromAPI,
@@ -25,14 +24,7 @@ import {
   failure,
   getSuccess,
   loading,
-  setPopulationAction,
 } from '../reducers/population';
-
-export const setPopulation = (population: Population): AppThunk => {
-  return (dispatch) => {
-    dispatch(setPopulationAction(population));
-  };
-};
 
 export const createPopulation = (name: string): CUDPopulationThunk => {
   return async (dispatch) => {

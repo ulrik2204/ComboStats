@@ -1,22 +1,13 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import GlobalStateDropdown from '../components/GlobalStateDropdown/index';
 import ListView from '../components/ListView/index';
 import PageTemplate from '../components/PageTemplate/index';
 import PopulationForm from '../components/PopulationForm';
 import { countElementName, sortElements } from '../lib/core';
-import { getPopulation } from '../store/actions/population-actions';
-import { useAppDispatch, useAppSelector } from '../store/index';
+import { useAppSelector } from '../store/index';
 
 const PopulationPage: FC = () => {
   const populationData = useAppSelector((state) => state.population.population);
-  const appDispatch = useAppDispatch();
-
-  // When the population data is set, update it with its elements
-  useEffect(() => {
-    // Do not fetch data if the name is empty.
-    if (populationData.name === '') return;
-    appDispatch(getPopulation());
-  }, [populationData]);
 
   return (
     <PageTemplate
