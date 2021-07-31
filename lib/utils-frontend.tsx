@@ -8,6 +8,7 @@ import { ErrorResponse } from './types';
 import {
   FormActionTypes,
   FormInputChange,
+  FormInteraction,
   FormState,
   FORM_ACTION,
   InputForm,
@@ -216,6 +217,40 @@ const findValueInForm = (formState: FormState, label: string): string | undefine
 };
 
 /**
+ * An action creater for setting a value in the formState by their label.
+ * @param formState The formState to set the value in.
+ * @param label The label of the field to set.
+ * @param value The new value of the field to set.
+ * @returns A FormInteraction object (for dipatching) to set
+ * the new value for the input field with that object.
+ * If no input field with that label is found, it returns an action that will do nothing.
+ * (Sets the value of the first input field in the last row to be the same value as it already is).
+ */
+const setValueActionInForm = (formState: FormState, label: string, value: any): FormInteraction => {
+  const form = formState.form;
+  for (let i = 0; i < form.length; i++) {
+    for (let j = 0; i < form[i].length; i++) {
+      if (form[i][j].label === label)
+        return {
+          type: FORM_ACTION.FIELD,
+          payload: {
+            position: [i, j],
+            value: value,
+          },
+        };
+    }
+  }
+  const [outer, inner] = [form.length, form[0].length];
+  return {
+    type: FORM_ACTION.FIELD,
+    payload: {
+      position: [outer, inner],
+      value: form[outer][inner].value,
+    },
+  };
+};
+
+/**
  * Hook to provide basic form functionality. Desingned to be used together with FormTemplate.
  * @param initialForm The initial state of the form (as InputForm[][]) used to create the form.
  * @returns The formState and the dispatch function to change it.
@@ -226,6 +261,7 @@ export const useForm = (initialForm: InputForm[][]): [FormState, Dispatch<FormAc
     submitFinished: false,
     form: initialForm,
     findValue: (label: string) => findValueInForm(formState, label),
+    setValueAction: (label: string, value: any) => setValueActionInForm(formState, label, value),
   };
   const [formState, formDispatch] = useReducer(formReducer, initialState);
   const toast = useToast();

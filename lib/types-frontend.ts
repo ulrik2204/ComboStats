@@ -56,8 +56,9 @@ export type FormState = {
   form: InputForm[][];
   loading: boolean;
   submitFinished: boolean;
-  findValue: (label: string) => string | undefined;
   errorMsg?: string;
+  findValue: (label: string) => string | undefined;
+  setValueAction: (label: string, value: any) => FormInteraction;
 };
 
 export type FormInputChange = {
@@ -78,7 +79,7 @@ type FormSubmitProgress = FormAction & {
   type: FORM_ACTION.SUBMIT_LOADING | typeof FORM_ACTION.SUBMIT_SUCCESS;
 };
 
-type FormInteraction = FormAction<FormInputChange> & {
+export type FormInteraction = FormAction<FormInputChange> & {
   type: typeof FORM_ACTION.FIELD;
 };
 
