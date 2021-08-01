@@ -43,6 +43,7 @@ export type InputForm = {
   value: any;
   label: string;
   className?: string;
+  type?: 'string' | 'number';
 };
 
 export enum FORM_ACTION {

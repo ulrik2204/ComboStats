@@ -70,7 +70,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
             <div key={outerIndex}>
               {rowInputs.map((input, innerIndex) => {
                 if (!Array.isArray(input.value)) {
-                  const type = typeof input.value;
+                  const type = input.type ?? typeof input.value;
                   return (
                     <TextField
                       key={`TextField${outerIndex},${innerIndex}`}
@@ -80,12 +80,11 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                       className={`${classes.inputFields} ${input.className}`}
                       onChange={(e) => {
                         const value = e.target.value.toString();
-                        if (typeof input.value === 'string')
-                          return setField([outerIndex, innerIndex], value);
-                        else if (typeof input.value === 'number') {
+                        if (type === 'string') return setField([outerIndex, innerIndex], value);
+                        else if (type === 'number') {
                           return setField(
                             [outerIndex, innerIndex],
-                            parseInt(value === '' ? '0' : value),
+                            value === '' ? '' : parseInt(value),
                           );
                         }
                       }}

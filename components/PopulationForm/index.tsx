@@ -58,7 +58,7 @@ const PopulationForm: FC<PopulationFormProps> = (props) => {
   const initialForm: InputForm[][] = [
     [
       { label: nameLabel, value: props.defaultName },
-      { label: countLabel, value: props.defaultCount, className: classes.countBox },
+      { label: countLabel, value: props.defaultCount, className: classes.countBox, type: 'number' },
     ],
     [{ label: rolesLabel, value: props.defaultRoles }],
   ];
