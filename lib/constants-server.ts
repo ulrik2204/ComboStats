@@ -5,7 +5,7 @@ export const RES_MSG = {
   INVALID_REQUEST_BODY(requestBody: object): string {
     return `Request body should be structured: ${JSON.stringify(requestBody)}`;
   },
-  EMTPY_OR_ZERO_ERROR: 'Cannot have an emtpy scenario or a zero count/minCount element.',
+  EMTPY_OR_ZERO_ERROR: 'Cannot have an emtpy scenario or a zero or negative count/minCount element.',
   INVALID_CREDENTIALS: 'Invalid or no user credentials were provided.',
   NOT_POPULATION_OWNER: 'You do not have permissions to this population.',
   INVALID_SCENARIO_GROUP_TYPE:

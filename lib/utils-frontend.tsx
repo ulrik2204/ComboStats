@@ -84,7 +84,7 @@ export const useToast = () => {
       children,
     }: ToastOptions) => {
       const newToastData: ToastProps = {
-        open: open ?? true,
+        open: open === undefined ? true : open,
         title,
         onClose: onClose ?? (() => setToastData({ ...newToastData, open: false })),
         type,
@@ -193,10 +193,18 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
       newStat.form.forEach((row) =>
         row.forEach((el) => {
           if (typeof el.value === 'number') el.value = 0;
+          else if (Array.isArray(el.value)) el.value = [];
           else el.value = '';
         }),
       );
       return newStat;
+    case FORM_ACTION.SUBMIT_RESET:
+      return {
+        ...state,
+        errorMsg: undefined,
+        submitFinished: true,
+        loading: false,
+      };
     default:
       return state;
   }
@@ -208,7 +216,7 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
  * @param label The label of the input field to find.
  * @returns The value of the input field with the provided label or undefined if none are found.
  */
-const findValueInForm = (formState: FormState, label: string): string | undefined => {
+const findValueInForm = (formState: FormState, label: string): any | undefined => {
   for (const row of formState.form) {
     for (const input of row) {
       if (input.label === label) return input.value;
@@ -240,7 +248,7 @@ const setValueActionInForm = (formState: FormState, label: string, value: any): 
         };
     }
   }
-  const [outer, inner] = [form.length, form[0].length];
+  const [outer, inner] = [form.length - 1, 0];
   return {
     type: FORM_ACTION.FIELD,
     payload: {
@@ -277,8 +285,8 @@ export const useForm = (initialForm: InputForm[][]): [FormState, Dispatch<FormAc
         description: formState.errorMsg,
         type: 'alert',
       });
-      // Error is now handled, continue as if it was a success.
-      formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
+      // Error is now handled, reset submit.
+      formDispatch({ type: FORM_ACTION.SUBMIT_RESET });
     }
   }, [formState]);
   return [formState, formDispatch];

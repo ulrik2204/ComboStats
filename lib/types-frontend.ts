@@ -50,6 +50,7 @@ export enum FORM_ACTION {
   SUBMIT_LOADING = 'SUBMIT_LOADING',
   SUBMIT_FAILURE = 'FAILURE',
   SUBMIT_SUCCESS = 'SUCCESS',
+  SUBMIT_RESET = 'SUBMIT_RESET',
 }
 
 export type FormState = {
@@ -57,7 +58,7 @@ export type FormState = {
   loading: boolean;
   submitFinished: boolean;
   errorMsg?: string;
-  findValue: (label: string) => string | undefined;
+  findValue: (label: string) => any | undefined;
   setValueAction: (label: string, value: any) => FormInteraction;
 };
 
@@ -76,7 +77,10 @@ type FormFailure = FormAction<ErrorResponse> & {
 };
 
 type FormSubmitProgress = FormAction & {
-  type: FORM_ACTION.SUBMIT_LOADING | typeof FORM_ACTION.SUBMIT_SUCCESS;
+  type:
+    | FORM_ACTION.SUBMIT_LOADING
+    | typeof FORM_ACTION.SUBMIT_SUCCESS
+    | typeof FORM_ACTION.SUBMIT_RESET;
 };
 
 export type FormInteraction = FormAction<FormInputChange> & {
@@ -84,3 +88,10 @@ export type FormInteraction = FormAction<FormInputChange> & {
 };
 
 export type FormActionTypes = FormFailure | FormSubmitProgress | FormInteraction;
+
+export type ListObject = {
+  id: string;
+  name: string;
+  notes: string[];
+  count: number;
+};

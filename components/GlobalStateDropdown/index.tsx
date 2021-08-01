@@ -18,6 +18,7 @@ import Popup from '../Popup/index';
 
 type GlobalStateDropdownProps = {
   type: 'Population' | 'Successes';
+  className?: string;
 };
 
 type ThisState = {
@@ -121,10 +122,6 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
       });
   }, [props.type]);
 
-  useEffect(() => {
-    console.log('PopulationState change', populationState.population);
-  }, [populationState.population]);
-
   // Update the global population to the popualtion with name as currentPopulationName
   // when currentPopulationName changes.
   useEffect(() => {
@@ -200,7 +197,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
   }, [thisState.openPopup]);
 
   return (
-    <div>
+    <div className={props.className}>
       <Popup
         title={`${thisState.popupState} ${usedLabel}`}
         open={thisState.openPopup}
@@ -242,7 +239,6 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
         }}
         editButtonOnClick={() => {
           thisDispatch(setField('popupState', 'Edit'));
-          console.log('Edit button');
           thisDispatch(setField('openPopup', true));
           formDispatch(nameFormState.setValueAction('Name', thisState.currentName));
         }}

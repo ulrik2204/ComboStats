@@ -50,7 +50,8 @@ export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) 
       const newElements = state.population.elements.filter(
         (el) => el.elementId !== editedEl.elementId,
       );
-      state.population.elements = newElements;
+      newElements.push(editedEl);
+      state.population.elements = sortElements(newElements);
     })
     .addCase(deleteElementSuccess, (state, action) => {
       // Remove the element that was deleted (with the same id) from the array

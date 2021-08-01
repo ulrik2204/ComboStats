@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [toastData, setToastData] = useState<ToastProps>({
     open: false,
     title: '',
-    onClose: () => setToastData({ ...toastData, open: false }),
+    onClose: () => {},
     type: 'none',
   });
   // Update localStorage with population when population changes

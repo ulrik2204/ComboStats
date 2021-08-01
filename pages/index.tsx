@@ -1,11 +1,11 @@
 import { Button } from '@material-ui/core';
 import { FC, useState } from 'react';
 import FormTemplate from '../components/FormTemplate/index';
+import GlobalStateDropdown from '../components/GlobalStateDropdown/index';
 import PageTemplate from '../components/PageTemplate/index';
-import { useForm, useLoading } from '../lib/utils-frontend';
+import { useForm, useLoading, useToast } from '../lib/utils-frontend';
 import { useAppDispatch, useAppSelector } from '../store';
 import { editPopulation, getPopulation } from '../store/actions/population-actions';
-import GlobalStateDropdown from '../components/GlobalStateDropdown/index';
 
 const Home: FC = () => {
   const [load, setLoad] = useState(false);
@@ -13,6 +13,7 @@ const Home: FC = () => {
   const population = useAppSelector((state) => state.population);
   const dispatch = useAppDispatch();
   const [populationId, setPopualtionId] = useState('');
+  const toast = useToast();
   const initialForm = [
     [
       {
@@ -53,12 +54,14 @@ const Home: FC = () => {
           <Button onClick={() => dispatch(editPopulation({ newName: 'Super' }))}>
             Change name
           </Button>
+          <Button onClick={() => toast({ title: 'Hei ho toast', type: 'alert' })}>Toast</Button>
           <Button onClick={() => dispatch(getPopulation())}>Get population els</Button>
           <div>
             <FormTemplate
               formState={state}
               formDispatch={stateDispatch}
               onConfirm={() => {
+                toast({ title: 'Hei', description: 'Something', type: 'alert' });
                 return new Promise((resolve, reject) => resolve({}));
               }}
             >
@@ -66,7 +69,7 @@ const Home: FC = () => {
             </FormTemplate>
           </div>
         </div>
-        <GlobalStateDropdown type="Population"/>
+        <GlobalStateDropdown type="Population" />
       </div>
     </PageTemplate>
   );

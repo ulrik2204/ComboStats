@@ -54,6 +54,7 @@ export const createPopulation = async (
   const sameNamePop = await prisma.population.findFirst({
     where: {
       name: popName,
+      ownerId: ownerKey.userId,
     },
   });
   if (sameNamePop) return res.status(400).json({ errorMsg: RES_MSG.SAME_NAME_POPULATION });
@@ -156,7 +157,7 @@ export const getPopulationsOnUser = async (
       ownerId: ownerKey.userId,
     },
     orderBy: {
-      name: 'desc',
+      name: 'asc',
     },
   });
   res.status(200).json({ allUserPopulations });
@@ -185,7 +186,7 @@ export const getPopulationElements = async (
     include: {
       elements: {
         orderBy: {
-          name: 'desc',
+          name: 'asc',
         },
       },
     },
@@ -224,11 +225,11 @@ export const createElement = async (
   if (!isPopOwner) return res.status(403).json({ errorMsg: RES_MSG.NOT_POPULATION_OWNER });
 
   // Check if there already is an element in that population with the given name.
-  const sameNameElement = await prisma.element.findFirst({ where: { name } });
+  const sameNameElement = await prisma.element.findFirst({ where: { name, populationId } });
   if (sameNameElement) return res.status(400).json({ errorMsg: RES_MSG.SAME_NAME_ELEMENT });
 
   // If count is 0, create nothing.
-  if (count === 0) return res.status(400).json({ errorMsg: RES_MSG.EMTPY_OR_ZERO_ERROR });
+  if (count <= 0) return res.status(400).json({ errorMsg: RES_MSG.EMTPY_OR_ZERO_ERROR });
 
   // Create count amount of elements with given parameters.
   const element: Element = await prisma.element.create({
@@ -307,12 +308,15 @@ export const editElementById = async (
   // Check that the user is the owner if the population the element is in.
   const isPopOwner = await isPopulationOwner(ownerKey.userId, oldElement.populationId);
   if (!isPopOwner) return res.status(403).json({ errorMsg: RES_MSG.NOT_POPULATION_OWNER });
-  // Check if there already is an elment with that name in the population
-  const sameNameElement = await prisma.element.findFirst({ where: { name: newName } });
-  if (sameNameElement) return res.status(400).json({ errorMsg: RES_MSG.SAME_NAME_ELEMENT });
+  // If the new name is different from the old name,
+  // check if there already is an elment with the new namein the population,
+  if (oldElement.name !== newName) {
+    const sameNameElement = await prisma.element.findFirst({ where: { name: newName } });
+    if (sameNameElement) return res.status(400).json({ errorMsg: RES_MSG.SAME_NAME_ELEMENT });
+  }
 
   // If the count is 0, edit nothing and return error.
-  if (newCount === 0) return res.status(400).json({ errorMsg: RES_MSG.EMTPY_OR_ZERO_ERROR });
+  if (newCount <= 0) return res.status(400).json({ errorMsg: RES_MSG.EMTPY_OR_ZERO_ERROR });
 
   // Else, update element as normal and send in response.
   const element = await prisma.element.update({
@@ -532,7 +536,7 @@ export const getScenarioGroups = async (
         populationId,
       },
       orderBy: {
-        name: 'desc',
+        name: 'asc',
       },
     });
     return res.status(200).json({ scenarioGroups: allScenarioGroups });
@@ -549,7 +553,7 @@ export const getScenarioGroups = async (
       type,
     },
     orderBy: {
-      name: 'desc',
+      name: 'asc',
     },
   });
   return res.status(200).json({ scenarioGroups });
@@ -613,7 +617,7 @@ export const createScenario = async (
       },
       requiredRoles: {
         orderBy: {
-          requiredRole: 'desc',
+          requiredRole: 'asc',
         },
       },
     },

@@ -14,12 +14,14 @@ import { Dispatch, FC } from 'react';
 import { buttonTheme } from '../../lib/themes';
 import { ErrorResponse } from '../../lib/types';
 import { FormActionTypes, FormState, FORM_ACTION } from '../../lib/types-frontend';
+import { ToastOptions, useToast } from '../../lib/utils-frontend';
 
 type FormTemplateProps = {
   formState: FormState;
   formDispatch: Dispatch<FormActionTypes>;
   onConfirm: () => Promise<ErrorResponse>; // An error response with an error message if there was an error and errorMsg being undefined otherwise.
   onSecondButtonClick?: () => Promise<ErrorResponse>;
+  toastOnSecondButtonClick?: Omit<ToastOptions, 'onConfirm'>;
   secondButtonText?: string;
   children?: JSX.Element;
 };
@@ -56,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const FormTemplate: FC<FormTemplateProps> = (props) => {
   const classes = useStyles();
+  const toast = useToast();
   // const [formState, formDispatch] = useReducer(props.setForm, props.form);
   const setField = (position: [number, number], value: any) =>
     props.formDispatch({ type: FORM_ACTION.FIELD, payload: { position, value } });
@@ -67,18 +70,24 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
             <div key={outerIndex}>
               {rowInputs.map((input, innerIndex) => {
                 if (!Array.isArray(input.value)) {
+                  const type = typeof input.value;
                   return (
                     <TextField
                       key={`TextField${outerIndex},${innerIndex}`}
                       label={input.label}
                       value={input.value}
-                      type={typeof input.value}
+                      type={type}
                       className={`${classes.inputFields} ${input.className}`}
                       onChange={(e) => {
+                        const value = e.target.value.toString();
                         if (typeof input.value === 'string')
-                          return setField([outerIndex, innerIndex], e.target.value);
-                        else if (typeof input.value === 'number')
-                          return setField([outerIndex, innerIndex], parseInt(e.target.value));
+                          return setField([outerIndex, innerIndex], value);
+                        else if (typeof input.value === 'number') {
+                          return setField(
+                            [outerIndex, innerIndex],
+                            parseInt(value === '' ? '0' : value),
+                          );
+                        }
                       }}
                     />
                   );
@@ -170,16 +179,25 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
               color="secondary"
               className={classes.secondButton}
               onClick={async () => {
-                props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
-                // Check that onSecondButtonClick is not undefined (which it is not at this point)
-                const onClick =
-                  props.onSecondButtonClick ?? (() => new Promise((res, rej) => res({})));
-                const errorResponse = await onClick();
-                if (!errorResponse.errorMsg)
-                  return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
-                return props.formDispatch({
-                  type: FORM_ACTION.SUBMIT_FAILURE,
-                  payload: errorResponse,
+                // Wrap the funtionality in a function so that it can be confirmed
+                const secondButtonFunc = async () => {
+                  props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
+                  // Check that onSecondButtonClick is not undefined (which it is not at this point)
+                  const onClick =
+                    props.onSecondButtonClick ?? (() => new Promise((res, rej) => res({})));
+                  const errorResponse = await onClick();
+                  if (!errorResponse.errorMsg)
+                    return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
+                  return props.formDispatch({
+                    type: FORM_ACTION.SUBMIT_FAILURE,
+                    payload: errorResponse,
+                  });
+                };
+                // Throw toast if props allow it.
+                if (!props.toastOnSecondButtonClick) return await secondButtonFunc();
+                toast({
+                  ...props.toastOnSecondButtonClick,
+                  onConfirm: async () => await secondButtonFunc(),
                 });
               }}
             >

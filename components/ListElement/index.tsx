@@ -1,14 +1,10 @@
 import { ListItem, ListItemText, makeStyles, Theme } from '@material-ui/core';
 import { FC } from 'react';
-
-export type ListEl = {
-  boldNotes: string[];
-  fadedNotes?: string[];
-};
+import { ListObject } from '../../lib/types-frontend';
 
 type ListElementProps = {
-  item: ListEl;
-  item2?: ListEl;
+  item: ListObject;
+  item2?: ListObject;
   onClick?: () => void;
 };
 
@@ -31,14 +27,11 @@ const ListElement: FC<ListElementProps> = (props) => {
   return (
     <ListItem className={classes.listElDiv} dense onClick={props.onClick}>
       <div>
-        <ListItemText
-          primary={<b>{props.item.boldNotes.join(', ')}</b>}
-          secondary={props.item.fadedNotes?.join(', ')}
-        />
+        <ListItemText primary={<b>{props.item.name}</b>} secondary={props.item.notes.join(', ')} />
         {props.item2 && (
           <ListItemText
-            primary={<b>{props.item2?.boldNotes?.join(', ')}</b>}
-            secondary={props.item2?.fadedNotes?.join(', ')}
+            primary={<b>{props.item2?.name}</b>}
+            secondary={props.item2?.notes.join(', ')}
           />
         )}
       </div>
