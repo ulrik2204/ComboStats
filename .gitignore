@@ -24,11 +24,16 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# local env files 
+#(temporarily .env file because of prisma only supports .env, even for running on the local database)
+.env 
 .env.local
-.env.development.local
 .env.test.local
-.env.production.local
+#.env.development
+#.env.production
 
 # vercel
 .vercel
+
+# Random local testfile
+lib/test.ts

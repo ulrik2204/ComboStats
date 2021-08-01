@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+// previewFeature referenatialActions allows for onDelete: Cascade
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["referentialActions"] 
+}
+
+model UserKey {
+  userId      String       @id @default(cuid())
+  profile     Profile?
+  populations Population[]
+}
+
+model Profile {
+  username     String  @id
+  passwordhash String
+  userId       String
+  user         UserKey @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model Element {
+  elementId    String              @id @default(cuid())
+  name         String
+  roles        String[]
+  count        Int // The amount of copies of this element in the population.
+  populationId String
+  inPopulation Population          @relation(fields: [populationId], references: [populationId], onDelete: Cascade)
+  inScenario   ElementInScenario[]
+}
+
+// A scenario happens if all elements in requiredElements with at least 
+model Scenario {
+  scenarioId       String              @id @default(cuid())
+  name             String              
+  scenarioGroupId  String
+  scenarioGroup    ScenarioGroup       @relation(fields: [scenarioGroupId], references: [scenarioGroupId], onDelete: Cascade)
+  requiredElements ElementInScenario[]
+  requiredRoles RoleInScenario[]
+}
+
+model ElementInScenario {
+  elementId  String
+  element    Element  @relation(fields: [elementId], references: [elementId], onDelete: Cascade)
+  minCount      Int // The minimum count of that element required in sample for the scenario to be registered.
+  scenarioId String
+  scenario   Scenario @relation(fields: [scenarioId], references: [scenarioId], onDelete: Cascade)
+
+  @@id([elementId, scenarioId])
+}
+
+model RoleInScenario {
+  requiredRole String
+  minCount Int // The minimum count of elements with that role required in sample for the scenario to be registered.
+  scenarioId String
+  scenario Scenario @relation(fields: [scenarioId], references: [scenarioId], onDelete: Cascade)
+  @@id([requiredRole, scenarioId])
+}
+
+model Population {
+  populationId   String          @id @default(cuid())
+  name           String
+  ownerId        String
+  owner          UserKey         @relation(fields: [ownerId], references: [userId], onDelete: Cascade)
+  elements       Element[]
+  scenarioGroups ScenarioGroup[]
+  // A population has connected scenario groups for calculation using the population.
+}
+
+model ScenarioGroup {
+  scenarioGroupId String            @id @default(cuid())
+  name            String
+  scenarios       Scenario[]
+  type            ScenarioGroupType
+  populationId    String
+  population      Population        @relation(fields: [populationId], references: [populationId], onDelete: Cascade)
+}
+
+enum ScenarioGroupType {
+  SUCCESSES
+  FAILURES
+  ACTIONS
+}

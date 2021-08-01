@@ -1,10 +1,10 @@
 import { Button, makeStyles, MuiThemeProvider, Theme } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { buttonTheme } from '../../lib/themes';
-import { useConfirmDialog } from '../../lib/util';
-import ListElement, { ListEl } from '../ListElement';
+import { ListObject } from '../../lib/types-frontend';
+import { useToast } from '../../lib/utils-frontend';
+import ListElement from '../ListElement';
 import Popup from '../Popup/index';
 
 /**
@@ -16,19 +16,23 @@ import Popup from '../Popup/index';
  * and the optional corresponding element that can also be edited.
  */
 type ListViewProps = {
-  infoList: ListEl[];
-  corrMoreInfoList?: ListEl[];
-  onDeleteAllClick: () => void;
+  infoList: ListObject[];
+  corrMoreInfoList?: ListObject[];
+  // onDeleteAllClick: () => void;
+  showAddButton: boolean;
   addItemTitle: string;
   addItemForm: (setOpenAddPopup?: Dispatch<SetStateAction<boolean>>) => JSX.Element;
   editItemTitle: string;
   editItemForm: (
-    defaultValue: [ListEl, ListEl | undefined],
+    clickedItem: { item: ListObject; corrItem?: ListObject },
     setOpenEditPopup?: Dispatch<SetStateAction<boolean>>,
   ) => JSX.Element;
 };
 
-function requireTwoSameLengthArrays<T extends readonly [] | readonly any[]>(t: T, u: { [K in keyof T]: any }): void {}
+function requireTwoSameLengthArrays<T extends readonly [] | readonly any[]>(
+  t: T,
+  u: { [K in keyof T]: any },
+): void {}
 
 const useStyles = makeStyles((theme: Theme) => ({
   viewDiv: {
@@ -56,45 +60,54 @@ const ListView: FC<ListViewProps> = (props) => {
   if (props.corrMoreInfoList) requireTwoSameLengthArrays(props.infoList, props.corrMoreInfoList);
   const [openAddPopup, setOpenAddPopup] = useState(false);
   const [openEditPopup, setOpenEditPopup] = useState(false);
-  const [clickedElement, setClickedElement] = useState<[ListEl, ListEl | undefined]>([
-    { boldNotes: [''], fadedNotes: [] },
-    undefined,
-  ]);
-  const confirmAction = useConfirmDialog();
+  const [clickedElement, setClickedElement] = useState<{ item: ListObject; corrItem?: ListObject }>(
+    { item: { id: '', name: '', notes: [], count: 0 } },
+  );
+  const toast = useToast();
   const classes = useStyles();
 
   return (
     <div className={classes.viewDiv}>
       <div className={classes.buttonDiv}>
-        <Popup open={openAddPopup} onClose={() => setOpenAddPopup(false)} title={props.addItemTitle}>
+        <Popup
+          open={openAddPopup}
+          onClose={() => setOpenAddPopup(false)}
+          title={props.addItemTitle}
+        >
           {props.addItemForm(setOpenAddPopup)}
         </Popup>
         <MuiThemeProvider theme={buttonTheme}>
-          <Button
+          {/* <Button
             variant="contained"
             color="default"
             onClick={() =>
-              confirmAction(
-                'Delete all items in list?',
-                'confirm',
-                props.onDeleteAllClick,
-                'This action is irreversible.',
-              )
+              toast({
+                title: 'Delete all items in list?',
+                type: 'confirm',
+                onYes: props.onDeleteAllClick,
+                description: 'This action is irreversible.',
+              })
             }
           >
             Delete all
-          </Button>
-          <Button
-            variant="contained"
-            color="default"
-            className={classes.addButton}
-            onClick={() => setOpenAddPopup(true)}
-          >
-            Add
-          </Button>
+          </Button> */}
+          {props.showAddButton && (
+            <Button
+              variant="contained"
+              color="default"
+              className={classes.addButton}
+              onClick={() => setOpenAddPopup(true)}
+            >
+              Add
+            </Button>
+          )}
         </MuiThemeProvider>
       </div>
-      <Popup open={openEditPopup} onClose={() => setOpenEditPopup(false)} title={props.editItemTitle}>
+      <Popup
+        open={openEditPopup}
+        onClose={() => setOpenEditPopup(false)}
+        title={props.editItemTitle}
+      >
         {props.editItemForm(clickedElement, setOpenEditPopup)}
       </Popup>
       <MuiThemeProvider theme={buttonTheme}>
@@ -102,21 +115,22 @@ const ListView: FC<ListViewProps> = (props) => {
           {(() => {
             const listElements: JSX.Element[] = [];
             for (let i = 0; i < props.infoList.length; i++) {
-              const el = props.infoList[i];
-              const corrEl = props.corrMoreInfoList?.[i];
-              const elItem = { boldNotes: el.boldNotes, fadedNotes: el.fadedNotes };
-              const corrElItem = corrEl ? { boldNotes: corrEl.boldNotes, fadedNotes: corrEl.fadedNotes } : undefined;
-              listElements.push(
+              const item = props.infoList[i];
+              const corrItem = props.corrMoreInfoList?.[i];
+              const items = [];
+              const element = (id: string) => (
                 <ListElement
-                  item={elItem}
-                  item2={corrElItem}
-                  key={uuidv4()}
+                  item={item}
+                  item2={corrItem}
+                  key={`${item.id} ${id}`}
                   onClick={() => {
                     setOpenEditPopup(true);
-                    setClickedElement([elItem, corrElItem]);
+                    setClickedElement({ item, corrItem });
                   }}
-                />,
+                />
               );
+              for (let x = 0; x < item.count; x++) items.push(element(x.toString()));
+              listElements.push(...items);
             }
             return listElements;
           })()}
@@ -126,3 +140,21 @@ const ListView: FC<ListViewProps> = (props) => {
   );
 };
 export default ListView;
+
+// props.infoList.reduce((listElements: JSX.Element[], item: ListObject, i) => {
+//   const corrItem = props.corrMoreInfoList?.[i];
+//   const items = [];
+//   const listElement = (
+//     <ListElement
+//       item={item}
+//       item2={corrItem}
+//       key={uuidv4()}
+//       onClick={() => {
+//         setOpenEditPopup(true);
+//         setClickedElement({ item, corrItem });
+//       }}
+//     />
+//   );
+//   for (let x = 0; x < item.count; i++) items.push(listElement);
+//   return [...listElements, ...items];
+// }, [])}
