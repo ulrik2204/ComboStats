@@ -49,6 +49,7 @@
       const invalidItem: any = variable.find((item) => {
         // An item is invalid if the item does not match the type
         // of any of the elements in the validType array.
+        if (!Array.isArray(validType)) return false;
         const itemOfValidType = validType.find((type) => isValidType(item, type));
         return itemOfValidType == undefined;
       });
