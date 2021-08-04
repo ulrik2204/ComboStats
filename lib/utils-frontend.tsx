@@ -100,13 +100,12 @@ export const useToast = () => {
   );
 };
 
-export const useLoading = (loading: boolean, title: string, description: string): (() => void) => {
+export const useLoading = (loading: boolean, title: string, description: string) => {
   const { toastData } = useContext(ToastContext);
-  const [startLoading, setStartLoading] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    if (startLoading && loading) {
+    if (loading) {
       toast({
         title,
         type: 'none',
@@ -116,17 +115,12 @@ export const useLoading = (loading: boolean, title: string, description: string)
         children: <LoadSpinner />,
       });
       return;
-    } else if (startLoading && !loading) {
+    } else if (!loading) {
       // Close the loading and reset.
       toast({ ...toastData, open: false });
-      setStartLoading(false);
       return;
     }
-  }, [loading, startLoading]);
-
-  return useCallback(() => {
-    setStartLoading(true);
-  }, [setStartLoading, startLoading]);
+  }, [loading]);
 };
 
 export const useLoginTempUser = () => {
@@ -140,7 +134,6 @@ export const useLoginTempUser = () => {
 
   useEffect(() => {
     setLoading(true);
-    startLoading();
     createTempUserFromAPI().then((res) => {
       if (!res.ok)
         return toast({
@@ -273,12 +266,9 @@ export const useForm = (initialForm: InputForm[][]): [FormState, Dispatch<FormAc
   };
   const [formState, formDispatch] = useReducer(formReducer, initialState);
   const toast = useToast();
-  const startLoading = useLoading(formState.loading, 'Loading...', 'Waiting for database.');
+  useLoading(formState.loading, 'Loading...', 'Waiting for database.');
 
   useEffect(() => {
-    if (formState.loading) {
-      startLoading();
-    }
     if (formState.submitFinished && formState.errorMsg) {
       toast({
         title: 'Error submitting form.',
