@@ -9,32 +9,32 @@ import {
   GetPopulationElementsResponse,
 } from '../../lib/types';
 
-export const loading = createAction('loading');
-export const failure = createAction<ErrorResponse>('failure');
-export const cuSuccess = createAction<CUDPopulationResponse>('cuSuccess');
-export const addElementSuccess = createAction<CUDElementResponse>('addElementSuccess');
-export const editElementSuccess = createAction<CUDElementResponse>('editElementSuccess');
-export const deleteElementSuccess = createAction<CUDElementResponse>('deleteElementSuccess');
-export const getSuccess = createAction<GetPopulationElementsResponse>('getSuccess');
+export const loadingAction = createAction('loading');
+export const failureAction = createAction<ErrorResponse>('failure');
+export const cuSuccessAction = createAction<CUDPopulationResponse>('cuSuccess');
+export const addElementSuccessAction = createAction<CUDElementResponse>('addElementSuccess');
+export const editElementSuccessAction = createAction<CUDElementResponse>('editElementSuccess');
+export const deleteElementSuccessAction = createAction<CUDElementResponse>('deleteElementSuccess');
+export const getSuccessAction = createAction<GetPopulationElementsResponse>('getSuccess');
 export const setPopulationAction = createAction<Population>('setPopulation');
-export const deleteSuccess = createAction('deletePopulation');
+export const deleteSuccessAction = createAction('deletePopulation');
 
 export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) => {
   builder
-    .addCase(loading, (state, action) => {
+    .addCase(loadingAction, (state, action) => {
       state.loading = true;
       state.errorMsg = undefined;
     })
-    .addCase(failure, (state, action) => {
+    .addCase(failureAction, (state, action) => {
       state.loading = false;
       state.errorMsg = action.payload.errorMsg;
     })
-    .addCase(cuSuccess, (state, action) => {
+    .addCase(cuSuccessAction, (state, action) => {
       state.loading = false;
       state.errorMsg = undefined;
       state.population = { ...action.payload.population, elements: [] };
     })
-    .addCase(addElementSuccess, (state, action) => {
+    .addCase(addElementSuccessAction, (state, action) => {
       state.loading = false;
       state.errorMsg = undefined;
       state.population = {
@@ -42,7 +42,7 @@ export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) 
         elements: sortElements([...state.population.elements, action.payload.element]),
       };
     })
-    .addCase(editElementSuccess, (state, action) => {
+    .addCase(editElementSuccessAction, (state, action) => {
       state.loading = false;
       state.errorMsg = undefined;
       // Remove the element that was edited (with the same id) from the array, and push the new one.
@@ -53,7 +53,7 @@ export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) 
       newElements.push(editedEl);
       state.population.elements = sortElements(newElements);
     })
-    .addCase(deleteElementSuccess, (state, action) => {
+    .addCase(deleteElementSuccessAction, (state, action) => {
       // Remove the element that was deleted (with the same id) from the array
       state.loading = false;
       state.errorMsg = undefined;
@@ -63,7 +63,7 @@ export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) 
       );
       state.population.elements = newElements;
     })
-    .addCase(getSuccess, (state, action) => {
+    .addCase(getSuccessAction, (state, action) => {
       state.loading = false;
       state.errorMsg = undefined;
       state.population = action.payload.population;
@@ -73,101 +73,7 @@ export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) 
       state.errorMsg = undefined;
       state.population = { ...action.payload, elements: [] };
     })
-    .addCase(deleteSuccess, (state, action) => {
+    .addCase(deleteSuccessAction, (state, action) => {
       state = NULL_POPULATION_STATE;
     });
 });
-
-// export const populationsReducer: Reducer<PopulationState, PopulationAction<object>> = (
-//   state: PopulationState = NULL_POPULATION_STATE,
-//   action: PopulationActionTypes<CUDPopulationResponse | ErrorResponse>,
-// ) => {
-//   switch (action.type) {
-//     case POPULATION_ACTIONS.LOADING:
-//       return {
-//         ...state,
-//         loading: true,
-//         errorMsg: undefined,
-//       } as PopulationState;
-//     case POPULATION_ACTIONS.FAILURE:
-//       return {
-//         ...state,
-//         loading: false,
-//         errorMsg: (action.payload as ErrorResponse).errorMsg,
-//       } as PopulationState;
-//     case POPULATION_ACTIONS.CU_SUCCESS:
-//       return {
-//         ...state,
-//         loading: false,
-//         errorMsg: undefined,
-//         population: {
-//           ...(action.payload as CUDPopulationResponse).population,
-//           elements: [],
-//         },
-//       } as PopulationState;
-//     case POPULATION_ACTIONS.ADD_ELEMENT_SUCCESS:
-//       return {
-//         ...state,
-//         loading: false,
-//         errorMsg: undefined,
-//         population: {
-//           ...state.population,
-//           elements: sortElements([
-//             ...state.population.elements,
-//             (action.payload as CUDElementResponse).element,
-//           ]),
-//         },
-//       } as PopulationState;
-//     case POPULATION_ACTIONS.EDIT_ELEMENT_SUCCESS:
-//       // Remove the element that was edited (with the same id) from the array, and push the new one.
-//       const editedEl = (action.payload as CUDElementResponse).element;
-//       const newElements = state.population.elements.filter(
-//         (el) => el.elementId !== editedEl.elementId,
-//       );
-//       newElements.push(editedEl);
-//       return {
-//         ...state,
-//         loading: false,
-//         errorMsg: undefined,
-//         population: {
-//           ...state.population,
-//           elements: sortElements(newElements),
-//         },
-//       } as PopulationState;
-//     case POPULATION_ACTIONS.DELETE_ELEMENT_SUCCESS:
-//       // Remove the element that was deleted (with the same id) from the array
-//       const deletedEl = (action.payload as CUDElementResponse).element;
-//       const newEls = state.population.elements.filter((el) => el.elementId !== deletedEl.elementId);
-//       return {
-//         ...state,
-//         loading: false,
-//         errorMsg: undefined,
-//         population: {
-//           ...state.population,
-//           elements: sortElements(newEls),
-//         },
-//       } as PopulationState;
-//     case POPULATION_ACTIONS.GET_SUCCESS:
-//       return {
-//         loading: false,
-//         errorMsg: undefined,
-//         population: {
-//           ...(action.payload as GetPopulationElementsResponse).population,
-//         },
-//       } as PopulationState;
-//     case POPULATION_ACTIONS.SET_POPULATION:
-//       return {
-//         loading: false,
-//         errorMsg: undefined,
-//         population: {
-//           ...state.population,
-//           ...(action.payload as Population),
-//           elements: [],
-//         },
-//       } as PopulationState;
-//     case POPULATION_ACTIONS.DELETE_SUCCESS:
-//       return NULL_POPULATION_STATE;
-//     default:
-//       return state;
-//   }
-// };

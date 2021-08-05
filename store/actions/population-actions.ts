@@ -16,108 +16,108 @@ import {
 } from '../../lib/types';
 import { AppThunk, CUDElementThunk, CUDPopulationThunk } from '../../lib/types-frontend';
 import {
-  addElementSuccess,
-  cuSuccess,
-  deleteElementSuccess,
-  deleteSuccess,
-  editElementSuccess,
-  failure,
-  getSuccess,
-  loading,
+  addElementSuccessAction,
+  cuSuccessAction,
+  deleteElementSuccessAction,
+  deleteSuccessAction,
+  editElementSuccessAction,
+  failureAction,
+  getSuccessAction,
+  loadingAction,
 } from '../reducers/population';
 
-export const createPopulation = (name: string): CUDPopulationThunk => {
+export const createPopulationTAction = (name: string): CUDPopulationThunk => {
   return async (dispatch) => {
-    dispatch(loading());
+    dispatch(loadingAction());
     const res = await createPopulationFromAPI({ name });
     if (res.ok) {
-      dispatch(cuSuccess(res.data));
+      dispatch(cuSuccessAction(res.data));
       return res;
     }
-    dispatch(failure(res.data));
+    dispatch(failureAction(res.data));
     return res;
   };
 };
 
-export const getPopulation = (): AppThunk<Promise<APIResponse<GetPopulationElementsResponse>>> => {
+export const getPopulationTAction = (): AppThunk<Promise<APIResponse<GetPopulationElementsResponse>>> => {
   return async (dispatch, getState) => {
-    dispatch(loading());
+    dispatch(loadingAction());
     const res = await getPopulationElementsFromAPI(getState().population.population.populationId);
     if (res.ok) {
-      dispatch(getSuccess(res.data));
+      dispatch(getSuccessAction(res.data));
       return res;
     }
-    dispatch(failure(res.data));
+    dispatch(failureAction(res.data));
     return res;
   };
 };
 
-export const editPopulation = (body: EditPopulationBody): CUDPopulationThunk => {
+export const editPopulationTAction = (body: EditPopulationBody): CUDPopulationThunk => {
   return async (dispatch, getState) => {
     // Declare loading
-    dispatch(loading());
+    dispatch(loadingAction());
     // Edit population
     const res = await editPopulationFromAPI(getState().population.population.populationId, body);
     if (res.ok) {
-      dispatch(cuSuccess(res.data));
+      dispatch(cuSuccessAction(res.data));
       return res;
     }
-    dispatch(failure(res.data));
+    dispatch(failureAction(res.data));
     return res;
   };
 };
 
-export const deletePopulation = (): CUDPopulationThunk => {
+export const deletePopulationTAction = (): CUDPopulationThunk => {
   return async (dispatch, getState) => {
-    dispatch(loading());
+    dispatch(loadingAction());
     const res = await deletePopulationFromAPI(getState().population.population.populationId);
     if (res.ok) {
-      dispatch(deleteSuccess());
+      dispatch(deleteSuccessAction());
       return res;
     }
-    dispatch(failure(res.data));
+    dispatch(failureAction(res.data));
     return res;
   };
 };
 
-export const addElement = (body: Omit<CreateElementBody, 'populationId'>): CUDElementThunk => {
+export const addElementTAction = (body: Omit<CreateElementBody, 'populationId'>): CUDElementThunk => {
   return async (dispatch, getState) => {
-    dispatch(loading());
+    dispatch(loadingAction());
     const res = await createElementFromAPI({
       ...body,
       populationId: getState().population.population.populationId,
     });
     if (res.ok) {
-      dispatch(addElementSuccess(res.data));
+      dispatch(addElementSuccessAction(res.data));
       return res;
     }
-    dispatch(failure(res.data));
+    dispatch(failureAction(res.data));
     return res;
   };
 };
 
-export const editElement = (elementId: string, body: EditElementBody): CUDElementThunk => {
+export const editElementTAction = (elementId: string, body: EditElementBody): CUDElementThunk => {
   return async (dispatch) => {
-    dispatch(loading());
+    dispatch(loadingAction());
     const res = await editElementFromAPI(elementId, body);
     if (res.ok) {
-      dispatch(editElementSuccess(res.data));
+      dispatch(editElementSuccessAction(res.data));
       return res;
     }
-    dispatch(failure(res.data));
+    dispatch(failureAction(res.data));
     return res;
   };
 };
 
-export const deleteElement = (elementId: string): CUDElementThunk => {
+export const deleteElementTAction = (elementId: string): CUDElementThunk => {
   return async (dispatch) => {
-    dispatch(loading());
+    dispatch(loadingAction());
     const res = await deleteElementFromAPI(elementId);
     if (res.ok) {
-      dispatch(deleteElementSuccess(res.data));
+      dispatch(deleteElementSuccessAction(res.data));
       return res;
     }
-    dispatch(failure(res.data));
+    dispatch(failureAction(res.data));
     return res;
   };
 };

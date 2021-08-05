@@ -5,10 +5,10 @@ import { GetAllPopulationsResponse } from '../../lib/types';
 import { InputForm } from '../../lib/types-frontend';
 import { useForm, useToast } from '../../lib/utils-frontend';
 import {
-  createPopulation,
-  deletePopulation,
-  editPopulation,
-  getPopulation,
+  createPopulationTAction,
+  deletePopulationTAction,
+  editPopulationTAction,
+  getPopulationTAction,
 } from '../../store/actions/population-actions';
 import { useAppDispatch, useAppSelector } from '../../store/index';
 import { setPopulationAction } from '../../store/reducers/population';
@@ -141,7 +141,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
       if (thisState.currentName === '') return;
       // TODO: Add if statement if type='successes' as well
       // Make the request to get elements/scenarios and throw a message if it fails.
-      appDispatch(getPopulation()).then((res) => {
+      appDispatch(getPopulationTAction()).then((res) => {
         if (!res.ok)
           return toast({
             title: 'Unable to retrieve cards, try again later',
@@ -205,8 +205,8 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
             if (!name) return {};
             let response;
             if (thisState.popupState === 'Add')
-              response = await appDispatch(createPopulation(name));
-            else response = await appDispatch(editPopulation({ newName: name }));
+              response = await appDispatch(createPopulationTAction(name));
+            else response = await appDispatch(editPopulationTAction({ newName: name }));
             thisDispatch(setField('openPopup', false));
             return response.data;
           }}
@@ -214,7 +214,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
             thisState.popupState !== 'Edit'
               ? undefined
               : async () => {
-                  const response = await appDispatch(deletePopulation());
+                  const response = await appDispatch(deletePopulationTAction());
                   thisDispatch(setField('openPopup', false));
                   return response.data;
                 }

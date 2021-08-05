@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { APIResponse, CUDElementResponse } from '../../lib/types';
 import { InputForm } from '../../lib/types-frontend';
 import { useForm, useToast } from '../../lib/utils-frontend';
-import { addElement, deleteElement, editElement } from '../../store/actions/population-actions';
+import { addElementTAction, deleteElementTAction, editElementTAction } from '../../store/actions/population-actions';
 import { useAppDispatch } from '../../store/index';
 import FormTemplate from '../FormTemplate/index';
 
@@ -89,10 +89,10 @@ const PopulationForm: FC<PopulationFormProps> = (props) => {
 
           // We now know that the input is legal, perform dispatch.
           let res: APIResponse<CUDElementResponse>;
-          if (props.type === 'add') res = await appDispatch(addElement({ name, roles, count }));
+          if (props.type === 'add') res = await appDispatch(addElementTAction({ name, roles, count }));
           else
             res = await appDispatch(
-              editElement(props.elementId, { newName: name, newRoles: roles, newCount: count }),
+              editElementTAction(props.elementId, { newName: name, newRoles: roles, newCount: count }),
             );
 
           // Clear all input data if appropriate.
@@ -110,7 +110,7 @@ const PopulationForm: FC<PopulationFormProps> = (props) => {
             ? undefined
             : async () => {
                 // Just perform the delete action
-                const res = await appDispatch(deleteElement(props.elementId));
+                const res = await appDispatch(deleteElementTAction(props.elementId));
                 props.afterDeleteAll?.();
                 return res.data;
               }
