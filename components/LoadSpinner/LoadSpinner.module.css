@@ -1,6 +1,6 @@
 .overDiv {
   display: flex;
-  width: 20em;
+  width: auto;
   height: 8em;
   align-items: center;
   justify-content: center;
