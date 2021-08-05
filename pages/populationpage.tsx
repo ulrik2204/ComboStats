@@ -42,8 +42,14 @@ const PopulationPage: FC = () => {
             count,
           }))}
           addItemTitle="Add card"
-          addItemForm={() => (
-            <PopulationForm defaultName="" defaultRoles={[]} defaultCount={1} type="add" />
+          addItemForm={(setOpenAddPopup) => (
+            <PopulationForm
+              defaultName=""
+              defaultRoles={[]}
+              defaultCount={1}
+              type="add"
+              afterConfirm={() => setOpenAddPopup?.(false)}
+            />
           )}
           editItemTitle="Edit card(s)"
           editItemForm={(clickedItem, setOpenEditPopup) => (

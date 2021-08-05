@@ -63,7 +63,6 @@ const ListView: FC<ListViewProps> = (props) => {
   const [clickedElement, setClickedElement] = useState<{ item: ListObject; corrItem?: ListObject }>(
     { item: { id: '', name: '', notes: [], count: 0 } },
   );
-  const toast = useToast();
   const classes = useStyles();
 
   return (
