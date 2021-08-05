@@ -126,20 +126,20 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
   // when currentPopulationName changes.
   useEffect(() => {
     if (relevantList.length > 0) {
+      console.log('thisState currentName change', thisState.currentName);
+
       // if (populationState.population.name === thisState.currentName && thisState.currentName !== "" && populationState.population.name !== "") return;
       const globalWithName = (relevantList as (Population | ScenarioGroup)[]).find(
         (el: Population | ScenarioGroup) => el.name === thisState.currentName,
       );
       if (globalWithName === undefined) return;
-      const oldGlobal = { ...relevantGlobal };
+
       // Set currentName to the name of that global
       setRelevantGlobal(globalWithName);
       // Get population elements.
       // If currentName is an empty string, the global state is the null object and there is nothing to get.
       if (thisState.currentName === '') return;
-      // If the global population id is the same, do not make the reqeust for elements.
       // TODO: Add if statement if type='successes' as well
-      if (globalWithName.populationId === oldGlobal.populationId) return;
       // Make the request to get elements/scenarios and throw a message if it fails.
       appDispatch(getPopulation()).then((res) => {
         if (!res.ok)
@@ -149,6 +149,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
             type: 'alert',
             color: 'error',
           });
+        console.log(res);
       });
     }
   }, [thisState.currentName]);
@@ -157,14 +158,8 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
   useEffect(() => {
     // Only fetch data when the popup is closed
     if (thisState.openPopup) return;
-    if (populationState.loading) return;
-    // if (populationState.population.name === thisState.currentName) return;
-    // if (
-    //   populationState.population.name === thisState.currentName &&
-    //   thisState.currentName !== '' &&
-    //   populationState.population.name !== ''
-    // )
-    // return;
+    // if (populationState.loading) return;
+
     chooseGet().then((res) => {
       if (!res.ok) {
         return toast({
@@ -192,7 +187,6 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
       } else if (props.type === 'Successes') {
         // TODO: Set currentName and scenarioGroups to the name of the successesState
       }
-      // Then update the name.
     });
   }, [thisState.openPopup]);
 

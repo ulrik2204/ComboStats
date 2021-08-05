@@ -64,11 +64,6 @@ const PopulationForm: FC<PopulationFormProps> = (props) => {
   ];
   const [formState, formDispatch] = useForm(initialForm);
 
-  const clearInputData = () => {
-    [nameLabel, countLabel, rolesLabel].forEach((label) => {
-      formDispatch(formState.setValueAction(label, ''));
-    });
-  };
   return (
     <div>
       <FormTemplate

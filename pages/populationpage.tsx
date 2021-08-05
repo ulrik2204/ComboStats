@@ -4,6 +4,7 @@ import GlobalStateDropdown from '../components/GlobalStateDropdown/index';
 import ListView from '../components/ListView/index';
 import PageTemplate from '../components/PageTemplate/index';
 import PopulationForm from '../components/PopulationForm';
+import { useLoading } from '../lib/utils-frontend';
 import { useAppSelector } from '../store/index';
 
 const useStyles = makeStyles(() =>
@@ -18,8 +19,11 @@ const useStyles = makeStyles(() =>
 );
 
 const PopulationPage: FC = () => {
-  const populationData = useAppSelector((state) => state.population.population);
+  const populationState = useAppSelector((state) => state.population);
+  const populationData = populationState.population;
   const classes = useStyles();
+  // Show loading icon when population is loading
+  useLoading(populationState.loading, 'Loading data...', 'Fetching your data from the server.');
 
   return (
     <PageTemplate
