@@ -3,8 +3,9 @@ import cookie from 'cookie';
 import { sign } from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { RES_MSG, USER_KEY_COOKIE } from './constants-server';
-import { fixRoles } from './core';
+import { fixRoles, fixScenario } from './core';
 import prisma from './prisma';
+import { fixScenarios } from './test';
 import {
   CreateTempUserResponse,
   CUDElementResponse,
@@ -480,7 +481,7 @@ export const getScenarioGroupById = async (
   if (!isSgOwner) return res.status(403).json({ errorMsg: RES_MSG.NOT_SCENARIO_GROUP_OWNER });
 
   // Find the scenarioGroup and related data
-  const scenarioGroup = await prisma.scenarioGroup.findUnique({
+  const scenarioGroupGet = await prisma.scenarioGroup.findUnique({
     where: {
       scenarioGroupId,
     },
@@ -497,7 +498,13 @@ export const getScenarioGroupById = async (
       },
     },
   });
-  if (!scenarioGroup) return res.status(404).json({ errorMsg: RES_MSG.NO_SCENARIO_GROUP_WITH_ID });
+  if (!scenarioGroupGet)
+    return res.status(404).json({ errorMsg: RES_MSG.NO_SCENARIO_GROUP_WITH_ID });
+  // Order the sent data properly.
+  const scenarioGroup = {
+    ...scenarioGroupGet,
+    scenarios: fixScenarios(scenarioGroupGet.scenarios),
+  };
   return res.status(200).json({ scenarioGroup });
 };
 
@@ -594,7 +601,7 @@ export const createScenario = async (
   if (!isSgOwner) return res.status(403).json({ errorMsg: RES_MSG.NOT_SCENARIO_GROUP_OWNER });
 
   // Create scenario with required elements and required roles and send it to user.
-  const scenario = await prisma.scenario.create({
+  const scenarioCreate = await prisma.scenario.create({
     data: {
       scenarioGroupId,
       name,
@@ -622,7 +629,8 @@ export const createScenario = async (
       },
     },
   });
-
+  // Fix the scenario before it is sent back.
+  const scenario = fixScenario(scenarioCreate);
   res.status(201).json({ scenario });
 };
 
@@ -700,7 +708,7 @@ export const editScenarioById = async (
   }
 
   // Edit scenario with required elements and required roles and send it to user.
-  const scenario = await prisma.scenario.update({
+  const scenarioEdit = await prisma.scenario.update({
     where: {
       scenarioId,
     },
@@ -732,6 +740,8 @@ export const editScenarioById = async (
       requiredRoles: true,
     },
   });
+  // Fix the edited sceanrio before it is sent.
+  const scenario = fixScenario(scenarioEdit);
 
   res.status(200).json({ scenario });
 };

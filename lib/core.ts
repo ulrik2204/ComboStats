@@ -1,4 +1,5 @@
-import { Element } from '.prisma/client';
+import { Element, ElementInScenario, RoleInScenario } from '.prisma/client';
+import { ScenarioData } from './types';
 /**
  * Making an element's appearence consistent by
  * sorting the roles aphabetically and removing
@@ -9,7 +10,8 @@ import { Element } from '.prisma/client';
 export const identifyEl = (element: Element): Element => {
   const resultEl: Element = { ...element, name: element.name, roles: [] };
   // Remove duplicates and make copy
-  for (const role of element.roles) if (resultEl.roles.indexOf(role) === -1) resultEl.roles.push(role);
+  for (const role of element.roles)
+    if (resultEl.roles.indexOf(role) === -1) resultEl.roles.push(role);
   // Sort roles alphabetically, filter out empty string roles and make all roles lower case.
   resultEl.roles = resultEl.roles
     .sort((a, b) => (a === b ? 0 : a > b ? 1 : -1))
@@ -65,7 +67,10 @@ export const shuffle = (list: any[]): any[] => {
     currentIndex--;
 
     // And swap it with the current element.
-    [resultList[currentIndex], resultList[randomIndex]] = [resultList[randomIndex], resultList[currentIndex]];
+    [resultList[currentIndex], resultList[randomIndex]] = [
+      resultList[randomIndex],
+      resultList[currentIndex],
+    ];
   }
   return resultList;
 };
@@ -182,4 +187,80 @@ export const draw = (population: Element[], drawCount: number): Element[] => {
   // @ts-ignore
   for (let i = 0; i < drawCount; i++) drawn.push(population.pop());
   return sortElements(drawn);
+};
+
+/**
+ * Fixes the requiredElements such that they are sorted by the element name.
+ * @param requiredElements The requiredElements to fix.
+ * @returns The requiredElements sorted by each element name.
+ */
+export const fixRequiredElements = (
+  requiredElements: (ElementInScenario & {
+    element: Element;
+  })[],
+) => {
+  return requiredElements.sort((el1, el2) => {
+    const ele1 = el1.element.name.toLowerCase();
+    const ele2 = el2.element.name.toLowerCase();
+    return ele1 === ele2 ? 0 : ele1 > ele2 ? 1 : -1;
+  });
+};
+
+/**
+ * Fixes the requiredRoles such that the roles roles are lowercase,
+ * non-empty strings and sorted alphabetically.
+ * @param requiredRoles The RoleInScenario object list to fix.
+ * @returns The fixed RoleInScenario object list.
+ */
+export const fixRequiredRoles = (requiredRoles: RoleInScenario[]) => {
+  const newRequiredRoles: RoleInScenario[] = [];
+  for (const role of requiredRoles) {
+    const roleNames = newRequiredRoles.map((reqEl) => reqEl.requiredRole);
+    if (roleNames.indexOf(role.requiredRole) === -1) newRequiredRoles.push(role);
+  }
+  return newRequiredRoles
+    .sort((a, b) =>
+      a.requiredRole === b.requiredRole ? 0 : a.requiredRole > b.requiredRole ? 1 : -1,
+    )
+    .filter((role) => role.requiredRole.trim() !== '')
+    .map((role) => {
+      const newRole = { ...role };
+      newRole.requiredRole = role.requiredRole.trim().toLowerCase();
+      return newRole;
+    });
+};
+
+/**
+ * Fix a scenario such that all the requiredRoles are sorted alphabetically
+ * and all the elements are sorted by their name.
+ * @param scenario The scenario to fix.
+ * @returns The fixed ScenarioData object.
+ */
+export const fixScenario = (scenario: ScenarioData) => {
+  const newScenario = { ...scenario };
+  // Fix the requiredElements.
+  newScenario.requiredElements = fixRequiredElements(scenario.requiredElements);
+  // Fix the roles in the required roles.
+  newScenario.requiredRoles = fixRequiredRoles(scenario.requiredRoles);
+  return newScenario;
+};
+
+/**
+ * Fixes the scenarios in the list and sorts them by name.
+ * @param scenarios
+ * @returns
+ */
+export const fixScenarios = (scenarios: ScenarioData[]) => {
+  // Sort scenarios such that elements are sorted alphabetically in the scenario
+  // and that the scenarios are sorted alphabetically by name
+
+  // Sort all the requiredElements by element name
+  const newScenarios: ScenarioData[] = [];
+  scenarios.forEach((scenario) => {
+    // Push the edited stuff to newScenarios
+    const newScenario = fixScenario(scenario);
+    newScenarios.push(newScenario);
+  });
+  // Return the newScenarios sorted by name.
+  return newScenarios.sort((a, b) => (a.name === b.name ? 0 : a.name > b.name ? 1 : -1));
 };
