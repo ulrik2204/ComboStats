@@ -5,6 +5,8 @@ import {
   APIResponse,
   CUDElementResponse,
   CUDPopulationResponse,
+  CUDScenarioGroupResponse,
+  CUScenarioResponse,
   ErrorResponse,
   PopulationData,
   ScenarioGroupData,
@@ -37,6 +39,11 @@ export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unk
 export type CUDPopulationThunk = AppThunk<Promise<APIResponse<CUDPopulationResponse>>>;
 
 export type CUDElementThunk = AppThunk<Promise<APIResponse<CUDElementResponse>>>;
+
+export type CUDScenarioGroupThunk = AppThunk<Promise<APIResponse<CUDScenarioGroupResponse>>>;
+
+export type CUSceanrioThunk = AppThunk<Promise<APIResponse<CUScenarioResponse>>>;
+
 
 // For FormTemplate
 export type InputForm = {

@@ -17,7 +17,7 @@ import {
 import { AppThunk, CUDElementThunk, CUDPopulationThunk } from '../../lib/types-frontend';
 import {
   addElementSuccessAction,
-  cuSuccessAction,
+  cuPopulationSuccessAction,
   deleteElementSuccessAction,
   deleteSuccessAction,
   editElementSuccessAction,
@@ -31,7 +31,7 @@ export const createPopulationTAction = (name: string): CUDPopulationThunk => {
     dispatch(loadingAction());
     const res = await createPopulationFromAPI({ name });
     if (res.ok) {
-      dispatch(cuSuccessAction(res.data));
+      dispatch(cuPopulationSuccessAction(res.data));
       return res;
     }
     dispatch(failureAction(res.data));
@@ -59,7 +59,7 @@ export const editPopulationTAction = (body: EditPopulationBody): CUDPopulationTh
     // Edit population
     const res = await editPopulationFromAPI(getState().population.population.populationId, body);
     if (res.ok) {
-      dispatch(cuSuccessAction(res.data));
+      dispatch(cuPopulationSuccessAction(res.data));
       return res;
     }
     dispatch(failureAction(res.data));
