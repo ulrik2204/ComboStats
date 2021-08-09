@@ -1,4 +1,4 @@
-import { ScenarioGroupType } from '@prisma/client';
+import { ScenarioGroup, ScenarioGroupType } from '@prisma/client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { NULL_FAILURES_STATE, NULL_SUCCESSES_STATE } from '../../lib/constants-frontend';
 import { fixScenarios } from '../../lib/core';
@@ -26,6 +26,11 @@ const scenarioGroupSlice = (scenarioGroupType: ScenarioGroupType) =>
       failure: (state, action: PayloadAction<ErrorResponse>) => {
         state.loading = false;
         state.errorMsg = action.payload.errorMsg;
+      },
+      setScenarioGroup: (state, action: PayloadAction<ScenarioGroup>) => {
+        state.loading = false;
+        state.errorMsg = undefined;
+        state.scenarioGroup = { ...action.payload, scenarios: [] };
       },
       cuScenarioGroupSuccess: (state, action: PayloadAction<CUDScenarioGroupResponse>) => {
         state.loading = false;

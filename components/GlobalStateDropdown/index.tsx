@@ -1,7 +1,7 @@
 import { Population, ScenarioGroup } from '@prisma/client';
 import { FC, useCallback, useEffect, useReducer } from 'react';
 import { getPopulationsOnUserFromAPI, getScenarioGroupsFromAPI } from '../../lib/api-calls';
-import { GetAllPopulationsResponse } from '../../lib/types';
+import { GetAllPopulationsResponse, GetScenarioGroupsResponse } from '../../lib/types';
 import { InputForm } from '../../lib/types-frontend';
 import { useForm, useToast } from '../../lib/utils-frontend';
 import {
@@ -10,8 +10,14 @@ import {
   editPopulationTAction,
   getPopulationTAction,
 } from '../../store/actions/population-actions';
+import {
+  createScenarioGroupTAction,
+  deleteScenarioGroupTAction,
+  editScenarioGroupTAction,
+} from '../../store/actions/scenario-group-actions';
 import { useAppDispatch, useAppSelector } from '../../store/index';
 import { setPopulationAction } from '../../store/reducers/population';
+import { successesActions } from '../../store/reducers/scenario-group';
 import Dropdown from '../Dropdown/index';
 import FormTemplate from '../FormTemplate/index';
 import Popup from '../Popup/index';
@@ -97,23 +103,25 @@ const initialNameForm: InputForm[][] = [[{ value: '', label: 'Name' }]];
  */
 const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
   const toast = useToast();
-  const [nameFormState, formDispatch] = useForm(initialNameForm);
+  const [formState, formDispatch] = useForm(initialNameForm);
   const populationState = useAppSelector((state) => state.population);
+  const successesState = useAppSelector((state) => state.successes);
   const appDispatch = useAppDispatch();
   const [thisState, thisDispatch] = useReducer(thisStateReducer, initialState);
   const usedLabel = props.type === 'population' ? 'deck' : 'combos';
   const relevantList =
     props.type === 'population' ? thisState.populations : thisState.scenarioGroups;
   // TODO: Add if statement os relevant global also can be successes
-  const relevantGlobal = populationState.population;
+  // const relevantGlobal =
+  //   props.type === 'population' ? populationState.population : successesState.scenarioGroup;
   const setRelevantGlobal = (newValue: any) => {
     if (props.type === 'population') return appDispatch(setPopulationAction(newValue));
     // TODO: CHANGE WHEN SCENARIO GROUP REDUCER IS CREATED
-    else return appDispatch(setPopulationAction(newValue));
+    else return appDispatch(successesActions.setScenarioGroup(newValue));
   };
 
   // Find the correct get api call depending on type
-  const chooseGet = useCallback(() => {
+  const relevantGetFromAPI = useCallback(() => {
     if (props.type === 'population') return getPopulationsOnUserFromAPI();
     else
       return getScenarioGroupsFromAPI({
@@ -160,7 +168,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
     if (thisState.openPopup) return;
     // if (populationState.loading) return;
 
-    chooseGet().then((res) => {
+    relevantGetFromAPI().then((res) => {
       if (!res.ok) {
         return toast({
           title: 'Unable to retrieve data from server.',
@@ -182,10 +190,19 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
             ],
           ),
         );
-
         return;
-      } else if (props.type === 'successes') {
-        // TODO: Set currentName and scenarioGroups to the name of the successesState
+      } else {
+        // If props.type is 'successes
+        thisDispatch(
+          setFields(
+            ['currentName', 'scenarioGroups'],
+            [
+              populationState.population.name,
+              (res.data as GetScenarioGroupsResponse).scenarioGroups,
+            ],
+          ),
+        );
+        return;
       }
     });
   }, [thisState.openPopup]);
@@ -198,15 +215,20 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
         onClose={() => thisDispatch(setField('openPopup', false))}
       >
         <FormTemplate
-          formState={nameFormState}
+          formState={formState}
           formDispatch={formDispatch}
           onConfirm={async () => {
-            const name = nameFormState.findValue('Name');
+            const name = formState.findValue('Name');
             if (!name) return {};
             let response;
-            if (thisState.popupState === 'Add')
+            if (thisState.popupState === 'Add' && props.type === 'population')
               response = await appDispatch(createPopulationTAction(name));
-            else response = await appDispatch(editPopulationTAction({ newName: name }));
+            else if (thisState.popupState === 'Edit' && props.type === 'population')
+              response = await appDispatch(editPopulationTAction({ newName: name }));
+            else if (thisState.popupState === 'Add' && props.type === 'successes')
+              response = await appDispatch(createScenarioGroupTAction({ name, type: 'SUCCESSES' }));
+            // Else thisState.popupState is 'Add' and props.type is 'successes'
+            else response = await appDispatch(editScenarioGroupTAction({ newName: name }));
             thisDispatch(setField('openPopup', false));
             return response.data;
           }}
@@ -214,7 +236,11 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
             thisState.popupState !== 'Edit'
               ? undefined
               : async () => {
-                  const response = await appDispatch(deletePopulationTAction());
+                  let response;
+                  if (props.type === 'population')
+                    response = await appDispatch(deletePopulationTAction());
+                  // Else props.type is 'successes'
+                  else response = await appDispatch(deleteScenarioGroupTAction());
                   thisDispatch(setField('openPopup', false));
                   return response.data;
                 }
@@ -224,17 +250,17 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
       <Dropdown
         itemList={relevantList.map((el) => el.name)}
         value={thisState.currentName}
-        setValue={(s) => thisDispatch(setField('currentName', s))}
+        setValue={(value) => thisDispatch(setField('currentName', value))}
         inputLabel={usedLabel}
         addButtonOnClick={() => {
-          thisDispatch(setField('popupState', 'add'));
+          thisDispatch(setField('popupState', 'Add'));
           thisDispatch(setField('openPopup', true));
-          formDispatch(nameFormState.setValueAction('Name', ''));
+          formDispatch(formState.setValueAction('Name', ''));
         }}
         editButtonOnClick={() => {
-          thisDispatch(setField('popupState', 'edit'));
+          thisDispatch(setField('popupState', 'Edit'));
           thisDispatch(setField('openPopup', true));
-          formDispatch(nameFormState.setValueAction('Name', thisState.currentName));
+          formDispatch(formState.setValueAction('Name', thisState.currentName));
         }}
       />
     </div>
