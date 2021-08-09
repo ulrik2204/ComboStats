@@ -11,7 +11,7 @@ import {
 
 export const loadingAction = createAction('loading');
 export const failureAction = createAction<ErrorResponse>('failure');
-export const cuSuccessAction = createAction<CUDPopulationResponse>('cuSuccess');
+export const cuPopulationSuccessAction = createAction<CUDPopulationResponse>('cuSuccess');
 export const addElementSuccessAction = createAction<CUDElementResponse>('addElementSuccess');
 export const editElementSuccessAction = createAction<CUDElementResponse>('editElementSuccess');
 export const deleteElementSuccessAction = createAction<CUDElementResponse>('deleteElementSuccess');
@@ -29,7 +29,7 @@ export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) 
       state.loading = false;
       state.errorMsg = action.payload.errorMsg;
     })
-    .addCase(cuSuccessAction, (state, action) => {
+    .addCase(cuPopulationSuccessAction, (state, action) => {
       state.loading = false;
       state.errorMsg = undefined;
       state.population = { ...action.payload.population, elements: [] };
