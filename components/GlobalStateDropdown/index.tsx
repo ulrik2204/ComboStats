@@ -17,7 +17,7 @@ import FormTemplate from '../FormTemplate/index';
 import Popup from '../Popup/index';
 
 type GlobalStateDropdownProps = {
-  type: 'Population' | 'Successes';
+  type: 'population' | 'successes';
   className?: string;
 };
 
@@ -101,20 +101,20 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
   const populationState = useAppSelector((state) => state.population);
   const appDispatch = useAppDispatch();
   const [thisState, thisDispatch] = useReducer(thisStateReducer, initialState);
-  const usedLabel = props.type === 'Population' ? 'Deck' : 'Combos';
+  const usedLabel = props.type === 'population' ? 'deck' : 'combos';
   const relevantList =
-    props.type === 'Population' ? thisState.populations : thisState.scenarioGroups;
+    props.type === 'population' ? thisState.populations : thisState.scenarioGroups;
   // TODO: Add if statement os relevant global also can be successes
   const relevantGlobal = populationState.population;
   const setRelevantGlobal = (newValue: any) => {
-    if (props.type === 'Population') return appDispatch(setPopulationAction(newValue));
+    if (props.type === 'population') return appDispatch(setPopulationAction(newValue));
     // TODO: CHANGE WHEN SCENARIO GROUP REDUCER IS CREATED
     else return appDispatch(setPopulationAction(newValue));
   };
 
   // Find the correct get api call depending on type
   const chooseGet = useCallback(() => {
-    if (props.type === 'Population') return getPopulationsOnUserFromAPI();
+    if (props.type === 'population') return getPopulationsOnUserFromAPI();
     else
       return getScenarioGroupsFromAPI({
         populationId: populationState.population.populationId,
@@ -170,7 +170,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
         });
       }
       // Else update the appropriate state and set the correct name.
-      if (props.type === 'Population') {
+      if (props.type === 'population') {
         // Set the currentName and populations state at the same time to avoid the
         // Dropdown being confused (as it need both values at the same time).
         thisDispatch(
@@ -184,7 +184,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
         );
 
         return;
-      } else if (props.type === 'Successes') {
+      } else if (props.type === 'successes') {
         // TODO: Set currentName and scenarioGroups to the name of the successesState
       }
     });
@@ -227,12 +227,12 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
         setValue={(s) => thisDispatch(setField('currentName', s))}
         inputLabel={usedLabel}
         addButtonOnClick={() => {
-          thisDispatch(setField('popupState', 'Add'));
+          thisDispatch(setField('popupState', 'add'));
           thisDispatch(setField('openPopup', true));
           formDispatch(nameFormState.setValueAction('Name', ''));
         }}
         editButtonOnClick={() => {
-          thisDispatch(setField('popupState', 'Edit'));
+          thisDispatch(setField('popupState', 'edit'));
           thisDispatch(setField('openPopup', true));
           formDispatch(nameFormState.setValueAction('Name', thisState.currentName));
         }}

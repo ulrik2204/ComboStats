@@ -32,7 +32,7 @@ const PopulationPage: FC = () => {
       column2={<div>Lorem ipsum dolor sit amet</div>}
     >
       <div className={classes.overDiv}>
-        <GlobalStateDropdown type="Population" className={classes.globalDropdown} />
+        <GlobalStateDropdown type="population" className={classes.globalDropdown} />
         <ListView
           showAddButton={populationData.name !== ''}
           infoList={populationData.elements.map(({ elementId, name, roles, count }) => ({
