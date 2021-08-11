@@ -1,9 +1,10 @@
 import { AppBar } from '@material-ui/core';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { useRouter } from 'next/dist/client/router';
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { backgroundTheme } from '../../lib/themes';
 import { useLoginTempUser } from '../../lib/utils-frontend';
+import { useAppSelector } from '../../store/index';
 import Arrowbutton from './Arrowbutton';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,89 +45,91 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const populationPage = '/populationpage';
+const successesPage = '/successespage';
+const morePage = '/morepage';
+const calculatePage = '/calculatepage';
+
 const Menu: FC = () => {
+  const state = useAppSelector((state) => state);
   const router = useRouter();
   const [lastClicked, setLastClicked] = useState({
-    population: router.pathname === '/populationpage',
-    successes: router.pathname === '/successespage',
-    more: router.pathname === '/morepage',
-    calculate: router.pathname === '/calculatepage',
+    population: router.pathname === populationPage,
+    successes: router.pathname === successesPage,
+    more: router.pathname === morePage,
+    calculate: router.pathname === calculatePage,
   });
+
+  const setClicked = useCallback(
+    (page: string) => {
+      setLastClicked({
+        population: page === populationPage,
+        successes: page === successesPage,
+        more: page === morePage,
+        calculate: page === calculatePage,
+      });
+    },
+    [setLastClicked],
+  );
   const classes = useStyles();
   useLoginTempUser();
+
+  useEffect(() => {
+    setClicked(router.pathname);
+  }, [router.pathname]);
+
+  useEffect(() => {
+    console.log(lastClicked, router.pathname);
+  }, [lastClicked]);
   return (
     <div>
       <MuiThemeProvider theme={backgroundTheme}>
         <AppBar position="fixed" color="secondary" className={classes.appBar}>
           <div className={classes.contentDiv}>
-            <span
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                router.push('/');
-                setLastClicked({
-                  population: false,
-                  successes: false,
-                  more: false,
-                  calculate: false,
-                });
-              }}
-            >
+            <span style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>
               <img src="/ComboStatsRoundedLogo.png" className={classes.logo} />
             </span>
             <Arrowbutton
               text="Deck"
-              onClick={() => {
-                setLastClicked({
-                  population: true,
-                  successes: false,
-                  more: false,
-                  calculate: false,
-                });
-                router.push('/populationpage');
-              }}
-              clicked={lastClicked.population}
+              variant={lastClicked.population ? 'clicked' : 'clickable'}
+              onClick={() => router.push(populationPage)}
               className={classes.arrowbutton}
             />
             <Arrowbutton
               text="Combos"
-              onClick={() => {
-                setLastClicked({
-                  population: false,
-                  successes: true,
-                  more: false,
-                  calculate: false,
-                });
-                router.push('/successespage');
-              }}
-              clicked={lastClicked.successes}
+              onClick={() => router.push(successesPage)}
+              variant={
+                lastClicked.successes
+                  ? 'clicked'
+                  : state.population.population.name === ''
+                  ? 'unclickable'
+                  : 'clickable'
+              }
               className={classes.arrowbutton}
             />
             <Arrowbutton
               text="More"
-              onClick={() => {
-                setLastClicked({
-                  population: false,
-                  successes: false,
-                  more: true,
-                  calculate: false,
-                });
-                router.push('/morepage');
-              }}
-              clicked={lastClicked.more}
+              onClick={() => router.push(morePage)}
+              variant={
+                lastClicked.more
+                  ? 'clicked'
+                  : state.successes.scenarioGroup.name === ''
+                  ? 'unclickable'
+                  : 'clickable'
+              }
               className={classes.arrowbutton}
             />
             <Arrowbutton
               text="Calculate"
-              onClick={() => {
-                setLastClicked({
-                  population: false,
-                  successes: false,
-                  more: false,
-                  calculate: true,
-                });
-                router.push('/calculatepage');
-              }}
-              clicked={lastClicked.calculate}
+              onClick={() => router.push(calculatePage)}
+              variant={
+                lastClicked.calculate
+                  ? 'clicked'
+                  : state.population.population.name === '' ||
+                    state.successes.scenarioGroup.name === ''
+                  ? 'unclickable'
+                  : 'clickable'
+              }
               className={classes.arrowbutton}
             />
           </div>
