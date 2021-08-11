@@ -71,7 +71,8 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
               {rowInputs.map((input, innerIndex) => {
                 if (!Array.isArray(input.value)) {
                   const type = input.type ?? typeof input.value;
-                  return (
+                  // If an inputRender is provided, use that, otherwise use standard TextField
+                  return !input.inputRender ? (
                     <TextField
                       key={`TextField${outerIndex},${innerIndex}`}
                       label={input.label}
@@ -89,6 +90,8 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                         }
                       }}
                     />
+                  ) : (
+                    input.inputRender(input.value, input.label)
                   );
                 }
                 // Else, make one input field for each value in the list
@@ -103,23 +106,30 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                       className={classes.arrayInnerDiv}
                     >
                       {input.value.map((item: string, itemIndex) => {
+                        const placeholder = `${input.label
+                          .toLowerCase()
+                          .slice(0, -1)} ${itemIndex}`;
                         return (
                           <div key={itemIndex} className={classes.arrayElementDiv}>
-                            <TextField
-                              key={`TextField${outerIndex},${innerIndex},${itemIndex} `}
-                              value={item}
-                              className={`${classes.arrayFields} ${input.className}`}
-                              // The placeholder is the item text minus the last letter ("roles" become "role")
-                              placeholder={`${input.label.toLowerCase().slice(0, -1)} ${itemIndex}`}
-                              onChange={(e) => {
-                                const newItems = [...input.value];
-                                newItems[itemIndex] =
-                                  typeof item === 'number'
-                                    ? parseInt(e.target.value)
-                                    : e.target.value;
-                                return setField([outerIndex, innerIndex], newItems);
-                              }}
-                            ></TextField>
+                            {!input.inputRender ? (
+                              <TextField
+                                key={`TextField${outerIndex},${innerIndex},${itemIndex} `}
+                                value={item}
+                                className={`${classes.arrayFields} ${input.className}`}
+                                // The placeholder is the item text minus the last letter ("roles" become "role")
+                                placeholder={placeholder}
+                                onChange={(e) => {
+                                  const newItems = [...input.value];
+                                  newItems[itemIndex] =
+                                    typeof item === 'number'
+                                      ? parseInt(e.target.value)
+                                      : e.target.value;
+                                  return setField([outerIndex, innerIndex], newItems);
+                                }}
+                              ></TextField>
+                            ) : (
+                              input.inputRender(item, placeholder)
+                            )}
                             <IconButton
                               key={`IconButton${outerIndex},${innerIndex},${itemIndex} `}
                               onClick={() => {

@@ -44,13 +44,13 @@ export type CUDScenarioGroupThunk = AppThunk<Promise<APIResponse<CUDScenarioGrou
 
 export type CUSceanrioThunk = AppThunk<Promise<APIResponse<CUScenarioResponse>>>;
 
-
 // For FormTemplate
 export type InputForm = {
   value: any;
   label: string;
   className?: string;
   type?: 'string' | 'number';
+  inputRender?: (value: string, label: string) => JSX.Element;
 };
 
 export enum FORM_ACTION {
