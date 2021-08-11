@@ -1,6 +1,6 @@
 import { ScenarioGroup, ScenarioGroupType } from '@prisma/client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { NULL_FAILURES_STATE, NULL_SUCCESSES_STATE } from '../../lib/constants-frontend';
+import { INITIAL_FAILURES_STATE, INITIAL_SUCCESSES_STATE } from '../../lib/constants-frontend';
 import { fixScenarios } from '../../lib/core';
 import {
   CUDScenarioGroupResponse,
@@ -11,7 +11,7 @@ import {
 } from '../../lib/types';
 
 const getInitialState = (type: ScenarioGroupType) =>
-  type === 'SUCCESSES' ? NULL_SUCCESSES_STATE : NULL_FAILURES_STATE;
+  type === 'SUCCESSES' ? INITIAL_SUCCESSES_STATE : INITIAL_FAILURES_STATE;
 
 const scenarioGroupSlice = (scenarioGroupType: ScenarioGroupType) =>
   createSlice({

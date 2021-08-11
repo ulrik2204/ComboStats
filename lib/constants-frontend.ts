@@ -2,20 +2,26 @@ import { PopulationState, ScenarioGroupState } from './types-frontend';
 
 // Some constants for the frontend only.
 
-export const NULL_POPULATION = {
+export const populationPageUrl = '/populationpage';
+export const successesPageUrl = '/successespage';
+export const morePageUrl = '/morepage';
+export const calculatePageUrl = '/calculatepage';
+export const homePageUrl = '/';
+
+export const INITIAL_POPULATION = {
   populationId: '',
   name: '',
   ownerId: '',
   elements: [],
 };
 
-export const NULL_POPULATION_STATE: PopulationState = {
+export const INITIAL_POPULATION_STATE: PopulationState = {
   loading: false,
   errorMsg: undefined,
-  population: NULL_POPULATION,
+  population: INITIAL_POPULATION,
 };
 
-export const NULL_SUCCESSES_STATE: ScenarioGroupState = {
+export const INITIAL_SUCCESSES_STATE: ScenarioGroupState = {
   loading: false,
   errorMsg: undefined,
   scenarioGroup: {
@@ -27,7 +33,7 @@ export const NULL_SUCCESSES_STATE: ScenarioGroupState = {
   },
 };
 
-export const NULL_FAILURES_STATE: ScenarioGroupState = {
+export const INITIAL_FAILURES_STATE: ScenarioGroupState = {
   loading: false,
   errorMsg: undefined,
   scenarioGroup: {

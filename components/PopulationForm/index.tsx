@@ -73,7 +73,6 @@ const PopulationForm: FC<PopulationFormProps> = (props) => {
           const name = formState.findValue(nameLabel);
           const count = parseInt(formState.findValue(countLabel));
           const roles = formState.findValue(rolesLabel);
-          console.log('count from PopForm', count);
           toast({
             title: 'Hei',
             type: 'alert',

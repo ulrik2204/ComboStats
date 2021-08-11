@@ -17,7 +17,6 @@ import {
   GetAllPopulationsResponse,
   GetIsLoggedInResponse,
   GetPopulationElementsResponse,
-  GetScenarioGroupsBody,
   GetScenarioGroupScenariosResponse,
   GetScenarioGroupsResponse,
 } from './types';
@@ -54,7 +53,7 @@ export const createTempUserFromAPI = async (): Promise<APIResponse<CreateTempUse
 
 /**
  * Sending a request to the api checking if the user is logged in with a valid token.
- * @return And APIResponse containg a boolean isLoggedIn which 
+ * @return And APIResponse containg a boolean isLoggedIn which
  * is true if the user is logged in and false otherwise.
  */
 export const isLoggedInFromAPI = async (): Promise<APIResponse<GetIsLoggedInResponse>> => {
@@ -229,11 +228,13 @@ export const getScenarioGroupFromAPI = async (scenarioGroupId: string) => {
  * @returns An APIResponse containing all the scenario groups in
  * the population with the given type (or all) or an error message as data.
  */
-export const getScenarioGroupsFromAPI = async (body: GetScenarioGroupsBody) => {
+export const getScenarioGroupsFromAPI = async (
+  populationId: string,
+  type: 'successes' | 'failures' | 'actions' | 'all',
+) => {
   const response: APIResponse<GetScenarioGroupsResponse> = await fromAPI(
-    `/api/scenario-groups`,
+    `/api/scenario-groups?populationId=${populationId}&type=${type}`,
     'GET',
-    body,
   );
   return response;
 };

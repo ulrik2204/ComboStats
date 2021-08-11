@@ -2,8 +2,14 @@ import { AppBar } from '@material-ui/core';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { useRouter } from 'next/dist/client/router';
 import { FC, useCallback, useEffect, useState } from 'react';
+import {
+  calculatePageUrl,
+  homePageUrl,
+  morePageUrl,
+  populationPageUrl,
+  successesPageUrl,
+} from '../../lib/constants-frontend';
 import { backgroundTheme } from '../../lib/themes';
-import { useLoginTempUser } from '../../lib/utils-frontend';
 import { useAppSelector } from '../../store/index';
 import Arrowbutton from './Arrowbutton';
 
@@ -45,34 +51,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const populationPage = '/populationpage';
-const successesPage = '/successespage';
-const morePage = '/morepage';
-const calculatePage = '/calculatepage';
-
 const Menu: FC = () => {
   const state = useAppSelector((state) => state);
   const router = useRouter();
   const [lastClicked, setLastClicked] = useState({
-    population: router.pathname === populationPage,
-    successes: router.pathname === successesPage,
-    more: router.pathname === morePage,
-    calculate: router.pathname === calculatePage,
+    population: router.pathname === populationPageUrl,
+    successes: router.pathname === successesPageUrl,
+    more: router.pathname === morePageUrl,
+    calculate: router.pathname === calculatePageUrl,
   });
 
   const setClicked = useCallback(
     (page: string) => {
       setLastClicked({
-        population: page === populationPage,
-        successes: page === successesPage,
-        more: page === morePage,
-        calculate: page === calculatePage,
+        population: page === populationPageUrl,
+        successes: page === successesPageUrl,
+        more: page === morePageUrl,
+        calculate: page === calculatePageUrl,
       });
     },
     [setLastClicked],
   );
   const classes = useStyles();
-  useLoginTempUser();
 
   useEffect(() => {
     setClicked(router.pathname);
@@ -86,18 +86,18 @@ const Menu: FC = () => {
       <MuiThemeProvider theme={backgroundTheme}>
         <AppBar position="fixed" color="secondary" className={classes.appBar}>
           <div className={classes.contentDiv}>
-            <span style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>
+            <span style={{ cursor: 'pointer' }} onClick={() => router.push(homePageUrl)}>
               <img src="/ComboStatsRoundedLogo.png" className={classes.logo} />
             </span>
             <Arrowbutton
               text="Deck"
               variant={lastClicked.population ? 'clicked' : 'clickable'}
-              onClick={() => router.push(populationPage)}
+              onClick={() => router.push(populationPageUrl)}
               className={classes.arrowbutton}
             />
             <Arrowbutton
               text="Combos"
-              onClick={() => router.push(successesPage)}
+              onClick={() => router.push(successesPageUrl)}
               variant={
                 lastClicked.successes
                   ? 'clicked'
@@ -109,7 +109,7 @@ const Menu: FC = () => {
             />
             <Arrowbutton
               text="More"
-              onClick={() => router.push(morePage)}
+              onClick={() => router.push(morePageUrl)}
               variant={
                 lastClicked.more
                   ? 'clicked'
@@ -121,7 +121,7 @@ const Menu: FC = () => {
             />
             <Arrowbutton
               text="Calculate"
-              onClick={() => router.push(calculatePage)}
+              onClick={() => router.push(calculatePageUrl)}
               variant={
                 lastClicked.calculate
                   ? 'clicked'

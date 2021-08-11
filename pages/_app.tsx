@@ -3,6 +3,7 @@ import { MuiThemeProvider } from '@material-ui/core';
 import type { AppProps } from 'next/app';
 import { useState } from 'react';
 import { Provider } from 'react-redux';
+import CommonLogic from '../components/CommonLogic/index';
 import Menu from '../components/Menu';
 import Toast, { ToastProps } from '../components/Toast/index';
 import { PopulationContext, SuccessGroupsContext, ToastContext } from '../lib/contexts';
@@ -63,6 +64,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   color={toastData.color}
                 />
                 <Menu />
+                <CommonLogic />
                 <Component {...pageProps} />
               </ToastContext.Provider>
             </SuccessGroupsContext.Provider>

@@ -518,16 +518,20 @@ export const getScenarioGroups = async (
   req: NextApiRequest,
   res: NextApiResponse<GetScenarioGroupsResponse | ErrorResponse>,
 ) => {
-  const requestBody = {
-    populationId: 'string',
-    type: 'string', // Can be "all", "successes", "failures", or "actions"
-  };
-  // Verify method and request body
-  if (!isValidRequestBody(req.body, requestBody))
-    return res.status(400).json({ errorMsg: RES_MSG.INVALID_REQUEST_BODY(requestBody) });
+  // const requestBody = {
+  //   populationId: 'string',
+  //   type: 'string', // Can be "all", "successes", "failures", or "actions"
+  // };
+  // // Verify method and request body
+  // if (!isValidRequestBody(req.body, requestBody))
+  //   return res.status(400).json({ errorMsg: RES_MSG.INVALID_REQUEST_BODY(requestBody) });
 
-  const populationId: string = req.body.populationId;
-  const reqTypeOrAll: string = req.body.type;
+  const populationId: string = req.query.populationId as string;
+  const reqTypeOrAll: string = req.query.type as string;
+  // Validate the query string
+  if (populationId == undefined || reqTypeOrAll == undefined)
+    return res.status(400).json({ errorMsg: RES_MSG.INVALID_QUERY_STRING });
+
   // Find ownerId based on the jwt token sent in cookie
   const ownerKey = await authenticateToken(req);
   if (!ownerKey) return res.status(401).json({ errorMsg: RES_MSG.INVALID_CREDENTIALS });

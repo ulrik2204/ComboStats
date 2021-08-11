@@ -5,13 +5,15 @@ export const RES_MSG = {
   INVALID_REQUEST_BODY(requestBody: object): string {
     return `Request body should be structured: ${JSON.stringify(requestBody)}`;
   },
-  EMTPY_OR_ZERO_ERROR: 'Cannot have an emtpy scenario or a zero or negative count/minCount element.',
+  EMTPY_OR_ZERO_ERROR:
+    'Cannot have an emtpy scenario or a zero or negative count/minCount element.',
   INVALID_CREDENTIALS: 'Invalid or no user credentials were provided.',
   NOT_POPULATION_OWNER: 'You do not have permissions to this population.',
   INVALID_SCENARIO_GROUP_TYPE:
     'Paramater "type" in request body should have value "successes", "failures" or "actions".',
   INVALID_SCENARIO_GROUP_TYPE_OR_ALL:
     'Paramater "type" in request body should have value "successes", "failures", "actions" or "all" (to get all scenario groups in population).',
+  INVALID_QUERY_STRING: 'Invalid query string',
   NOT_ALLOWED_SCENARIO_GROUP_TYPE:
     'It is not allowed to add more scenario groups of this type to the population.',
   NOT_SCENARIO_GROUP_OWNER: 'You do not have permissions to this scenario group.',

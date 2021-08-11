@@ -1,6 +1,6 @@
 import { Population } from '@prisma/client';
 import { createAction, createReducer } from '@reduxjs/toolkit';
-import { NULL_POPULATION_STATE } from '../../lib/constants-frontend';
+import { INITIAL_POPULATION_STATE } from '../../lib/constants-frontend';
 import { sortElements } from '../../lib/core';
 import {
   CUDElementResponse,
@@ -19,7 +19,7 @@ export const getSuccessAction = createAction<GetPopulationElementsResponse>('get
 export const setPopulationAction = createAction<Population>('setPopulation');
 export const deleteSuccessAction = createAction('deletePopulation');
 
-export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) => {
+export const populationReducer = createReducer(INITIAL_POPULATION_STATE, (builder) => {
   builder
     .addCase(loadingAction, (state, action) => {
       state.loading = true;
@@ -74,6 +74,6 @@ export const populationReducer = createReducer(NULL_POPULATION_STATE, (builder) 
       state.population = { ...action.payload, elements: [] };
     })
     .addCase(deleteSuccessAction, (state, action) => {
-      state = NULL_POPULATION_STATE;
+      state = INITIAL_POPULATION_STATE;
     });
 });

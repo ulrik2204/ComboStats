@@ -14,6 +14,7 @@ import {
   createScenarioGroupTAction,
   deleteScenarioGroupTAction,
   editScenarioGroupTAction,
+  getScenarioGroupTAction,
 } from '../../store/actions/scenario-group-actions';
 import { useAppDispatch, useAppSelector } from '../../store/index';
 import { setPopulationAction } from '../../store/reducers/population';
@@ -116,26 +117,24 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
   //   props.type === 'population' ? populationState.population : successesState.scenarioGroup;
   const setRelevantGlobal = (newValue: any) => {
     if (props.type === 'population') return appDispatch(setPopulationAction(newValue));
-    // TODO: CHANGE WHEN SCENARIO GROUP REDUCER IS CREATED
     else return appDispatch(successesActions.setScenarioGroup(newValue));
   };
 
   // Find the correct get api call depending on type
   const relevantGetFromAPI = useCallback(() => {
     if (props.type === 'population') return getPopulationsOnUserFromAPI();
-    else
-      return getScenarioGroupsFromAPI({
-        populationId: populationState.population.populationId,
-        type: 'SUCCESSES',
-      });
+    else return getScenarioGroupsFromAPI(populationState.population.populationId, 'successes');
+  }, [props.type]);
+
+  const relevantGetDataFromAPI = useCallback(() => {
+    if (props.type === 'population') return appDispatch(getPopulationTAction());
+    else return appDispatch(getScenarioGroupTAction());
   }, [props.type]);
 
   // Update the global population to the popualtion with name as currentPopulationName
   // when currentPopulationName changes.
   useEffect(() => {
     if (relevantList.length > 0) {
-      console.log('thisState currentName change', thisState.currentName);
-
       // if (populationState.population.name === thisState.currentName && thisState.currentName !== "" && populationState.population.name !== "") return;
       const globalWithName = (relevantList as (Population | ScenarioGroup)[]).find(
         (el: Population | ScenarioGroup) => el.name === thisState.currentName,
@@ -149,15 +148,14 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
       if (thisState.currentName === '') return;
       // TODO: Add if statement if type='successes' as well
       // Make the request to get elements/scenarios and throw a message if it fails.
-      appDispatch(getPopulationTAction()).then((res) => {
+      relevantGetDataFromAPI().then((res) => {
         if (!res.ok)
           return toast({
-            title: 'Unable to retrieve cards, try again later',
+            title: 'Unable to retrieve cards or scenarios, try again later',
             description: `Error getting data from the server: ${res.status}.`,
             type: 'alert',
             color: 'error',
           });
-        console.log(res);
       });
     }
   }, [thisState.currentName]);
@@ -192,12 +190,12 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
         );
         return;
       } else {
-        // If props.type is 'successes
+        // If props.type is 'successes'
         thisDispatch(
           setFields(
             ['currentName', 'scenarioGroups'],
             [
-              populationState.population.name,
+              successesState.scenarioGroup.name,
               (res.data as GetScenarioGroupsResponse).scenarioGroups,
             ],
           ),
