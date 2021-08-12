@@ -18,11 +18,13 @@ export type ScenarioGroupData = ScenarioGroup & {
   scenarios: ScenarioData[];
 };
 
+export type ElementInScenarioData = ElementInScenario & {
+  element: Element;
+};
+
 export type ScenarioData = Scenario & {
   requiredRoles: RoleInScenario[];
-  requiredElements: (ElementInScenario & {
-    element: Element;
-  })[];
+  requiredElements: ElementInScenarioData[];
 };
 
 export type CreatePopulationBody = {
