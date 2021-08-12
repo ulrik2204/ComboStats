@@ -1,10 +1,5 @@
-import { Button, createStyles, makeStyles, TextField, Theme } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from '@material-ui/icons/Close';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { FC, useState } from 'react';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import { buttonTheme } from '../../lib/themes';
 
 type SuccessesFormProps = {
   defaultSuccesses: string[];
@@ -18,12 +13,20 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const SuccessesForm: FC<SuccessesFormProps> = (props) => {
+// Form label constants
+// const scenarioNameLabel
+
+const ScenarioForm: FC<SuccessesFormProps> = (props) => {
   const [successes, setSuccesses] = useState<string[]>(props.defaultSuccesses);
   const classes = useStyles();
 
-  return (
-    <MuiThemeProvider theme={buttonTheme}>
+  return <div></div>;
+};
+
+export default ScenarioForm;
+
+/**
+ *     <MuiThemeProvider theme={buttonTheme}>
     <div>
       <div>
         {(() => {
@@ -68,7 +71,4 @@ const SuccessesForm: FC<SuccessesFormProps> = (props) => {
       <div>End</div>
     </div>
     </MuiThemeProvider>
-  );
-};
-
-export default SuccessesForm;
+ */

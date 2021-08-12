@@ -7,7 +7,7 @@ import { addElementTAction, deleteElementTAction, editElementTAction } from '../
 import { useAppDispatch } from '../../store/index';
 import FormTemplate from '../FormTemplate/index';
 
-type PopualtionFormCommonProps = {
+type ElementFormCommonProps = {
   defaultName: string;
   defaultRoles: string[];
   defaultCount: number;
@@ -15,9 +15,9 @@ type PopualtionFormCommonProps = {
   afterDeleteAll?: () => void;
 };
 
-type PopulationFormTypeProps = { type: 'add' } | { type: 'edit'; elementId: string };
+type ElementFormTypeProps = { type: 'add' } | { type: 'edit'; elementId: string };
 
-type PopulationFormProps = PopualtionFormCommonProps & PopulationFormTypeProps;
+type ElementFormProps = ElementFormCommonProps & ElementFormTypeProps;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,7 +51,7 @@ const nameLabel = 'Name';
 const countLabel = 'Count';
 const rolesLabel = 'Roles';
 
-const PopulationForm: FC<PopulationFormProps> = (props) => {
+const ElementForm: FC<ElementFormProps> = (props) => {
   const classes = useStyles();
   const toast = useToast();
   const appDispatch = useAppDispatch();
@@ -119,7 +119,7 @@ const PopulationForm: FC<PopulationFormProps> = (props) => {
   );
 };
 
-export default PopulationForm;
+export default ElementForm;
 
 // const [name, setName] = useState(props.defaultName);
 // const [elementCount, setElementCount] = useState(props.defaultCount);

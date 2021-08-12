@@ -3,7 +3,7 @@ import { FC } from 'react';
 import GlobalStateDropdown from '../components/GlobalStateDropdown/index';
 import ListView from '../components/ListView/index';
 import PageTemplate from '../components/PageTemplate/index';
-import PopulationForm from '../components/PopulationForm';
+import ElementForm from '../components/ElementForm';
 import { useLoading } from '../lib/utils-frontend';
 import { useAppSelector } from '../store/index';
 
@@ -43,7 +43,7 @@ const PopulationPage: FC = () => {
           }))}
           addItemTitle="Add card"
           addItemForm={(setOpenAddPopup) => (
-            <PopulationForm
+            <ElementForm
               defaultName=""
               defaultRoles={[]}
               defaultCount={1}
@@ -53,7 +53,7 @@ const PopulationPage: FC = () => {
           )}
           editItemTitle="Edit card(s)"
           editItemForm={(clickedItem, setOpenEditPopup) => (
-            <PopulationForm
+            <ElementForm
               defaultName={clickedItem.item.name}
               defaultRoles={clickedItem.item.notes}
               defaultCount={
