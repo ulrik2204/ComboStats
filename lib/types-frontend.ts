@@ -50,7 +50,7 @@ export type InputForm = {
   label: string;
   className?: string;
   type?: 'string' | 'number';
-  inputRender?: (value: string, label: string) => JSX.Element;
+  inputRender?: (value: string, label: string, itemIndex: number) => JSX.Element;
 };
 
 export enum FORM_ACTION {

@@ -230,8 +230,8 @@ const findValueInForm = (formState: FormState, label: string): any | undefined =
 const setValueActionInForm = (formState: FormState, label: string, value: any): FormInteraction => {
   const form = formState.form;
   for (let i = 0; i < form.length; i++) {
-    for (let j = 0; i < form[i].length; i++) {
-      if (form[i][j].label === label)
+    for (let j = 0; j < form[i].length; j++) {
+      if (form[i][j].label === label) {
         return {
           type: FORM_ACTION.FIELD,
           payload: {
@@ -239,6 +239,7 @@ const setValueActionInForm = (formState: FormState, label: string, value: any): 
             value: value,
           },
         };
+      }
     }
   }
   const [outer, inner] = [form.length - 1, 0];

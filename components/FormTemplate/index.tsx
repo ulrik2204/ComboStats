@@ -91,7 +91,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                       }}
                     />
                   ) : (
-                    input.inputRender(input.value, input.label)
+                    input.inputRender(input.value, input.label, -1)
                   );
                 }
                 // Else, make one input field for each value in the list
@@ -128,7 +128,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                                 }}
                               ></TextField>
                             ) : (
-                              input.inputRender(item, placeholder)
+                              input.inputRender(item, input.label, itemIndex)
                             )}
                             <IconButton
                               key={`IconButton${outerIndex},${innerIndex},${itemIndex} `}
