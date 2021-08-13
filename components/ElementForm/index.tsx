@@ -3,7 +3,11 @@ import { FC } from 'react';
 import { APIResponse, CUDElementResponse } from '../../lib/types';
 import { InputForm } from '../../lib/types-frontend';
 import { useForm, useToast } from '../../lib/utils-frontend';
-import { addElementTAction, deleteElementTAction, editElementTAction } from '../../store/actions/population-actions';
+import {
+  addElementTAction,
+  deleteElementTAction,
+  editElementTAction,
+} from '../../store/actions/population-actions';
 import { useAppDispatch } from '../../store/index';
 import FormTemplate from '../FormTemplate/index';
 
@@ -88,10 +92,15 @@ const ElementForm: FC<ElementFormProps> = (props) => {
 
           // We now know that the input is legal, perform dispatch.
           let res: APIResponse<CUDElementResponse>;
-          if (props.type === 'add') res = await appDispatch(addElementTAction({ name, roles, count }));
+          if (props.type === 'add')
+            res = await appDispatch(addElementTAction({ name, roles, count }));
           else
             res = await appDispatch(
-              editElementTAction(props.elementId, { newName: name, newRoles: roles, newCount: count }),
+              editElementTAction(props.elementId, {
+                newName: name,
+                newRoles: roles,
+                newCount: count,
+              }),
             );
 
           // Clear all input data if appropriate.

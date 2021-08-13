@@ -29,11 +29,14 @@ type FormTemplateProps = {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     arrayElementDiv: {
-      display: 'inline',
-    },
-    arrayFields: {
+      display: 'flex',
       marginBottom: '0.3em',
       marginRight: '1em',
+    },
+    arrayFields: {
+      width: '12em',
+      alignSelf: 'flex-end',
+      marginRight: '0.5em',
     },
     inputFields: {
       marginRight: '2em',
@@ -49,6 +52,13 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexFlow: 'row',
       justifyContent: 'flex-end',
+    },
+    addButton: {
+      marginTop: '0.5em',
+    },
+    deleteElementButton: {
+      alignSelf: 'flex-end',
+      padding: '4px',
     },
     secondButton: {
       marginLeft: theme.spacing(2),
@@ -91,7 +101,9 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                       }}
                     />
                   ) : (
-                    input.inputRender(input.value, input.label, -1)
+                    <div className={`${classes.inputFields} ${input.className}`}>
+                      {input.inputRender(input.value, input.label, -1)}
+                    </div>
                   );
                 }
                 // Else, make one input field for each value in the list
@@ -110,12 +122,15 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                           .toLowerCase()
                           .slice(0, -1)} ${itemIndex}`;
                         return (
-                          <div key={itemIndex} className={classes.arrayElementDiv}>
+                          <div
+                            key={itemIndex}
+                            className={`${classes.arrayElementDiv} ${input.className}`}
+                          >
                             {!input.inputRender ? (
                               <TextField
                                 key={`TextField${outerIndex},${innerIndex},${itemIndex} `}
                                 value={item}
-                                className={`${classes.arrayFields} ${input.className}`}
+                                className={`${classes.arrayFields}`}
                                 // The placeholder is the item text minus the last letter ("roles" become "role")
                                 placeholder={placeholder}
                                 onChange={(e) => {
@@ -126,12 +141,15 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                                       : e.target.value;
                                   return setField([outerIndex, innerIndex], newItems);
                                 }}
-                              ></TextField>
+                              />
                             ) : (
-                              input.inputRender(item, input.label, itemIndex)
+                              <div className={`${classes.arrayFields}`}>
+                                {input.inputRender(item, input.label, itemIndex)}
+                              </div>
                             )}
                             <IconButton
                               key={`IconButton${outerIndex},${innerIndex},${itemIndex} `}
+                              className={classes.deleteElementButton}
                               onClick={() => {
                                 const newItems = [...input.value];
                                 newItems.splice(itemIndex, 1);
@@ -150,6 +168,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                     <Button
                       key={`Button${outerIndex}, ${innerIndex}`}
                       startIcon={<AddIcon />}
+                      className={classes.addButton}
                       onClick={() => {
                         const newItems = [...input.value];
                         newItems.push('');
@@ -193,7 +212,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                   props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
                   // Check that onSecondButtonClick is not undefined (which it is not at this point)
                   const onClick =
-                    props.onSecondButtonClick ?? (() => new Promise((res, rej) => res({})));
+                    props.onSecondButtonClick ?? (() => new Promise((res, _rej) => res({})));
                   const errorResponse = await onClick();
                   if (!errorResponse.errorMsg)
                     return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });

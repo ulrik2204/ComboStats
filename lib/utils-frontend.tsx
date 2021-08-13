@@ -227,7 +227,7 @@ const findValueInForm = (formState: FormState, label: string): any | undefined =
  * If no input field with that label is found, it returns an action that will do nothing.
  * (Sets the value of the first input field in the last row to be the same value as it already is).
  */
-const setValueActionInForm = (formState: FormState, label: string, value: any): FormInteraction => {
+function setValueActionInForm(formState: FormState, label: string, value: any): FormInteraction {
   const form = formState.form;
   for (let i = 0; i < form.length; i++) {
     for (let j = 0; j < form[i].length; j++) {
@@ -250,14 +250,16 @@ const setValueActionInForm = (formState: FormState, label: string, value: any): 
       value: form[outer][inner].value,
     },
   };
-};
+}
 
 /**
  * Hook to provide basic form functionality. Desingned to be used together with FormTemplate.
  * @param initialForm The initial state of the form (as InputForm[][]) used to create the form.
  * @returns The formState and the dispatch function to change it.
  */
-export const useForm = (initialForm: InputForm[][]): [FormState, Dispatch<FormActionTypes>] => {
+export const useForm = (
+  initialForm: InputForm<any>[][],
+): [FormState, Dispatch<FormActionTypes>] => {
   const initialState: FormState = {
     loading: false,
     submitFinished: false,
