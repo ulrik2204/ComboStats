@@ -11,7 +11,7 @@ import {
   FormInteraction,
   FormState,
   FORM_ACTION,
-  InputForm,
+  FormInput,
 } from './types-frontend';
 
 /**
@@ -257,9 +257,7 @@ function setValueActionInForm(formState: FormState, label: string, value: any): 
  * @param initialForm The initial state of the form (as InputForm[][]) used to create the form.
  * @returns The formState and the dispatch function to change it.
  */
-export const useForm = (
-  initialForm: InputForm<any>[][],
-): [FormState, Dispatch<FormActionTypes>] => {
+export const useForm = (initialForm: FormInput[][]): [FormState, Dispatch<FormActionTypes>] => {
   const initialState: FormState = {
     loading: false,
     submitFinished: false,

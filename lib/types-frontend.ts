@@ -44,13 +44,34 @@ export type CUDScenarioGroupThunk = AppThunk<Promise<APIResponse<CUDScenarioGrou
 
 export type CUSceanrioThunk = AppThunk<Promise<APIResponse<CUScenarioResponse>>>;
 
-// For FormTemplate
-export type InputForm<ValueType = any> = {
-  value: ValueType;
+export type InputArrayItem = { placeholder: string; className?: string } & (
+  | { value: string; type: 'string' }
+  | { value: number; type: 'number' }
+);
+
+type InputRenderSingle = { inputRender?: (value: string | number, label: string) => JSX.Element };
+
+export type InputTypeRow = Omit<InputArrayItem, 'value'>;
+
+type FormInputValue =
+  | (({ value: string; type: 'string' } | { value: number; type: 'number' }) & InputRenderSingle)
+  | (
+      | {
+          value: string[];
+          type: 'array';
+          inputRender?: (arrayItem: string, label: string, index: number) => JSX.Element;
+        }
+      | {
+          value: InputArrayItem[][];
+          type: 'inputarray';
+          inputRow: InputTypeRow[];
+          inputRender?: (inputArray: InputArrayItem[], label: string, index: number) => JSX.Element;
+        }
+    );
+
+export type FormInput = FormInputValue & {
   label: string;
   className?: string;
-  type?: 'string' | 'number';
-  inputRender?: (value: ValueType, label: string, itemIndex: number) => JSX.Element;
 };
 
 export enum FORM_ACTION {
@@ -62,7 +83,7 @@ export enum FORM_ACTION {
 }
 
 export type FormState = {
-  form: InputForm<any>[][];
+  form: FormInput[][];
   loading: boolean;
   submitFinished: boolean;
   errorMsg?: string;

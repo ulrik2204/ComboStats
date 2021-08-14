@@ -1,9 +1,9 @@
 import { createStyles, makeStyles } from '@material-ui/core';
 import { FC } from 'react';
+import ElementForm from '../components/ElementForm';
 import GlobalStateDropdown from '../components/GlobalStateDropdown/index';
 import ListView from '../components/ListView/index';
 import PageTemplate from '../components/PageTemplate/index';
-import ElementForm from '../components/ElementForm';
 import { useLoading } from '../lib/utils-frontend';
 import { useAppSelector } from '../store/index';
 
@@ -45,7 +45,7 @@ const PopulationPage: FC = () => {
           addItemForm={(setOpenAddPopup) => (
             <ElementForm
               defaultName=""
-              defaultRoles={[]}
+              defaultRoles={['']}
               defaultCount={1}
               type="add"
               afterConfirm={() => setOpenAddPopup?.(false)}

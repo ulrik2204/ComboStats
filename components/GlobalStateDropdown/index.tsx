@@ -2,7 +2,7 @@ import { Population, ScenarioGroup } from '@prisma/client';
 import { FC, useCallback, useEffect, useReducer } from 'react';
 import { getPopulationsOnUserFromAPI, getScenarioGroupsFromAPI } from '../../lib/api-calls';
 import { GetAllPopulationsResponse, GetScenarioGroupsResponse } from '../../lib/types';
-import { InputForm } from '../../lib/types-frontend';
+import { FormInput } from '../../lib/types-frontend';
 import { useForm, useToast } from '../../lib/utils-frontend';
 import {
   createPopulationTAction,
@@ -96,7 +96,7 @@ const initialState: ThisState = {
   popupState: 'Add',
 };
 
-const initialNameForm: InputForm[][] = [[{ value: '', label: 'Name' }]];
+const initialNameForm: FormInput[][] = [[{ value: '', label: 'Name', type: 'string' }]];
 
 /**
  * Conponent that handles setting of and creating populations and scenario groups as the global state.

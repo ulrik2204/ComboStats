@@ -1,7 +1,7 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { FC } from 'react';
 import { APIResponse, CUDElementResponse } from '../../lib/types';
-import { InputForm } from '../../lib/types-frontend';
+import { FormInput } from '../../lib/types-frontend';
 import { useForm, useToast } from '../../lib/utils-frontend';
 import {
   addElementTAction,
@@ -59,12 +59,12 @@ const ElementForm: FC<ElementFormProps> = (props) => {
   const classes = useStyles();
   const toast = useToast();
   const appDispatch = useAppDispatch();
-  const initialForm: InputForm[][] = [
+  const initialForm: FormInput[][] = [
     [
-      { label: nameLabel, value: props.defaultName },
+      { label: nameLabel, value: props.defaultName, type: 'string' },
       { label: countLabel, value: props.defaultCount, className: classes.countBox, type: 'number' },
     ],
-    [{ label: rolesLabel, value: props.defaultRoles }],
+    [{ label: rolesLabel, value: props.defaultRoles, type: 'array' }],
   ];
   const [formState, formDispatch] = useForm(initialForm);
 
