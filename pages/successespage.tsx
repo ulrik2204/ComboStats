@@ -2,7 +2,9 @@ import { createStyles, makeStyles } from '@material-ui/core';
 import { useRouter } from 'next/dist/client/router';
 import { FC, useEffect } from 'react';
 import GlobalStateDropdown from '../components/GlobalStateDropdown';
+import ListView from '../components/ListView/index';
 import PageTemplate from '../components/PageTemplate/index';
+import ScenarioForm from '../components/ScenarioForm/index';
 import { populationPageUrl } from '../lib/constants-frontend';
 import { useAppSelector } from '../store/index';
 
@@ -34,6 +36,57 @@ const SuccessesPage: FC = () => {
     >
       <div className={classes.overDiv}>
         <GlobalStateDropdown type="successes" className={classes.globalDropdown} />
+        <ListView
+          showAddButton={state.successes.scenarioGroup.name !== ''}
+          addItemTitle="Add combo"
+          addItemForm={(setOpenAddPopup) => (
+            <ScenarioForm
+              defaultRequiredElements={[]}
+              defaultRequiredRoles={[]}
+              defaultScenarioName=""
+              type="add"
+            />
+          )}
+          editItemTitle="Edit combo"
+          editItemForm={(clickedItem, setOpenEditPopup) => {
+            return (
+              <ScenarioForm
+                // Handle the default later
+                defaultRequiredElements={[]}
+                defaultRequiredRoles={[]}
+                defaultScenarioName=""
+                type="edit"
+                scenarioId={clickedItem.item.id}
+              />
+            );
+          }}
+          infoList={state.successes.scenarioGroup.scenarios.map(
+            ({ scenarioId, name, requiredElements }) => {
+              const elementInfo = requiredElements.map(
+                (reqEl) => `${reqEl.element.name} (${reqEl.minCount})`,
+              );
+              return {
+                id: scenarioId,
+                name,
+                notes: elementInfo,
+                count: 1,
+              };
+            },
+          )}
+          corrMoreInfoList={state.successes.scenarioGroup.scenarios.map(
+            ({ scenarioId, requiredRoles }) => {
+              const rolesInfo = requiredRoles.map(
+                (reqRole) => `${reqRole.requiredRole} (${reqRole.minCount})`,
+              );
+              return {
+                id: scenarioId,
+                name: 'Required roles',
+                notes: rolesInfo,
+                count: 1,
+              };
+            },
+          )}
+        />
       </div>
     </PageTemplate>
   );
