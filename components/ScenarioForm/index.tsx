@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 import { NULL_ELEMENT } from '../../lib/constants-frontend';
 import { fixRoles } from '../../lib/core';
 import { APIResponse, CUScenarioResponse, RequiredElement, RequiredRole } from '../../lib/types';
-import { FormInput, InputArrayItem } from '../../lib/types-frontend';
+import { ArrayInputItem, FormInput } from '../../lib/types-frontend';
 import { useForm } from '../../lib/utils-frontend';
 import {
   createScenarioTAction,
@@ -17,8 +17,8 @@ import FormTemplate from '../FormTemplate/index';
 
 type ScenarioFormCommonProps = {
   defaultScenarioName: string;
-  defaultRequiredElements: RequiredElement[];
-  defaultRequiredRoles: RequiredRole[];
+  defaultRequiredElements: ArrayInputItem[][];
+  defaultRequiredRoles: ArrayInputItem[][];
   afterConfirm?: () => void;
   afterDelete?: () => void;
 };
@@ -75,21 +75,21 @@ function ScenarioForm(props: ScenarioFormProps) {
     [
       {
         label: scenarioNameLabel,
-        value: '',
+        value: props.defaultScenarioName,
         type: 'string',
       },
     ],
     [
       {
         label: requiredElementsLabel,
-        value: [],
+        value: props.defaultRequiredElements,
         type: 'inputarray',
         // className: classes.requiredElement,
-        inputRow: [
+        rowInputsInfo: [
           { type: 'string', placeholder: requiredElementPlaceholder },
           { type: 'number', placeholder: minCountPlaceholder },
         ],
-        inputRender: (inputArray, label, index) => {
+        inputRender: (inputArray, rowInputsInfo, index) => {
           return (
             <>
               <Autocomplete
@@ -98,13 +98,13 @@ function ScenarioForm(props: ScenarioFormProps) {
                 disableClearable
                 getOptionLabel={(option) => option.name}
                 defaultValue={NULL_ELEMENT}
-                value={elements.find((el) => el.elementId === inputArray[0].value) ?? NULL_ELEMENT}
+                value={elements.find((el) => el.elementId === inputArray[0]) ?? NULL_ELEMENT}
                 className={classes.elementAutocomplete}
                 onChange={(_e, newValue) => {
                   const newArray = [
                     ...formState.findValue(requiredElementsLabel),
-                  ] as InputArrayItem[][];
-                  newArray[index][0].value = newValue?.elementId ?? NULL_ELEMENT;
+                  ] as ArrayInputItem[][];
+                  newArray[index][0] = newValue?.elementId ?? NULL_ELEMENT;
                   formDispatch(formState.setValueAction(requiredElementsLabel, newArray));
                 }}
                 renderInput={(params) => (
@@ -113,15 +113,15 @@ function ScenarioForm(props: ScenarioFormProps) {
               />
               <TextField
                 type="number"
-                label={inputArray[1].placeholder}
-                value={inputArray[1].value}
+                label={rowInputsInfo[1].placeholder}
+                value={inputArray[1]}
                 className={classes.inputCount}
                 onChange={(e) => {
                   const newValue = e.target.value;
                   const newArray = [
                     ...formState.findValue(requiredElementsLabel),
-                  ] as InputArrayItem[][];
-                  newArray[index][1].value = newValue !== '' ? parseInt(newValue) : '';
+                  ] as ArrayInputItem[][];
+                  newArray[index][1] = newValue !== '' ? parseInt(newValue) : '';
                   formDispatch(formState.setValueAction(requiredElementsLabel, newArray));
                 }}
               />
@@ -133,13 +133,13 @@ function ScenarioForm(props: ScenarioFormProps) {
     [
       {
         label: requiredRolesLabel,
-        value: [],
-        inputRow: [
+        value: props.defaultRequiredRoles,
+        rowInputsInfo: [
           { type: 'string', placeholder: requiredRolePlaceholder },
           { type: 'number', placeholder: minCountPlaceholder },
         ],
         type: 'inputarray',
-        inputRender: (inputArray, label, index) => {
+        inputRender: (inputArray, rowInputsInfo, index) => {
           return (
             <>
               <Autocomplete
@@ -148,13 +148,13 @@ function ScenarioForm(props: ScenarioFormProps) {
                 disableClearable
                 getOptionLabel={(option) => option}
                 defaultValue={''}
-                value={inputArray[0].value as string}
+                value={inputArray[0] as string}
                 className={classes.elementAutocomplete}
                 onChange={(_e, newValue) => {
                   const newArray = [
                     ...formState.findValue(requiredRolesLabel),
-                  ] as InputArrayItem[][];
-                  newArray[index][0].value = newValue;
+                  ] as ArrayInputItem[][];
+                  newArray[index][0] = newValue;
                   formDispatch(formState.setValueAction(requiredRolesLabel, newArray));
                 }}
                 renderInput={(params) => (
@@ -163,15 +163,15 @@ function ScenarioForm(props: ScenarioFormProps) {
               />
               <TextField
                 type="number"
-                label={inputArray[1].placeholder}
-                value={inputArray[1].value}
+                label={rowInputsInfo[1].placeholder}
+                value={inputArray[1]}
                 className={classes.inputCount}
                 onChange={(e) => {
                   const newValue = e.target.value;
                   const newArray = [
                     ...formState.findValue(requiredRolesLabel),
-                  ] as InputArrayItem[][];
-                  newArray[index][1].value = newValue !== '' ? parseInt(newValue) : '';
+                  ] as ArrayInputItem[][];
+                  newArray[index][1] = newValue !== '' ? parseInt(newValue) : '';
                   formDispatch(formState.setValueAction(requiredRolesLabel, newArray));
                 }}
               />
@@ -192,8 +192,8 @@ function ScenarioForm(props: ScenarioFormProps) {
         // Retrieve the form data
         const requiredElementsFromForm = formState.findValue(
           requiredElementsLabel,
-        ) as InputArrayItem[][];
-        const requiredRolesFromForm = formState.findValue(requiredRolesLabel) as InputArrayItem[][];
+        ) as ArrayInputItem[][];
+        const requiredRolesFromForm = formState.findValue(requiredRolesLabel) as ArrayInputItem[][];
         const scenarioName = formState.findValue(scenarioNameLabel) as string;
 
         // Format the data to be readable
@@ -202,8 +202,8 @@ function ScenarioForm(props: ScenarioFormProps) {
             return [
               ...reqEls,
               {
-                elementId: inputArray[0].value as string,
-                minCount: inputArray[1].value as number,
+                elementId: inputArray[0] as string,
+                minCount: inputArray[1] as number,
               },
             ];
           },
@@ -214,8 +214,8 @@ function ScenarioForm(props: ScenarioFormProps) {
             return [
               ...reqRoles,
               {
-                requiredRole: inputArray[0].value as string,
-                minCount: inputArray[1].value as number,
+                requiredRole: inputArray[0] as string,
+                minCount: inputArray[1] as number,
               },
             ];
           },

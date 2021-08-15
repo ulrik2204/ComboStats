@@ -6,6 +6,13 @@ import ListView from '../components/ListView/index';
 import PageTemplate from '../components/PageTemplate/index';
 import ScenarioForm from '../components/ScenarioForm/index';
 import { populationPageUrl } from '../lib/constants-frontend';
+import {
+  parseStringListAsRequiredElements,
+  parseStringListAsStringNumberTuples,
+  requiredElementsToStringList,
+  requiredRolesToStringList,
+} from '../lib/core';
+import { useToast } from '../lib/utils-frontend';
 import { useAppSelector } from '../store/index';
 
 const useStyles = makeStyles(() =>
@@ -22,6 +29,7 @@ const SuccessesPage: FC = () => {
   const classes = useStyles();
   const state = useAppSelector((state) => state);
   const router = useRouter();
+  const toast = useToast();
 
   // If the user tries to access the page without having a set population, redirect to populaiton.
   useEffect(() => {
@@ -45,6 +53,7 @@ const SuccessesPage: FC = () => {
               defaultRequiredRoles={[]}
               defaultScenarioName=""
               type="add"
+              afterConfirm={() => setOpenAddPopup(false)}
             />
           )}
           editItemTitle="Edit combo"
@@ -52,19 +61,24 @@ const SuccessesPage: FC = () => {
             return (
               <ScenarioForm
                 // Handle the default later
-                defaultRequiredElements={[]}
-                defaultRequiredRoles={[]}
-                defaultScenarioName=""
+                defaultRequiredElements={parseStringListAsRequiredElements(
+                  clickedItem.item.notes,
+                  state.population.population.elements,
+                )}
+                defaultRequiredRoles={parseStringListAsStringNumberTuples(
+                  clickedItem.corrItem?.notes || [],
+                )}
+                defaultScenarioName={clickedItem.item.name}
                 type="edit"
                 scenarioId={clickedItem.item.id}
+                afterConfirm={() => setOpenEditPopup(false)}
+                afterDelete={() => setOpenEditPopup(false)}
               />
             );
           }}
           infoList={state.successes.scenarioGroup.scenarios.map(
             ({ scenarioId, name, requiredElements }) => {
-              const elementInfo = requiredElements.map(
-                (reqEl) => `${reqEl.element.name} (${reqEl.minCount})`,
-              );
+              const elementInfo = requiredElementsToStringList(requiredElements);
               return {
                 id: scenarioId,
                 name,
@@ -75,12 +89,10 @@ const SuccessesPage: FC = () => {
           )}
           corrMoreInfoList={state.successes.scenarioGroup.scenarios.map(
             ({ scenarioId, requiredRoles }) => {
-              const rolesInfo = requiredRoles.map(
-                (reqRole) => `${reqRole.requiredRole} (${reqRole.minCount})`,
-              );
+              const rolesInfo = requiredRolesToStringList(requiredRoles);
               return {
                 id: scenarioId,
-                name: 'Required roles',
+                name: '',
                 notes: rolesInfo,
                 count: 1,
               };

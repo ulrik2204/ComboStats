@@ -44,14 +44,11 @@ export type CUDScenarioGroupThunk = AppThunk<Promise<APIResponse<CUDScenarioGrou
 
 export type CUSceanrioThunk = AppThunk<Promise<APIResponse<CUScenarioResponse>>>;
 
-export type InputArrayItem = { placeholder: string; className?: string } & (
-  | { value: string; type: 'string' }
-  | { value: number; type: 'number' }
-);
+export type ArrayInputItem = string | number;
 
 type InputRenderSingle = { inputRender?: (value: string | number, label: string) => JSX.Element };
 
-export type InputTypeRow = Omit<InputArrayItem, 'value'>;
+export type ArrayInputInfo = { placeholder: string; type: 'string' | 'number'; className?: string };
 
 type FormInputValue =
   | (({ value: string; type: 'string' } | { value: number; type: 'number' }) & InputRenderSingle)
@@ -62,10 +59,14 @@ type FormInputValue =
           inputRender?: (arrayItem: string, label: string, index: number) => JSX.Element;
         }
       | {
-          value: InputArrayItem[][];
+          value: ArrayInputItem[][];
           type: 'inputarray';
-          inputRow: InputTypeRow[];
-          inputRender?: (inputArray: InputArrayItem[], label: string, index: number) => JSX.Element;
+          rowInputsInfo: ArrayInputInfo[];
+          inputRender?: (
+            inputArray: ArrayInputItem[],
+            rowInputsInfo: ArrayInputInfo[],
+            index: number,
+          ) => JSX.Element;
         }
     );
 

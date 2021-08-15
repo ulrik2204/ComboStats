@@ -1,5 +1,6 @@
 import { Element, ElementInScenario, RoleInScenario } from '.prisma/client';
-import { ScenarioData } from './types';
+import { ElementInScenarioData, ScenarioData } from './types';
+import { ArrayInputItem } from './types-frontend';
 /**
  * Making an element's appearence consistent by
  * sorting the roles aphabetically and removing
@@ -263,4 +264,37 @@ export const fixScenarios = (scenarios: ScenarioData[]) => {
   });
   // Return the newScenarios sorted by name.
   return newScenarios.sort((a, b) => (a.name === b.name ? 0 : a.name > b.name ? 1 : -1));
+};
+
+export const requiredElementsToStringList = (
+  requiredElements: ElementInScenarioData[],
+): string[] => {
+  return requiredElements.map((reqEl) => `${reqEl.element.name} (${reqEl.minCount})`);
+};
+
+export const requiredRolesToStringList = (requiredRoles: RoleInScenario[]): string[] => {
+  return requiredRoles.map((reqRole) => `${reqRole.requiredRole} (${reqRole.minCount})`);
+};
+
+export const parseStringListAsStringNumberTuples = (stringList: string[]): ArrayInputItem[][] => {
+  return stringList.map((str) => {
+    const infoList = str.split(' ');
+    const string = infoList[0];
+    // Get the minCount of the element by parsing the second infoList string and removing paranthesis.
+    const number = parseInt(infoList[1].replace(/[()]/g, ''));
+    return [string, number];
+  });
+};
+
+export const parseStringListAsRequiredElements = (
+  stringList: string[],
+  elements: Element[],
+): ArrayInputItem[][] => {
+  const tuples = parseStringListAsStringNumberTuples(stringList);
+  return tuples.map((tuple) => {
+    const element = elements.find((el) => el.name === tuple[0]);
+    const elementId = element?.elementId ?? '';
+    const minCount = tuple[1];
+    return [elementId, minCount];
+  });
 };

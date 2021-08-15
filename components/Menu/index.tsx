@@ -78,9 +78,6 @@ const Menu: FC = () => {
     setClicked(router.pathname);
   }, [router.pathname]);
 
-  useEffect(() => {
-    console.log(lastClicked, router.pathname);
-  }, [lastClicked]);
   return (
     <div>
       <MuiThemeProvider theme={backgroundTheme}>

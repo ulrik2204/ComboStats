@@ -29,10 +29,7 @@ const ListElement: FC<ListElementProps> = (props) => {
       <div>
         <ListItemText primary={<b>{props.item.name}</b>} secondary={props.item.notes.join(', ')} />
         {props.item2 && (
-          <ListItemText
-            primary={<b>{props.item2?.name}</b>}
-            secondary={props.item2?.notes.join(', ')}
-          />
+          <ListItemText primary={props.item2?.name} secondary={props.item2?.notes.join(', ')} />
         )}
       </div>
     </ListItem>

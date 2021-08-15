@@ -3,7 +3,6 @@ import List from '@material-ui/core/List';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { buttonTheme } from '../../lib/themes';
 import { ListObject } from '../../lib/types-frontend';
-import { useToast } from '../../lib/utils-frontend';
 import ListElement from '../ListElement';
 import Popup from '../Popup/index';
 
@@ -21,11 +20,11 @@ type ListViewProps = {
   // onDeleteAllClick: () => void;
   showAddButton: boolean;
   addItemTitle: string;
-  addItemForm: (setOpenAddPopup?: Dispatch<SetStateAction<boolean>>) => JSX.Element;
+  addItemForm: (setOpenAddPopup: Dispatch<SetStateAction<boolean>>) => JSX.Element;
   editItemTitle: string;
   editItemForm: (
     clickedItem: { item: ListObject; corrItem?: ListObject },
-    setOpenEditPopup?: Dispatch<SetStateAction<boolean>>,
+    setOpenEditPopup: Dispatch<SetStateAction<boolean>>,
   ) => JSX.Element;
 };
 

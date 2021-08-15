@@ -13,7 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { Dispatch, FC } from 'react';
 import { buttonTheme } from '../../lib/themes';
 import { ErrorResponse } from '../../lib/types';
-import { FormActionTypes, FormState, FORM_ACTION, InputArrayItem } from '../../lib/types-frontend';
+import { ArrayInputItem, FormActionTypes, FormState, FORM_ACTION } from '../../lib/types-frontend';
 import { ToastOptions, useToast } from '../../lib/utils-frontend';
 
 type FormTemplateProps = {
@@ -28,6 +28,9 @@ type FormTemplateProps = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    simpleTextField: {
+      marginRight: '2em',
+    },
     rowDiv: {
       marginRight: '2em',
       marginBottom: '1em',
@@ -91,7 +94,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                       label={input.label}
                       value={input.value}
                       type={type}
-                      className={`${input.className}`}
+                      className={`${classes.simpleTextField} ${input.className}`}
                       onChange={(e) => {
                         const value = e.target.value.toString();
                         if (input.type === 'string')
@@ -132,7 +135,11 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                               input.type === 'array' ? (
                                 input.inputRender(item as string, input.label, itemIndex)
                               ) : (
-                                input.inputRender(item as InputArrayItem[], input.label, itemIndex)
+                                input.inputRender(
+                                  item as ArrayInputItem[],
+                                  input.rowInputsInfo,
+                                  itemIndex,
+                                )
                               )
                             ) : input.type === 'array' ? (
                               <TextField
@@ -151,21 +158,22 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                               // The item is an array of objects with value, label and type (inputarray)
                               //
                               input.value.map((arrayInputs, arrayIndex) => {
-                                return arrayInputs.map((arrayInput, arrayInputIndex) => {
+                                return arrayInputs.map((inputArrayItem, arrayInputIndex) => {
+                                  const inputRowType = input.rowInputsInfo[arrayInputIndex];
                                   return (
                                     <TextField
                                       key={`ArrayRowTextField${outerIndex},${innerIndex},${itemIndex},${arrayIndex},${arrayInputIndex}`}
-                                      value={arrayInput.value}
+                                      value={inputArrayItem}
                                       className={`${classes.arrayFields} ${
-                                        arrayInput.className ?? ''
+                                        inputRowType.className ?? ''
                                       }`}
-                                      type={arrayInput.type}
+                                      type={inputRowType.type}
                                       // The placeholder is the item text minus the last letter ("roles" become "role")
-                                      placeholder={arrayInput.placeholder}
+                                      placeholder={input.rowInputsInfo[arrayIndex].placeholder}
                                       onChange={(e) => {
                                         const newValue = e.target.value;
                                         const newItems = [...arrayInputs];
-                                        newItems[arrayInputIndex].value =
+                                        newItems[arrayInputIndex] =
                                           newValue === '' ? '' : parseInt(newValue);
                                         return setField([outerIndex, innerIndex], newItems);
                                       }}
@@ -202,11 +210,10 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                           input.type === 'array'
                             ? ''
                             : ([
-                                ...input.inputRow.map((arrayInput) => ({
-                                  ...arrayInput,
-                                  value: arrayInput.type === 'number' ? 1 : '',
-                                })),
-                              ] as InputArrayItem[]);
+                                ...input.rowInputsInfo.map((inputType) =>
+                                  inputType.type === 'number' ? 1 : '',
+                                ),
+                              ] as ArrayInputItem[]);
                         newItems.push(pushItem);
                         return setField([outerIndex, innerIndex], newItems);
                       }}

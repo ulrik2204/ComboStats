@@ -48,7 +48,7 @@ const PopulationPage: FC = () => {
               defaultRoles={['']}
               defaultCount={1}
               type="add"
-              afterConfirm={() => setOpenAddPopup?.(false)}
+              afterConfirm={() => setOpenAddPopup(false)}
             />
           )}
           editItemTitle="Edit card(s)"
@@ -58,12 +58,12 @@ const PopulationPage: FC = () => {
               defaultRoles={clickedItem.item.notes}
               defaultCount={
                 populationData.elements.find((element) => element.elementId === clickedItem.item.id)
-                  ?.count ?? -1 // It cannot coe to -1
+                  ?.count ?? -1 // It cannot be to -1
               }
               elementId={clickedItem.item.id}
               type="edit"
-              afterConfirm={() => setOpenEditPopup?.(false)}
-              afterDelete={() => setOpenEditPopup?.(false)}
+              afterConfirm={() => setOpenEditPopup(false)}
+              afterDelete={() => setOpenEditPopup(false)}
             />
           )}
         />
