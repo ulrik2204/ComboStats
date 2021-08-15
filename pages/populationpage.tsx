@@ -29,7 +29,7 @@ const PopulationPage: FC = () => {
     <PageTemplate
       title="Deck"
       description="The group of cards that are drawn from."
-      column2={<div>Lorem ipsum dolor sit amet</div>}
+      column2={<div></div>}
     >
       <div className={classes.overDiv}>
         <GlobalStateDropdown type="population" className={classes.globalDropdown} />

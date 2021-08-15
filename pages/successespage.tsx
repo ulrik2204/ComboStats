@@ -40,7 +40,7 @@ const SuccessesPage: FC = () => {
     <PageTemplate
       title="Combos"
       description="Register a combo/success when either of these scenarios occur."
-      column2={<div>Lorem ipsum dolor sit amet</div>}
+      column2={<div></div>}
     >
       <div className={classes.overDiv}>
         <GlobalStateDropdown type="successes" className={classes.globalDropdown} />
