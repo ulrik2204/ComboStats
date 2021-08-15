@@ -279,9 +279,9 @@ export const requiredRolesToStringList = (requiredRoles: RoleInScenario[]): stri
 export const parseStringListAsStringNumberTuples = (stringList: string[]): ArrayInputItem[][] => {
   return stringList.map((str) => {
     const infoList = str.split(' ');
-    const string = infoList[0];
+    const string = infoList.slice(0, -1).join(' ');
     // Get the minCount of the element by parsing the second infoList string and removing paranthesis.
-    const number = parseInt(infoList[1].replace(/[()]/g, ''));
+    const number = parseInt(infoList[infoList.length - 1].replace(/[()]/g, ''));
     return [string, number];
   });
 };
