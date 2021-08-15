@@ -1,3 +1,4 @@
+import { Element } from '@prisma/client';
 import { PopulationState, ScenarioGroupState } from './types-frontend';
 
 // Some constants for the frontend only.
@@ -7,6 +8,14 @@ export const successesPageUrl = '/successespage';
 export const morePageUrl = '/morepage';
 export const calculatePageUrl = '/calculatepage';
 export const homePageUrl = '/';
+
+export const NULL_ELEMENT: Element = {
+  elementId: '',
+  name: '',
+  count: 0,
+  roles: [],
+  populationId: '',
+};
 
 export const INITIAL_POPULATION = {
   populationId: '',

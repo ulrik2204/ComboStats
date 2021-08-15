@@ -16,7 +16,7 @@ type ElementFormCommonProps = {
   defaultRoles: string[];
   defaultCount: number;
   afterConfirm?: () => void;
-  afterDeleteAll?: () => void;
+  afterDelete?: () => void;
 };
 
 type ElementFormTypeProps = { type: 'add' } | { type: 'edit'; elementId: string };
@@ -103,14 +103,13 @@ const ElementForm: FC<ElementFormProps> = (props) => {
               }),
             );
 
-          // Clear all input data if appropriate.
           props.afterConfirm?.();
 
           return res.data;
         }}
         toastOnSecondButtonClick={{
           title: 'Delete all copies?',
-          description: 'This action is irreversible',
+          description: 'This action is irreversible.',
           type: 'confirm',
         }}
         onSecondButtonClick={
@@ -119,7 +118,7 @@ const ElementForm: FC<ElementFormProps> = (props) => {
             : async () => {
                 // Just perform the delete action
                 const res = await appDispatch(deleteElementTAction(props.elementId));
-                props.afterDeleteAll?.();
+                props.afterDelete?.();
                 return res.data;
               }
         }

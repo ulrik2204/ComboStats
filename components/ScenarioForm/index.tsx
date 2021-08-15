@@ -2,11 +2,17 @@ import { createStyles, makeStyles, TextField, Theme } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { Element } from '@prisma/client';
 import React, { useMemo } from 'react';
+import { NULL_ELEMENT } from '../../lib/constants-frontend';
 import { fixRoles } from '../../lib/core';
-import { RequiredElement, RequiredRole } from '../../lib/types';
-import { InputArrayItem, FormInput } from '../../lib/types-frontend';
+import { APIResponse, CUScenarioResponse, RequiredElement, RequiredRole } from '../../lib/types';
+import { FormInput, InputArrayItem } from '../../lib/types-frontend';
 import { useForm } from '../../lib/utils-frontend';
-import { useAppSelector } from '../../store/index';
+import {
+  createScenarioTAction,
+  deleteScenarioTAction,
+  editScenarioTAction,
+} from '../../store/actions/scenario-group-actions';
+import { useAppDispatch, useAppSelector } from '../../store/index';
 import FormTemplate from '../FormTemplate/index';
 
 type ScenarioFormCommonProps = {
@@ -14,7 +20,7 @@ type ScenarioFormCommonProps = {
   defaultRequiredElements: RequiredElement[];
   defaultRequiredRoles: RequiredRole[];
   afterConfirm?: () => void;
-  afterDeleteAll?: () => void;
+  afterDelete?: () => void;
 };
 
 type ScenarioFormTypeProps = { type: 'add' } | { type: 'edit'; scenarioId: string };
@@ -50,14 +56,21 @@ const minCountPlaceholder = 'Min. Count';
 const requiredRolesLabel = 'Required Roles';
 const requiredRolePlaceholder = 'Required Role';
 
+/**
+ * Component handling the form structure and submit of adding and editing a scenario.
+ */
 function ScenarioForm(props: ScenarioFormProps) {
   const classes = useStyles();
+  const appDispatch = useAppDispatch();
   const elements = useAppSelector((state) => state.population.population.elements);
+  const elementOptions = [NULL_ELEMENT, ...elements];
   const roles = useMemo(
     () => fixRoles(elements.reduce((roles: string[], el) => [...roles, ...el.roles], [])),
     [elements],
   );
+  const roleOptions = useMemo(() => ['', ...roles], [elements]);
 
+  // The form object
   const initialFormState: FormInput[][] = [
     [
       {
@@ -80,18 +93,18 @@ function ScenarioForm(props: ScenarioFormProps) {
           return (
             <>
               <Autocomplete
-                options={elements}
+                options={elementOptions}
                 autoSelect
                 disableClearable
                 getOptionLabel={(option) => option.name}
-                defaultValue={elements[0]}
-                value={elements.find((el) => el.elementId === inputArray[0].value) ?? elements[0]}
+                defaultValue={NULL_ELEMENT}
+                value={elements.find((el) => el.elementId === inputArray[0].value) ?? NULL_ELEMENT}
                 className={classes.elementAutocomplete}
                 onChange={(_e, newValue) => {
                   const newArray = [
                     ...formState.findValue(requiredElementsLabel),
                   ] as InputArrayItem[][];
-                  newArray[index][0].value = newValue?.elementId ?? '';
+                  newArray[index][0].value = newValue?.elementId ?? NULL_ELEMENT;
                   formDispatch(formState.setValueAction(requiredElementsLabel, newArray));
                 }}
                 renderInput={(params) => (
@@ -130,12 +143,12 @@ function ScenarioForm(props: ScenarioFormProps) {
           return (
             <>
               <Autocomplete
-                options={roles}
+                options={roleOptions}
                 autoSelect
                 disableClearable
                 getOptionLabel={(option) => option}
-                defaultValue={roles[0]}
-                value={(inputArray[0].value as string) || roles[0]}
+                defaultValue={''}
+                value={inputArray[0].value as string}
                 className={classes.elementAutocomplete}
                 onChange={(_e, newValue) => {
                   const newArray = [
@@ -156,10 +169,10 @@ function ScenarioForm(props: ScenarioFormProps) {
                 onChange={(e) => {
                   const newValue = e.target.value;
                   const newArray = [
-                    ...formState.findValue(requiredElementsLabel),
+                    ...formState.findValue(requiredRolesLabel),
                   ] as InputArrayItem[][];
                   newArray[index][1].value = newValue !== '' ? parseInt(newValue) : '';
-                  formDispatch(formState.setValueAction(requiredElementsLabel, newArray));
+                  formDispatch(formState.setValueAction(requiredRolesLabel, newArray));
                 }}
               />
             </>
@@ -169,63 +182,109 @@ function ScenarioForm(props: ScenarioFormProps) {
     ],
   ];
   const [formState, formDispatch] = useForm(initialFormState);
+
+  // The component render
   return (
-    <div>
-      <FormTemplate
-        formState={formState}
-        formDispatch={formDispatch}
-        onConfirm={async () => ({})}
-      />
-    </div>
+    <FormTemplate
+      formState={formState}
+      formDispatch={formDispatch}
+      onConfirm={async () => {
+        // Retrieve the form data
+        const requiredElementsFromForm = formState.findValue(
+          requiredElementsLabel,
+        ) as InputArrayItem[][];
+        const requiredRolesFromForm = formState.findValue(requiredRolesLabel) as InputArrayItem[][];
+        const scenarioName = formState.findValue(scenarioNameLabel) as string;
+
+        // Format the data to be readable
+        const requiredElements: RequiredElement[] = requiredElementsFromForm.reduce(
+          (reqEls: RequiredElement[], inputArray) => {
+            return [
+              ...reqEls,
+              {
+                elementId: inputArray[0].value as string,
+                minCount: inputArray[1].value as number,
+              },
+            ];
+          },
+          [] as RequiredElement[],
+        );
+        const requiredRoles: RequiredRole[] = requiredRolesFromForm.reduce(
+          (reqRoles, inputArray) => {
+            return [
+              ...reqRoles,
+              {
+                requiredRole: inputArray[0].value as string,
+                minCount: inputArray[1].value as number,
+              },
+            ];
+          },
+          [] as RequiredRole[],
+        );
+
+        // Validate data
+        if (scenarioName === '') return { errorMsg: 'No name was provided.' };
+        console.log('Required stuff', scenarioName, requiredElements, requiredRoles);
+        // If any requiredRole or elementId in requiredElement is empty, send error.
+        const invalidRequiredElement = requiredElements.find(
+          (reqEl) => reqEl.elementId === '' || reqEl.minCount === 0,
+        );
+        if (invalidRequiredElement) return { errorMsg: 'No name or Min. Count of 0 was provided.' };
+        const invalidRequiredRole = requiredRoles.find(
+          (reqRole) => reqRole.requiredRole === '' || reqRole.minCount === 0,
+        );
+        if (invalidRequiredRole)
+          return { errorMsg: 'An invalid role or Min. Count of 0 was provided ' };
+
+        // Check if the Min. Count of a requiredElement exceeds the count of the element in the deck.
+        const invalidRequiredElementMinCount = requiredElements.find((reqEl) => {
+          const element = elements.find((el) => el.elementId === reqEl.elementId);
+          // If the element with the given id is not found, something is wrong and return true.
+          if (!element) return true;
+          return reqEl.minCount > element.count;
+        });
+        if (invalidRequiredElementMinCount)
+          return {
+            errorMsg:
+              'It is impossible to draw the provided Min. Count of a given card as it is greater than the count of the card in the deck.',
+          };
+
+        // The form data is now valid. Submit the form.
+        let res: APIResponse<CUScenarioResponse>;
+        if (props.type === 'add')
+          res = await appDispatch(
+            createScenarioTAction({ scenarioName, requiredElements, requiredRoles }),
+          );
+        else
+          res = await appDispatch(
+            editScenarioTAction(props.scenarioId, {
+              newScenarioName: scenarioName,
+              newRequiredElements: requiredElements,
+              newRequiredRoles: requiredRoles,
+            }),
+          );
+        // Do something afterwards if appropriate.
+        props.afterConfirm?.();
+
+        return res.data;
+      }}
+      toastOnSecondButtonClick={{
+        title: 'Delete scenario?',
+        description: 'This action is irreversible.',
+        type: 'confirm',
+      }}
+      onSecondButtonClick={
+        props.type !== 'edit'
+          ? undefined
+          : async () => {
+              // Delete the scenario
+              const res = await appDispatch(deleteScenarioTAction(props.scenarioId));
+              props.afterDelete?.();
+              return res.data;
+            }
+      }
+    />
   );
 }
 
 export default ScenarioForm;
-
-/**
- *     <MuiThemeProvider theme={buttonTheme}>
-    <div>
-      <div>
-        {(() => {
-          const elNameFields: JSX.Element[] = [];
-          for (let i = 0; i < successes.length; i++) {
-            elNameFields.push(
-              <div className={classes.elNameDiv} key={i}>
-                <TextField
-                  value={successes[i]}
-                  placeholder={`name${i}`}
-                  onChange={(e) => {
-                    const newSucc = [...successes];
-                    newSucc[i] = e.target.value;
-                    setSuccesses(newSucc);
-                  }}
-                />
-                <IconButton
-                  onClick={() => {
-                    const newSucc = [...successes];
-                    newSucc.splice(i, 1);
-                    setSuccesses(newSucc);
-                  }}
-                >
-                  <CloseIcon color="secondary" />
-                </IconButton>
-              </div>,
-            );
-          }
-          return elNameFields;
-        })()}
-      </div>
-      <Button
-        startIcon={<AddIcon />}
-        onClick={() => {
-          const newSucc = [...successes];
-          newSucc.push('');
-          setSuccesses(newSucc);
-        }}
-      >
-        Add card name
-      </Button>
-      <div>End</div>
-    </div>
-    </MuiThemeProvider>
- */

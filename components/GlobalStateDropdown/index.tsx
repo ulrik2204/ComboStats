@@ -112,9 +112,6 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
   const usedLabel = props.type === 'population' ? 'deck' : 'combos';
   const relevantList =
     props.type === 'population' ? thisState.populations : thisState.scenarioGroups;
-  // TODO: Add if statement os relevant global also can be successes
-  // const relevantGlobal =
-  //   props.type === 'population' ? populationState.population : successesState.scenarioGroup;
   const setRelevantGlobal = (newValue: any) => {
     if (props.type === 'population') return appDispatch(setPopulationAction(newValue));
     else return appDispatch(successesActions.setScenarioGroup(newValue));

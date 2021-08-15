@@ -63,7 +63,7 @@ const PopulationPage: FC = () => {
               elementId={clickedItem.item.id}
               type="edit"
               afterConfirm={() => setOpenEditPopup?.(false)}
-              afterDeleteAll={() => setOpenEditPopup?.(false)}
+              afterDelete={() => setOpenEditPopup?.(false)}
             />
           )}
         />
