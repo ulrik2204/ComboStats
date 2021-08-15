@@ -19,6 +19,7 @@ type ScenarioFormCommonProps = {
   defaultScenarioName: string;
   defaultRequiredElements: ArrayInputItem[][];
   defaultRequiredRoles: ArrayInputItem[][];
+  scenarioGroupType: 'successes' | 'failures';
   afterConfirm?: () => void;
   afterDelete?: () => void;
 };
@@ -253,15 +254,22 @@ function ScenarioForm(props: ScenarioFormProps) {
         let res: APIResponse<CUScenarioResponse>;
         if (props.type === 'add')
           res = await appDispatch(
-            createScenarioTAction({ scenarioName, requiredElements, requiredRoles }),
+            createScenarioTAction(
+              { scenarioName, requiredElements, requiredRoles },
+              props.scenarioGroupType,
+            ),
           );
         else
           res = await appDispatch(
-            editScenarioTAction(props.scenarioId, {
-              newScenarioName: scenarioName,
-              newRequiredElements: requiredElements,
-              newRequiredRoles: requiredRoles,
-            }),
+            editScenarioTAction(
+              props.scenarioId,
+              {
+                newScenarioName: scenarioName,
+                newRequiredElements: requiredElements,
+                newRequiredRoles: requiredRoles,
+              },
+              props.scenarioGroupType,
+            ),
           );
         // Do something afterwards if appropriate.
         props.afterConfirm?.();

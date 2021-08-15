@@ -12,7 +12,7 @@ import {
   requiredElementsToStringList,
   requiredRolesToStringList,
 } from '../lib/core';
-import { useToast } from '../lib/utils-frontend';
+import { useLoading } from '../lib/utils-frontend';
 import { useAppSelector } from '../store/index';
 
 const useStyles = makeStyles(() =>
@@ -29,7 +29,7 @@ const SuccessesPage: FC = () => {
   const classes = useStyles();
   const state = useAppSelector((state) => state);
   const router = useRouter();
-  const toast = useToast();
+  useLoading(state.successes.loading, 'Loading data...', 'Fetching your data from the server.');
 
   // If the user tries to access the page without having a set population, redirect to populaiton.
   useEffect(() => {
@@ -52,6 +52,7 @@ const SuccessesPage: FC = () => {
               defaultRequiredElements={[]}
               defaultRequiredRoles={[]}
               defaultScenarioName=""
+              scenarioGroupType="successes"
               type="add"
               afterConfirm={() => setOpenAddPopup(false)}
             />
@@ -69,6 +70,7 @@ const SuccessesPage: FC = () => {
                   clickedItem.corrItem?.notes || [],
                 )}
                 defaultScenarioName={clickedItem.item.name}
+                scenarioGroupType="successes"
                 type="edit"
                 scenarioId={clickedItem.item.id}
                 afterConfirm={() => setOpenEditPopup(false)}

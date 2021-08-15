@@ -17,7 +17,7 @@ import {
   GetScenarioGroupScenariosResponse,
 } from '../../lib/types';
 import { AppThunk, CUDScenarioGroupThunk, CUSceanrioThunk } from '../../lib/types-frontend';
-import { successesActions } from '../reducers/scenario-group';
+import { failuresActions, successesActions } from '../reducers/scenario-group';
 
 export const createScenarioGroupTAction = (
   body: Omit<CreateScenarioGroupBody, 'populationId'>,
@@ -36,7 +36,7 @@ export const createScenarioGroupTAction = (
   };
 };
 
-export const editScenarioGroupTAction = (body: EditScenarioGroupBody): CUDScenarioGroupThunk => {
+export const editSuccessesTAction = (body: EditScenarioGroupBody): CUDScenarioGroupThunk => {
   return async (dispatch, getState) => {
     dispatch(successesActions.loading());
     const scenarioGroupId = getState().successes.scenarioGroup.scenarioGroupId;
@@ -50,7 +50,7 @@ export const editScenarioGroupTAction = (body: EditScenarioGroupBody): CUDScenar
   };
 };
 
-export const deleteScenarioGroupTAction = (): CUDScenarioGroupThunk => {
+export const deleteSuccessesTAction = (): CUDScenarioGroupThunk => {
   return async (dispatch, getState) => {
     dispatch(successesActions.loading());
     const scenarioGroupId = getState().successes.scenarioGroup.scenarioGroupId;
@@ -64,34 +64,43 @@ export const deleteScenarioGroupTAction = (): CUDScenarioGroupThunk => {
   };
 };
 
-export const getScenarioGroupTAction = (): AppThunk<
-  Promise<APIResponse<GetScenarioGroupScenariosResponse>>
-> => {
+export const getScenarioGroupTAction = (
+  type: 'successes' | 'failures',
+): AppThunk<Promise<APIResponse<GetScenarioGroupScenariosResponse>>> => {
   return async (dispatch, getState) => {
-    dispatch(successesActions.loading());
-    const scenarioGroupId = getState().successes.scenarioGroup.scenarioGroupId;
+    const actions = type === 'successes' ? successesActions : failuresActions;
+    dispatch(actions.loading());
+    const scenarioGroupId =
+      type === 'successes'
+        ? getState().successes.scenarioGroup.scenarioGroupId
+        : getState().failures.scenarioGroup.scenarioGroupId;
     const res = await getScenarioGroupFromAPI(scenarioGroupId);
     if (res.ok) {
-      dispatch(successesActions.getScenarioGroupSuccess(res.data));
+      dispatch(actions.getScenarioGroupSuccess(res.data));
       return res;
     }
-    dispatch(successesActions.failure(res.data));
+    dispatch(actions.failure(res.data));
     return res;
   };
 };
 
 export const createScenarioTAction = (
   body: Omit<CreateScenarioBody, 'scenarioGroupId'>,
+  type: 'successes' | 'failures',
 ): CUSceanrioThunk => {
   return async (dispatch, getState) => {
-    dispatch(successesActions.loading());
-    const scenarioGroupId = getState().successes.scenarioGroup.scenarioGroupId;
+    const actions = type === 'successes' ? successesActions : failuresActions;
+    dispatch(actions.loading());
+    const scenarioGroupId =
+      type === 'successes'
+        ? getState().successes.scenarioGroup.scenarioGroupId
+        : getState().failures.scenarioGroup.scenarioGroupId;
     const res = await createScenarioFromAPI({ ...body, scenarioGroupId });
     if (res.ok) {
-      dispatch(successesActions.addScenarioSuccess(res.data));
+      dispatch(actions.addScenarioSuccess(res.data));
       return res;
     }
-    dispatch(successesActions.failure(res.data));
+    dispatch(actions.failure(res.data));
     return res;
   };
 };
@@ -99,15 +108,17 @@ export const createScenarioTAction = (
 export const editScenarioTAction = (
   scenarioId: string,
   body: EditScenarioBody,
+  type: 'successes' | 'failures',
 ): CUSceanrioThunk => {
   return async (dispatch) => {
-    dispatch(successesActions.loading());
+    const actions = type === 'successes' ? successesActions : failuresActions;
+    dispatch(actions.loading());
     const res = await editScenarioFromAPI(scenarioId, body);
     if (res.ok) {
-      dispatch(successesActions.editScenarioSuccess(res.data));
+      dispatch(actions.editScenarioSuccess(res.data));
       return res;
     }
-    dispatch(successesActions.failure(res.data));
+    dispatch(actions.failure(res.data));
     return res;
   };
 };

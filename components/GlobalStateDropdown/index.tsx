@@ -12,8 +12,8 @@ import {
 } from '../../store/actions/population-actions';
 import {
   createScenarioGroupTAction,
-  deleteScenarioGroupTAction,
-  editScenarioGroupTAction,
+  deleteSuccessesTAction,
+  editSuccessesTAction,
   getScenarioGroupTAction,
 } from '../../store/actions/scenario-group-actions';
 import { useAppDispatch, useAppSelector } from '../../store/index';
@@ -125,7 +125,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
 
   const relevantGetDataFromAPI = useCallback(() => {
     if (props.type === 'population') return appDispatch(getPopulationTAction());
-    else return appDispatch(getScenarioGroupTAction());
+    else return appDispatch(getScenarioGroupTAction('successes'));
   }, [props.type]);
 
   // Update the global population to the popualtion with name as currentPopulationName
@@ -223,7 +223,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
             else if (thisState.popupState === 'Add' && props.type === 'successes')
               response = await appDispatch(createScenarioGroupTAction({ name, type: 'SUCCESSES' }));
             // Else thisState.popupState is 'Add' and props.type is 'successes'
-            else response = await appDispatch(editScenarioGroupTAction({ newName: name }));
+            else response = await appDispatch(editSuccessesTAction({ newName: name }));
             thisDispatch(setField('openPopup', false));
             return response.data;
           }}
@@ -235,7 +235,7 @@ const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
                   if (props.type === 'population')
                     response = await appDispatch(deletePopulationTAction());
                   // Else props.type is 'successes'
-                  else response = await appDispatch(deleteScenarioGroupTAction());
+                  else response = await appDispatch(deleteSuccessesTAction());
                   thisDispatch(setField('openPopup', false));
                   return response.data;
                 }
