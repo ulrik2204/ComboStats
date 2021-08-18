@@ -1,13 +1,16 @@
+import { Button } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import { ScenarioGroup } from '@prisma/client';
 import { useRouter } from 'next/dist/client/router';
 import { FC, useEffect, useState } from 'react';
 import FormTemplate from '../components/FormTemplate/index';
 import PageTemplate from '../components/PageTemplate/index';
+import Popup from '../components/Popup/index';
 import { getCalculationFromAPI, getScenarioGroupsFromAPI } from '../lib/api-calls';
 import { populationPageUrl } from '../lib/constants-frontend';
 import { ErrorResponse, GetCalculationResponse } from '../lib/types';
 import { FormInput } from '../lib/types-frontend';
+import { isNum } from '../lib/utils';
 import { useForm, useToast } from '../lib/utils-frontend';
 import { useAppSelector } from '../store/index';
 
@@ -22,14 +25,20 @@ const useStyles = makeStyles(() =>
     resultGridItem: {
       width: 'auto',
     },
+    logDiv: {
+      overflow: 'auto',
+    },
   }),
 );
+
+const numberOfSamplesLabel = 'Number of Samples';
+const drawsPerSampleLabel = 'Draws per Sample';
 
 const Calculate: FC = () => {
   const formInitialState: FormInput[][] = [
     [
-      { label: 'Number of samples', value: 10000, type: 'number' },
-      { label: 'Draws per sample', value: 5, type: 'number' },
+      { label: numberOfSamplesLabel, value: 10000, type: 'number' },
+      { label: drawsPerSampleLabel, value: 5, type: 'number' },
     ],
   ];
   const classes = useStyles();
@@ -38,6 +47,7 @@ const Calculate: FC = () => {
   const state = useAppSelector((state) => state);
   const [successGroups, setSuccessGroups] = useState<ScenarioGroup[] | null>(null);
   const [result, setResult] = useState<GetCalculationResponse | null>(null);
+  const [showLog, setShowLog] = useState(false);
   const [formState, formDispatch] = useForm(formInitialState);
   // If the user tries to access the page without having a set population or successes, redirect to that page.
   useEffect(() => {
@@ -61,7 +71,15 @@ const Calculate: FC = () => {
 
   const handleCalculateClick = async (): Promise<ErrorResponse> => {
     // This returns a list of probabilities for each successGroup in alphabetical order.
-    const res = await getCalculationFromAPI(state.population.population.populationId, 1000, 1);
+    const numberOfSamplesInput = formState.findValue(numberOfSamplesLabel);
+    const drawsPerSampleInput = formState.findValue(drawsPerSampleLabel);
+    if (!isNum(numberOfSamplesInput) || !isNum(drawsPerSampleInput))
+      return { errorMsg: 'Number of samples and/or draws per sample were not provided.' };
+    const res = await getCalculationFromAPI(
+      state.population.population.populationId,
+      numberOfSamplesInput,
+      drawsPerSampleInput,
+    );
     if (!res.ok)
       return {
         errorMsg: `Error getting calculation: ${res.status}. Please try again later.`,
@@ -74,6 +92,20 @@ const Calculate: FC = () => {
   return (
     <PageTemplate title="Calculate" description="Calculate" column2={<div></div>}>
       <div>
+        <Popup open={showLog} onClose={() => setShowLog(false)} title="Log" maxWidth="sm">
+          <div>
+            <h4>
+              <i>Log of the first 100 samples</i>
+            </h4>
+            {result && (
+              <div className={classes.logDiv}>
+                {result.first100Logs.map((log) => (
+                  <div>{log}</div>
+                ))}
+              </div>
+            )}
+          </div>
+        </Popup>
         <FormTemplate
           formState={formState}
           formDispatch={formDispatch}
@@ -97,6 +129,12 @@ const Calculate: FC = () => {
                   </>
                 );
               })}
+            </div>
+            <br />
+            <div>
+              <Button variant="contained" onClick={() => setShowLog(!showLog)}>
+                Show log
+              </Button>
             </div>
           </div>
         )}
