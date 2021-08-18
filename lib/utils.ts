@@ -4,12 +4,11 @@
  * @returns The value of the environmental varaible.
  * @throws Error if the environmental variable is not found.
  */
- export const getEnv = (envName: string): string => {
+export const getEnv = (envName: string): string => {
   const variable = process.env[envName];
   if (!variable) throw new Error(`Environmental variable ${envName} not found`);
   return variable;
 };
-
 
 /**
  * Checks if a variable is if a correct type.
@@ -17,7 +16,7 @@
  * @param validType The type to check for. Suports js types and (nested) objects.
  * @returns True if variable is of validType and false otherwise.
  */
- export const isValidType = (variable: any, validType: string | object): boolean => {
+export const isValidType = (variable: any, validType: string | object): boolean => {
   if (typeof variable === validType) return true;
 
   // If validType is an object, check the type of the content of variable
@@ -36,8 +35,10 @@
     // If validType is a non-empty object, check if there is a value in the variable object
     //  that has an invalid type
     else if (hasKeys && !isArr) {
-      // @ts-ignore validType will have at least one key.
-      const invalidValue = Object.keys(validType).find((key) => !isValidType(variable[key], validType[key]));
+      const invalidValue = Object.keys(validType).find(
+        // @ts-ignore validType will have at least one key.
+        (key) => !isValidType(variable[key], validType[key]),
+      );
       return invalidValue === undefined;
 
       // If validType is a non-empty array, check that each item in the variable array
@@ -60,4 +61,4 @@
   return false;
 };
 
-
+export const isNum = (string: string) => /^\d+$/.test(string);

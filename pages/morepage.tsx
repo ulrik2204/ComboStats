@@ -80,6 +80,7 @@ const More: FC = () => {
     <PageTemplate
       title="More features (optional)"
       description="More handy, optional features to determine when success or failure occurs."
+      column2={<div></div>}
     >
       <div>
         <h2>Bricks</h2>

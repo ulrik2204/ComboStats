@@ -15,6 +15,7 @@ import {
   EditScenarioBody,
   EditScenarioGroupBody,
   GetAllPopulationsResponse,
+  GetCalculationResponse,
   GetIsLoggedInResponse,
   GetPopulationElementsResponse,
   GetScenarioGroupScenariosResponse,
@@ -275,6 +276,18 @@ export const deleteScenarioFromAPI = async (scenarioId: string) => {
   const response: APIResponse<DeleteScenarioResponse> = await fromAPI(
     `/api/scenarios/${scenarioId}`,
     'DELETE',
+  );
+  return response;
+};
+
+export const getCalculationFromAPI = async (
+  populationId: string,
+  numberOfSamples: number,
+  drawsPerSample: number,
+) => {
+  const response: APIResponse<GetCalculationResponse> = await fromAPI(
+    `/api/populations/${populationId}/calculate?numberOfSamples=${numberOfSamples}&drawsPerSample=${drawsPerSample}`,
+    'GET',
   );
   return response;
 };

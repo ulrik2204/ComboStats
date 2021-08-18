@@ -2,10 +2,10 @@ import { Element, UserKey } from '@prisma/client';
 import cookie from 'cookie';
 import { sign } from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
+import scenarioGroups from '../pages/api/scenario-groups';
 import { RES_MSG, USER_KEY_COOKIE } from './constants-server';
-import { fixRoles, fixScenario } from './core';
+import { calculateProbabilities, fixRoles, fixScenario, fixScenarios } from './core';
 import prisma from './prisma';
-import { fixScenarios } from './test';
 import {
   CreateTempUserResponse,
   CUDElementResponse,
@@ -15,12 +15,15 @@ import {
   DeleteScenarioResponse,
   ErrorResponse,
   GetAllPopulationsResponse,
+  GetCalculationResponse,
   GetIsLoggedInResponse,
   GetPopulationElementsResponse,
   GetScenarioGroupScenariosResponse,
   GetScenarioGroupsResponse,
+  PopulationData,
+  ScenarioGroupData,
 } from './types';
-import { getEnv } from './utils';
+import { getEnv, isNum } from './utils';
 import {
   authenticateToken,
   checkPopulationToScenarioGroups,
@@ -790,4 +793,95 @@ export const getIsLoggedIn = async (
   const userKey = await authenticateToken(req);
   // The user is logged in if the userKey is not undefined.
   res.status(200).json({ isLoggedIn: userKey !== undefined });
+};
+
+/**
+ * Handles the request to calculate the probability of drawing any success in the provided population (in url).
+ * @remarks Requires that the user sends a cookie with its jwt token.
+ */
+export const getCalculation = async (
+  req: NextApiRequest,
+  res: NextApiResponse<GetCalculationResponse | ErrorResponse>,
+) => {
+  const ownerKey = await authenticateToken(req);
+  if (!ownerKey) return res.status(401).json({ errorMsg: RES_MSG.INVALID_CREDENTIALS });
+  // Query parameters
+  const populationId: string = req.query.id as string;
+  const numberOfSamplesString: string = req.query.numberOfSamples as string;
+  const drawsPerSampleString: string = req.query.drawsPerSample as string;
+
+  // Validate the query string parameters
+  if (populationId == undefined || !isNum(numberOfSamplesString) || !isNum(drawsPerSampleString))
+    return res.status(400).json({ errorMsg: RES_MSG.INVALID_QUERY_STRING });
+  const numberOfSamples = parseInt(numberOfSamplesString);
+  const drawsPerSample = parseInt(drawsPerSampleString);
+  // Check that the user owns the population with the provided populationId.
+  const isPopOwner = await isPopulationOwner(ownerKey.userId, populationId);
+  if (!isPopOwner) return res.status(403).json({ errorMsg: RES_MSG.NOT_POPULATION_OWNER });
+  // Get the data for the calculation
+  const population: PopulationData | null = await prisma.population.findUnique({
+    where: {
+      populationId,
+    },
+    include: {
+      elements: true,
+    },
+  });
+  if (!population) return res.json({ errorMsg: RES_MSG.NO_POPULATION_WITH_ID });
+  const successGroups: ScenarioGroupData[] = await prisma.scenarioGroup.findMany({
+    where: {
+      populationId,
+      type: 'SUCCESSES',
+    },
+    include: {
+      scenarios: {
+        include: {
+          requiredElements: {
+            include: {
+              element: true,
+            },
+          },
+          requiredRoles: true,
+        },
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+  if (scenarioGroups.length === 0)
+    return res.json({ errorMsg: RES_MSG.NO_SCENARIO_GROUPS_IN_POPULATION });
+  const failures: ScenarioGroupData | null = await prisma.scenarioGroup.findFirst({
+    where: {
+      populationId,
+      type: 'FAILURES',
+    },
+    include: {
+      scenarios: {
+        include: {
+          requiredElements: {
+            include: {
+              element: true,
+            },
+          },
+          requiredRoles: true,
+        },
+      },
+    },
+  });
+  // console.log(
+  //   'Calc data: ',
+  //   JSON.stringify(population, null, 2),
+  //   JSON.stringify(successGroups, null, 2),
+  //   JSON.stringify(failures, null, 2),
+  // );
+
+  const result = calculateProbabilities(
+    population,
+    successGroups,
+    failures,
+    numberOfSamples,
+    drawsPerSample,
+  );
+  res.json(result);
 };

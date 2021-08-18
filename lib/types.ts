@@ -137,3 +137,8 @@ export type CUScenarioResponse = {
 export type DeleteScenarioResponse = {
   scenario: Scenario;
 };
+
+export type GetCalculationResponse = {
+  probabilities: number[];
+  first100Logs: string[];
+};

@@ -25,4 +25,5 @@ export const RES_MSG = {
   NO_POPULATION_WITH_ID: 'There is no population with the provided populationId.',
   NO_SCENARIO_GROUP_WITH_ID: 'There is no scenario group with the given scenarioGroupId.',
   NO_SCENARIO_WITH_ID: 'There is no scenario with the provided scenarioId.',
+  NO_SCENARIO_GROUPS_IN_POPULATION: 'There are no scenario groups in the population.',
 };

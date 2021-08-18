@@ -4,7 +4,7 @@ import {
   deletePopulationById,
   editPopulationById,
   getPopulationElements,
-} from '../../../lib/rest-methods';
+} from '../../../../lib/rest-methods';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') return await createPopulation(req, res);
