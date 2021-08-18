@@ -7,11 +7,11 @@ import { ToastContext as ToastContext } from './contexts';
 import { ErrorResponse } from './types';
 import {
   FormActionTypes,
+  FormInput,
   FormInputChange,
   FormInteraction,
   FormState,
   FORM_ACTION,
-  FormInput,
 } from './types-frontend';
 
 /**
@@ -182,14 +182,16 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
       return newStatt;
     case FORM_ACTION.SUBMIT_SUCCESS:
       // Set all input values to empty
+      const shouldClearForm = action.payload.clearForm;
       const newStat = { ...state, loading: false, errorMsg: undefined, submitFinished: true };
-      newStat.form.forEach((row) =>
-        row.forEach((el) => {
-          if (typeof el.value === 'number') el.value = 0;
-          else if (Array.isArray(el.value)) el.value = [];
-          else el.value = '';
-        }),
-      );
+      if (shouldClearForm)
+        newStat.form.forEach((row) =>
+          row.forEach((el) => {
+            if (typeof el.value === 'number') el.value = 0;
+            else if (Array.isArray(el.value)) el.value = [];
+            else el.value = '';
+          }),
+        );
       return newStat;
     case FORM_ACTION.SUBMIT_RESET:
       return {

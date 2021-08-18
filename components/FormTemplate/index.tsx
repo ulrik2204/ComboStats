@@ -29,10 +29,14 @@ type FormTemplateProps = {
   formState: FormState;
   formDispatch: Dispatch<FormActionTypes>;
   onConfirm: () => Promise<ErrorResponse>; // An error response with an error message if there was an error and errorMsg being undefined otherwise.
+  confirmButtonText?: string;
   onSecondButtonClick?: () => Promise<ErrorResponse>;
   toastOnSecondButtonClick?: Omit<ToastOptions, 'onConfirm'>;
   secondButtonText?: string;
   children?: JSX.Element;
+  className?: string;
+  disableClearOnConfirm?: boolean;
+  disableClearOnSecondButtonClick?: boolean;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -88,7 +92,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
 
   // Render
   return (
-    <div>
+    <div className={props.className}>
       <MuiThemeProvider theme={buttonTheme}>
         {props.formState.form.map((rowInputs, outerIndex) => {
           return (
@@ -245,7 +249,10 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
               props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
               const errorResponse = await props.onConfirm();
               if (!errorResponse.errorMsg) {
-                return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
+                return props.formDispatch({
+                  type: FORM_ACTION.SUBMIT_SUCCESS,
+                  payload: { clearForm: !props.disableClearOnConfirm },
+                });
               }
               return props.formDispatch({
                 type: FORM_ACTION.SUBMIT_FAILURE,
@@ -253,7 +260,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
               });
             }}
           >
-            Confirm
+            {props.confirmButtonText ?? 'Confirm'}
           </Button>
           {props.onSecondButtonClick && (
             <Button
@@ -269,7 +276,10 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                     props.onSecondButtonClick ?? (() => new Promise((res, _rej) => res({})));
                   const errorResponse = await onClick();
                   if (!errorResponse.errorMsg)
-                    return props.formDispatch({ type: FORM_ACTION.SUBMIT_SUCCESS });
+                    return props.formDispatch({
+                      type: FORM_ACTION.SUBMIT_SUCCESS,
+                      payload: { clearForm: !props.disableClearOnSecondButtonClick },
+                    });
                   return props.formDispatch({
                     type: FORM_ACTION.SUBMIT_FAILURE,
                     payload: errorResponse,

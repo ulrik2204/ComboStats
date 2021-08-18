@@ -24,13 +24,13 @@ const useStyles = (col2: boolean) =>
       display: 'flex',
       justifyContent: 'center',
       flexGrow: 2,
-      width: '45em',
+      width: '50em',
     },
     intro: {
-      width: '45em',
+      width: '50em',
     },
     column1: {
-      width: col2 === true ? '30em' : '45em',
+      width: col2 === true ? '35em' : '50em',
       height: '100%',
     },
     column2: {

@@ -115,18 +115,25 @@ type FormFailure = FormAction<ErrorResponse> & {
   type: typeof FORM_ACTION.SUBMIT_FAILURE;
 };
 
-type FormSubmitProgress = FormAction & {
-  type:
-    | FORM_ACTION.SUBMIT_LOADING
-    | typeof FORM_ACTION.SUBMIT_SUCCESS
-    | typeof FORM_ACTION.SUBMIT_RESET;
+type FormInputClear = { clearForm: boolean };
+
+type FormSubmitSuccess = FormAction<FormInputClear> & {
+  type: FORM_ACTION.SUBMIT_SUCCESS;
+};
+
+type FormDispatchWithoutPaylaod = FormAction & {
+  type: FORM_ACTION.SUBMIT_LOADING | typeof FORM_ACTION.SUBMIT_RESET;
 };
 
 export type FormInteraction = FormAction<FormInputChange> & {
   type: typeof FORM_ACTION.FIELD;
 };
 
-export type FormActionTypes = FormFailure | FormSubmitProgress | FormInteraction;
+export type FormActionTypes =
+  | FormFailure
+  | FormDispatchWithoutPaylaod
+  | FormSubmitSuccess
+  | FormInteraction;
 
 export type ListObject = {
   id: string;
