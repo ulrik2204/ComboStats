@@ -46,34 +46,43 @@ export type CUSceanrioThunk = AppThunk<Promise<APIResponse<CUScenarioResponse>>>
 
 export type ArrayInputItem = string | number;
 
-type InputRenderSingle = { inputRender?: (value: string | number, label: string) => JSX.Element };
+type InputRenderSingle = {
+  inputRenderSingle?: (value: string | number, label: string) => JSX.Element;
+};
 
 export type ArrayInputInfo = { placeholder: string; type: 'string' | 'number'; className?: string };
 
-type FormInputValue =
-  | (({ value: string; type: 'string' } | { value: number; type: 'number' }) & InputRenderSingle)
-  | (
-      | {
-          value: string[];
-          type: 'array';
-          inputRender?: (arrayItem: string, label: string, index: number) => JSX.Element;
-        }
-      | {
-          value: ArrayInputItem[][];
-          type: 'inputarray';
-          rowInputsInfo: ArrayInputInfo[];
-          inputRender?: (
-            inputArray: ArrayInputItem[],
-            rowInputsInfo: ArrayInputInfo[],
-            index: number,
-          ) => JSX.Element;
-        }
-    );
+export type FormInputSingle = (
+  | { value: string; type: 'string' }
+  | { value: number; type: 'number' }
+) &
+  InputRenderSingle;
 
-export type FormInput = FormInputValue & {
+export type FormInputArray = {
+  value: string[];
+  type: 'array';
+  inputRender?: (arrayItem: string, label: string, index: number) => JSX.Element;
+};
+
+export type FormInputArrayInput = {
+  value: ArrayInputItem[][];
+  type: 'inputarray';
+  rowInputsInfo: ArrayInputInfo[];
+  inputRender?: (
+    inputArray: ArrayInputItem[],
+    rowInputsInfo: ArrayInputInfo[],
+    index: number,
+  ) => JSX.Element;
+};
+
+type FormInputValue = FormInputSingle | FormInputArray | FormInputArrayInput;
+
+export type FormInputCommon = {
   label: string;
   className?: string;
 };
+
+export type FormInput = FormInputValue & FormInputCommon;
 
 export enum FORM_ACTION {
   FIELD = 'FIELD',
