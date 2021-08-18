@@ -37,7 +37,7 @@ const drawsPerSampleLabel = 'Draws per Sample';
 const Calculate: FC = () => {
   const formInitialState: FormInput[][] = [
     [
-      { label: numberOfSamplesLabel, value: 10000, type: 'number' },
+      { label: numberOfSamplesLabel, value: 1000, type: 'number' },
       { label: drawsPerSampleLabel, value: 5, type: 'number' },
     ],
   ];
@@ -70,15 +70,21 @@ const Calculate: FC = () => {
   }, []);
 
   const handleCalculateClick = async (): Promise<ErrorResponse> => {
-    // This returns a list of probabilities for each successGroup in alphabetical order.
+    // Validate form
     const numberOfSamplesInput = formState.findValue(numberOfSamplesLabel);
     const drawsPerSampleInput = formState.findValue(drawsPerSampleLabel);
     if (!isNum(numberOfSamplesInput) || !isNum(drawsPerSampleInput))
       return { errorMsg: 'Number of samples and/or draws per sample were not provided.' };
+    const [numberOfSamples, drawsPerSample] = [
+      numberOfSamplesInput as number,
+      drawsPerSampleInput as number,
+    ];
+    if (numberOfSamples > 50000) return { errorMsg: 'Number of samples cannot exceed 50 000.' };
+    // This returns a list of probabilities for each successGroup in alphabetical order.
     const res = await getCalculationFromAPI(
       state.population.population.populationId,
-      numberOfSamplesInput,
-      drawsPerSampleInput,
+      numberOfSamples,
+      drawsPerSample,
     );
     if (!res.ok)
       return {
