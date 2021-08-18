@@ -23,15 +23,15 @@ export const createScenarioGroupTAction = (
   body: Omit<CreateScenarioGroupBody, 'populationId'>,
 ): CUDScenarioGroupThunk => {
   return async (dispatch, getState) => {
-    dispatch(successesActions.loading());
-    // ENSURE THAT IT IS IMPOSSIBLE TO DO THIS WITHOUT ALSREADY HAVING CHOSEN A POPULATION.
+    const actions = body.type === 'SUCCESSES' ? successesActions : failuresActions;
+    dispatch(actions.loading());
     const populationId = getState().population.population.populationId;
     const res = await createScenarioGroupFromAPI({ ...body, populationId });
     if (res.ok) {
-      dispatch(successesActions.cuScenarioGroupSuccess(res.data));
+      dispatch(actions.cuScenarioGroupSuccess(res.data));
       return res;
     }
-    dispatch(successesActions.failure(res.data));
+    dispatch(actions.failure(res.data));
     return res;
   };
 };
@@ -125,15 +125,17 @@ export const editScenarioTAction = (
 
 export const deleteScenarioTAction = (
   scenarioId: string,
+  type: 'successes' | 'failures',
 ): AppThunk<Promise<APIResponse<DeleteScenarioResponse>>> => {
   return async (dispatch) => {
-    dispatch(successesActions.loading());
+    const actions = type === 'successes' ? successesActions : failuresActions;
+    dispatch(actions.loading());
     const res = await deleteScenarioFromAPI(scenarioId);
     if (res.ok) {
-      dispatch(successesActions.deleteScenarioSuccess(res.data));
+      dispatch(actions.deleteScenarioSuccess(res.data));
       return res;
     }
-    dispatch(successesActions.failure(res.data));
+    dispatch(actions.failure(res.data));
     return res;
   };
 };

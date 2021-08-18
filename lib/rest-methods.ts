@@ -875,13 +875,17 @@ export const getCalculation = async (
   //   JSON.stringify(successGroups, null, 2),
   //   JSON.stringify(failures, null, 2),
   // );
-
-  const result = calculateProbabilities(
-    population,
-    successGroups,
-    failures,
-    numberOfSamples,
-    drawsPerSample,
-  );
+  let result: GetCalculationResponse;
+  try {
+    result = calculateProbabilities(
+      population,
+      successGroups,
+      failures,
+      numberOfSamples,
+      drawsPerSample,
+    );
+  } catch (error) {
+    return res.status(400).json({ errorMsg: 'There was an error in calculation' });
+  }
   res.json(result);
 };

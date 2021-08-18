@@ -506,7 +506,7 @@ export const calculateProbabilities = (
     let shuffledElements = shuffle(elements);
     // console.log('Shuffled', JSON.stringify(shuffledElements, null, 2));
 
-    let { drawn: hand, restElements } = draw(shuffledElements, drawsPerSample);
+    const { drawn: hand, restElements } = draw(shuffledElements, drawsPerSample);
     console.log('Hand', JSON.stringify(hand));
 
     // Update the shuffledElements

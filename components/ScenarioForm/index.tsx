@@ -225,7 +225,6 @@ function ScenarioForm(props: ScenarioFormProps) {
 
         // Validate data
         if (scenarioName === '') return { errorMsg: 'No name was provided.' };
-        console.log('Required stuff', scenarioName, requiredElements, requiredRoles);
         // If any requiredRole or elementId in requiredElement is empty, send error.
         const invalidRequiredElement = requiredElements.find(
           (reqEl) => reqEl.elementId === '' || reqEl.minCount === 0,
@@ -286,7 +285,9 @@ function ScenarioForm(props: ScenarioFormProps) {
           ? undefined
           : async () => {
               // Delete the scenario
-              const res = await appDispatch(deleteScenarioTAction(props.scenarioId));
+              const res = await appDispatch(
+                deleteScenarioTAction(props.scenarioId, props.scenarioGroupType),
+              );
               props.afterDelete?.();
               return res.data;
             }

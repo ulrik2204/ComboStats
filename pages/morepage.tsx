@@ -6,7 +6,7 @@ import ListView from '../components/ListView';
 import PageTemplate from '../components/PageTemplate/index';
 import ScenarioForm from '../components/ScenarioForm';
 import { getScenarioGroupsFromAPI } from '../lib/api-calls';
-import { populationPageUrl, successesPageUrl } from '../lib/constants-frontend';
+import { populationPageUrl } from '../lib/constants-frontend';
 import {
   parseStringListAsRequiredElements,
   parseStringListAsStringNumberTuples,
@@ -41,9 +41,8 @@ const More: FC = () => {
   // If the user tries to access the page without having a set population or successes, redirect to that page.
   useEffect(() => {
     if (state.population.population.name === '') router.push(populationPageUrl);
-    else if (state.successes.scenarioGroup.name === '') router.push(successesPageUrl);
     else {
-      // Check if there is a failure scenario on this populatiuon, and if not create it
+      // Check if there is a failure scenario on this population, and if not create it
       getScenarioGroupsFromAPI(state.population.population.populationId, 'failures').then((res) => {
         if (!res.ok)
           return toast({
@@ -87,7 +86,7 @@ const More: FC = () => {
         <p>Register failure/brick when either of these scenarios are drawn.</p>
         <div className={classes.overDiv}>
           <ListView
-            showAddButton={state.failures.scenarioGroup.name !== ''}
+            showAddButton={state.failures.scenarioGroup.scenarioGroupId !== ''}
             addItemTitle="Add brick"
             addItemForm={(setOpenAddPopup) => (
               <ScenarioForm

@@ -88,7 +88,7 @@ const Calculate: FC = () => {
     );
     if (!res.ok)
       return {
-        errorMsg: `Error getting calculation: ${res.status}. Please try again later.`,
+        errorMsg: `${res.data.errorMsg}. Status code: ${res.status}`,
       };
     // Else, the response is fine
     setResult(res.data);
@@ -105,7 +105,7 @@ const Calculate: FC = () => {
             </h4>
             {result && (
               <div className={classes.logDiv}>
-                {result.first100Logs.map((log) => (
+                {result.first100Logs?.map((log) => (
                   <div>{log}</div>
                 ))}
               </div>
