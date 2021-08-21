@@ -869,12 +869,6 @@ export const getCalculation = async (
       },
     },
   });
-  // console.log(
-  //   'Calc data: ',
-  //   JSON.stringify(population, null, 2),
-  //   JSON.stringify(successGroups, null, 2),
-  //   JSON.stringify(failures, null, 2),
-  // );
   let result: GetCalculationResponse;
   try {
     result = calculateProbabilities(

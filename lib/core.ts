@@ -7,25 +7,6 @@ import {
   ScenarioGroupData,
 } from './types';
 import { ArrayInputItem } from './types-frontend';
-/**
- * Making an element's appearence consistent by
- * sorting the roles aphabetically and removing
- * duplicate roles.
- * @param element The element to identify
- * @returns An element with consistent appearence.
- */
-export const identifyEl = (element: Element): Element => {
-  const resultEl: Element = { ...element, name: element.name, roles: [] };
-  // Remove duplicates and make copy
-  for (const role of element.roles)
-    if (resultEl.roles.indexOf(role) === -1) resultEl.roles.push(role);
-  // Sort roles alphabetically, filter out empty string roles and make all roles lower case.
-  resultEl.roles = resultEl.roles
-    .sort((a, b) => (a === b ? 0 : a > b ? 1 : -1))
-    .filter((role) => role.trim() !== '')
-    .map((role) => role.trim().toLowerCase());
-  return resultEl;
-};
 
 /**
  * Sort roles alphabetically, filter out empty string roles and make all roles lower case.
@@ -54,108 +35,6 @@ export const sortElements = (elements: Element[]): Element[] => {
     const ele2 = el2.name.toLowerCase();
     return ele1 === ele2 ? 0 : ele1 > ele2 ? 1 : -1;
   });
-};
-
-/**
- * Shuffles a list using the Fisher-Yates/Knuth algorithm
- * @param list The list to shuffle
- * @return The shuffles list
- */
-export function shuffle<T>(list: T[]): T[] {
-  const resultList = [];
-  for (const item of list) resultList.push(item);
-  let currentIndex = resultList.length,
-    randomIndex;
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [resultList[currentIndex], resultList[randomIndex]] = [
-      resultList[randomIndex],
-      resultList[currentIndex],
-    ];
-  }
-  return resultList;
-}
-
-/**
- * Remove a single element by name in a list of elements.
- * @param elements The element array in which to remove an element.
- * @param elName The name of the element to remove.
- * @returns The array of elements without one element with elName
- * @remarks If an elenet with the name is not found, elements is returned
- */
-// export const removeByName = (elements: Element[], elName: string): Element[] => {
-//   const index = elements.map((el) => el.name).indexOf(elName);
-//   const resultList: Element[] = [];
-//   if (index > -1) {
-//     for (const item of elements) resultList.push(item);
-//     resultList.splice(index, 1);
-//     return resultList;
-//   }
-//   return elements;
-// };
-
-/**
- * Remove a single element in a list of elements.
- * @param elements The element array in which to remove an element.
- * @param elementId The id of the element to remove.
- * @returns The array of elements without the specified element.
- * @remarks If the element is not found, elements is returned.
- */
-export const removeFirstByElementId = (elements: Element[], elementId: string): Element[] => {
-  const elementsCopy = [...elements];
-  const index = elements.map((el) => el.elementId).indexOf(elementId);
-  if (index > -1) elementsCopy.splice(index, 1);
-  return elementsCopy;
-};
-
-/**
- * Removes all elements with a specific name in a list of elements.
- * @param elements The list of elements to remove items from.
- * @param elName The name of the elements to remove.
- * @returns The list of elements in elements that do not have name elName
- */
-export const removeAllByName = (elements: Element[], elName: string): Element[] => {
-  return elements.filter((el) => el.name !== elName);
-};
-
-/**
- * Counts the amount of elements with given name in elements.
- * @param elements The list of elements in which to count.
- * @param elName The name of the element(s) to count for
- * @returns The amount of elements with elName in elements.
- */
-export const countElementName = (elements: Element[], elName: string): number => {
-  let count = 0;
-  for (const el of elements) if (el.name === elName) count++;
-  return count;
-};
-
-/**
- * Drawing a number of elements from top of population (last index).
- * @param population The population to draw from.
- * @param drawCount The number of elements drawn from the last index (popped).
- * @returns The elements drawn.
- * @remarks The population object is directly manipulated.
- */
-export const draw = (
-  population: Element[],
-  drawCount: number,
-): { drawn: Element[]; restElements: Element[] } => {
-  if (population.length < drawCount) throw Error('Not enough elements left to draw');
-  const restElements = [...population];
-  const drawn: Element[] = [];
-  for (let i = 0; i < drawCount; i++) {
-    const drawEl = restElements.pop();
-    if (drawEl == undefined) throw Error('Not enough elements left to draw');
-    drawn.push(drawEl);
-  }
-  return { drawn, restElements };
 };
 
 /**
@@ -234,16 +113,93 @@ export const fixScenarios = (scenarios: ScenarioData[]) => {
   return newScenarios.sort((a, b) => (a.name === b.name ? 0 : a.name > b.name ? 1 : -1));
 };
 
+/**
+ * Shuffles a list using the Fisher-Yates/Knuth algorithm
+ * @param list The list to shuffle
+ * @return The shuffles list
+ */
+export function shuffle<T>(list: T[]): T[] {
+  const resultList = [];
+  for (const item of list) resultList.push(item);
+  let currentIndex = resultList.length,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [resultList[currentIndex], resultList[randomIndex]] = [
+      resultList[randomIndex],
+      resultList[currentIndex],
+    ];
+  }
+  return resultList;
+}
+
+/**
+ * Remove a single element in a list of elements.
+ * @param elements The element array in which to remove an element.
+ * @param elementId The id of the element to remove.
+ * @returns The array of elements without the specified element.
+ * @remarks If the element is not found, elements is returned.
+ */
+export const removeFirstByElementId = (elements: Element[], elementId: string): Element[] => {
+  const elementsCopy = [...elements];
+  const index = elements.map((el) => el.elementId).indexOf(elementId);
+  if (index > -1) elementsCopy.splice(index, 1);
+  return elementsCopy;
+};
+
+/**
+ * Drawing a number of elements from top of population (last index).
+ * @param population The population to draw from.
+ * @param drawCount The number of elements drawn from the last index (popped).
+ * @returns The elements drawn.
+ * @remarks The population object is directly manipulated.
+ */
+export const draw = (
+  population: Element[],
+  drawCount: number,
+): { drawn: Element[]; restElements: Element[] } => {
+  if (population.length < drawCount) throw Error('Not enough elements left to draw');
+  const restElements = [...population];
+  const drawn: Element[] = [];
+  for (let i = 0; i < drawCount; i++) {
+    const drawEl = restElements.pop();
+    if (drawEl == undefined) throw Error('Not enough elements left to draw');
+    drawn.push(drawEl);
+  }
+  return { drawn, restElements };
+};
+
+/**
+ * Handling the string display of required elements.
+ * @param requiredElements The ElementInScenarioData array to display as a string.
+ */
 export const requiredElementsToStringList = (
   requiredElements: ElementInScenarioData[],
 ): string[] => {
   return requiredElements.map((reqEl) => `${reqEl.element.name} (${reqEl.minCount})`);
 };
 
+/**
+ * Handling the
+ * @param requiredRoles The RoleInScenario array to display as a string.
+ * @returns
+ */
 export const requiredRolesToStringList = (requiredRoles: RoleInScenario[]): string[] => {
   return requiredRoles.map((reqRole) => `${reqRole.requiredRole} (${reqRole.minCount})`);
 };
 
+/**
+ * Parsing a string array generated using the above ...ToStringList functions, parsing it
+ * as if it was a string followed by a nunber in paranthesis.
+ * @param stringList The list of strings in this format: 'string (number)'
+ * @returns A list of [string, number] tuples as an ArrayInputItem two-dim list.
+ */
 export const parseStringListAsStringNumberTuples = (stringList: string[]): ArrayInputItem[][] => {
   return stringList.map((str) => {
     const infoList = str.split(' ');
@@ -254,6 +210,12 @@ export const parseStringListAsStringNumberTuples = (stringList: string[]): Array
   });
 };
 
+/**
+ * Parsinga string array generated by the above requiredElementsToStringList function. And returning it as a [elementId, minCount] tuple.
+ * @param stringList The list of strings to parse.
+ * @param elements The list of elements to find the element names in (to get that element's id).
+ * @returns A list of [elementId: string, minCount: number] tuples as an ArrayInputItem two-dim list.
+ */
 export const parseStringListAsRequiredElements = (
   stringList: string[],
   elements: Element[],
@@ -376,6 +338,12 @@ const findRoleCombination = (
   return null;
 };
 
+/**
+ * Function to find elements that fulfills the requiredRoles in an elements array, and remove them from that array.
+ * @param elements The array of elements to fulfill the roles in.
+ * @param requiredRoles The required roles that the elements should fulfill.
+ * @returns The array of elements minus a combination of elements that fulfills the roles (one each), or null if this combination is impossible to find.
+ */
 export const removeElementsThatFulfillsRequiredRoles = (
   elements: Element[],
   requiredRoles: RoleInScenario[],
@@ -387,7 +355,6 @@ export const removeElementsThatFulfillsRequiredRoles = (
     for (let i = 0; i < reqRole.minCount; i++) reqRolesCopy.push(reqRole.requiredRole);
     return reqRolesCopy;
   }, []);
-  console.log('repeatedRequiredRoles', repeatedRequiredRoles);
 
   // We now want find elements such that there are at least 1 element with each role (including repeated roles).
 
@@ -402,13 +369,11 @@ export const removeElementsThatFulfillsRequiredRoles = (
       }
     }
   }
-  console.log('elementsWithRequiredRoles', elementsWithRequiredRoles);
 
   const elementsFulfillsRoles = findRoleCombination(
     elementsWithRequiredRoles,
     repeatedRequiredRoles,
   );
-  console.log('roleCombination', elementsFulfillsRoles);
   // Remove these elements the elements
   let elementsCopy: Element[] = [...elements];
   if (elementsFulfillsRoles == null) return null;
@@ -419,6 +384,13 @@ export const removeElementsThatFulfillsRequiredRoles = (
   return elementsCopy;
 };
 
+/**
+ * Function that handles finding a scenario in a hand.
+ * @param hand The hand to find a scenario in.
+ * @param scenarios The list of scenarios that the hand fulfill.
+ * @returns The first ScenarioData object that the hand fulfills, or null if the hand fulfills no scenario in the given array of scenarios.
+ * TODO: Handle prioritization if multiple scenarios are found in the hand.
+ */
 export const findScenarioInHand = (
   hand: Element[],
   scenarios: ScenarioData[],
@@ -430,7 +402,6 @@ export const findScenarioInHand = (
     // The drawnCopy as duplicates may be required
     // Remove required elements from
     const handWithoutRequiredElements = removeRequiredElements(handCopy, scenario.requiredElements);
-    console.log('handWithoutRequiredElements', handWithoutRequiredElements);
 
     // If it is null, then the hand did not contain the required elements; try next scenario;
     if (handWithoutRequiredElements == null) break;
@@ -438,7 +409,6 @@ export const findScenarioInHand = (
       handWithoutRequiredElements,
       scenario.requiredRoles,
     );
-    console.log('handWithoutRequiredROLES', handWithoutElementsThatFullfillsRequiredRoles);
 
     // If it is null, then the rest of the hand did not contain the requried roles;
     if (handWithoutElementsThatFullfillsRequiredRoles == null) break;
@@ -449,33 +419,53 @@ export const findScenarioInHand = (
   return null;
 };
 
-class First100Logs {
-  private first100Logs: string[];
-  constructor() {
-    this.first100Logs = [];
+/**
+ * A class handling logging of hands and the results of that hand.
+ * Only logs the first N samples (maxLogs), by default 100.
+ */
+class FirstNLogs {
+  private firstNLogs: string[];
+  private maxLogs: number;
+  constructor(maxLogs: number = 100) {
+    this.firstNLogs = [];
+    this.maxLogs = maxLogs;
   }
 
+  /**
+   * Log a sample and its result as a string if the sample nr is less than this.maxLogs
+   * @param sampleNr The sample number.
+   * @param hand The sample hand.
+   * @param isSuccess If the hand is a success.
+   * @param scenario The optional ScenarioData object that made this hand a success.
+   */
   log(sampleNr: number, hand: Element[], isSuccess: boolean, scenario?: ScenarioData) {
-    if (this.first100Logs.length >= 100) return;
+    if (this.firstNLogs.length >= this.maxLogs) return;
     // Else, log the information.
     const handString = 'Hand: [' + hand.map((el) => el.name).join(', ') + ']';
     const isSuccessString = 'Registered: ' + (isSuccess === true ? 'SUCCESS' : 'FAILURE');
     const fulfilledScenario = scenario ? ' | Scenario: ' + scenario.name : '';
     const logInfo = `Sample ${sampleNr} | ${handString} | ${isSuccessString}${fulfilledScenario}`;
-    this.first100Logs.push(logInfo);
+    this.firstNLogs.push(logInfo);
   }
 
+  /**
+   * Getting array of logs that this instance has logged.
+   * @returns The list of logs.
+   */
   getLogs() {
-    return this.first100Logs;
+    return this.firstNLogs;
   }
 }
 
 /**
- * Calculates the probability of success
- * @param population
- * @param successGroups
- * @param failures
- * @returns
+ * Estimates the probability of drawing success from a population without replacement.
+ * @param population The population to draw elements from.
+ * @param successGroups The list of scenarios that registers success.
+ * @param failures The optional list of failures that makes the sample register a failure.
+ * @param numberOfSamples The number of samples that should be generated (higher, the more accuracy but slower).
+ * @param drawsPerSample The number of elements drawn per sample to check for success (the hand size), (usually a quite small number).
+ * @returns An object consisting of an array of the estimated probabilities of drawing the successGroup (by index),
+ * and logs of the first 100 samples and their results (to see if the program works as the user wants.)
  */
 export const calculateProbabilities = (
   population: PopulationData,
@@ -490,31 +480,26 @@ export const calculateProbabilities = (
     for (let i = 0; i < el.count; i++) elsCopy.push(el);
     return elsCopy;
   }, []);
-  // console.log('Elements', JSON.stringify(elements, null, 2));
 
   // Make an array noting the count of successes for each successGroup
   const successArray = Array.from(Array(successGroups.length), () => 0);
-  console.log('SuccessArray', successArray);
 
   // A list logging the first 100 samples and if it was a success (and what success).
-  const first100Logs = new First100Logs();
+  const first100Logs = new FirstNLogs();
 
   // The outer loop for getting each sample.
   for (let i = 0; i < numberOfSamples; i++) {
     let hasLogged = false;
     // Shuffle the elements and draw a hand.
     let shuffledElements = shuffle(elements);
-    // console.log('Shuffled', JSON.stringify(shuffledElements, null, 2));
 
     const { drawn: hand, restElements } = draw(shuffledElements, drawsPerSample);
-    console.log('Hand', JSON.stringify(hand));
 
     // Update the shuffledElements
     shuffledElements = restElements;
     // Check if there are any failures (if failures is defined).
     if (failures !== null) {
       const failureScenario = findScenarioInHand(hand, failures.scenarios);
-      console.log('FailureScenario', JSON.stringify(failureScenario, null, 2));
       if (failureScenario) {
         // If there are failures, log it and try next sample.
         first100Logs.log(i, hand, false, failureScenario);
@@ -526,7 +511,6 @@ export const calculateProbabilities = (
     for (let successIndex = 0; successIndex < successGroups.length; successIndex++) {
       const successes = successGroups[successIndex];
       const successScenario = findScenarioInHand(hand, successes.scenarios);
-      console.log('SuccessScenario', JSON.stringify(successScenario, null, 2));
       if (successScenario) {
         // If there is a successScenario, log it and add a success to the successArray of the corresponding successes index.
         first100Logs.log(i, hand, true, successScenario);
@@ -538,9 +522,7 @@ export const calculateProbabilities = (
     if (!hasLogged) first100Logs.log(i, hand, false);
   }
   // We now have the amount of successes for each successGroup, we want to find the probability
-  console.log('successArray', successArray);
   const probabilities = successArray.map((successCount) => successCount / numberOfSamples);
-  console.log('Prob', probabilities);
 
   return {
     probabilities,

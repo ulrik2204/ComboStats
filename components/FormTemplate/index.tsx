@@ -83,6 +83,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+/**
+ * Component handling the visual representation of a FormState. Is intended to use together with the useForm hook.
+ * TODO: Refactor into smaller functions.
+ * TODO: Move to formik.
+ */
 const FormTemplate: FC<FormTemplateProps> = (props) => {
   const classes = useStyles();
   const toast = useToast();
@@ -304,4 +309,3 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
 };
 
 export default FormTemplate;
-

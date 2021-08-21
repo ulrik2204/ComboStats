@@ -51,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Component handling the functionlity of and display of the top menu.
+ */
 const Menu: FC = () => {
   const state = useAppSelector((state) => state);
   const router = useRouter();

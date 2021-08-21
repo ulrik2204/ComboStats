@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 /**
  * An item in the list veiw
- * @param props The name and roles represented in this listelement
  */
 const ListElement: FC<ListElementProps> = (props) => {
   const classes = useStyles();

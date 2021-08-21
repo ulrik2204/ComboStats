@@ -6,7 +6,7 @@ import {
   MenuItem,
   Select,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+/**
+ * Component handling the items and display of a dropdown list with add-to-list functionality.
+ */
 const Dropdown: FC<DropdownProps> = (props) => {
   const classes = useStyles();
   const addButtonUnique = 'addButton^gf34trfg34tq425r';

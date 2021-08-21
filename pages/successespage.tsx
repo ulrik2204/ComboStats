@@ -33,7 +33,7 @@ const SuccessesPage: FC = () => {
 
   // If the user tries to access the page without having a set population, redirect to populaiton.
   useEffect(() => {
-    if (state.population.population.name === '') router.push(populationPageUrl);
+    if (state.population.population.populationId === '') router.push(populationPageUrl);
   }, []);
 
   return (

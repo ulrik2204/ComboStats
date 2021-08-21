@@ -100,7 +100,6 @@ const initialNameForm: FormInput[][] = [[{ value: '', label: 'Name', type: 'stri
 
 /**
  * Conponent that handles setting of and creating populations and scenario groups as the global state.
- * @param props
  */
 const GlobalStateDropdown: FC<GlobalStateDropdownProps> = (props) => {
   const toast = useToast();

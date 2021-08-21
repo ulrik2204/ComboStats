@@ -61,7 +61,6 @@ const useStyles = (col2: boolean) =>
 
 /**
  * A component determining the structure of a page and where to place it.
- * @param props The title, description and children of the page
  */
 const PageTemplate: FC<PageTemplateProps> = (props) => {
   const classes = useStyles(!!props.column2);

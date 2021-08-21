@@ -56,6 +56,9 @@ const useStyles = (color: ToastColor) =>
     }),
   )();
 
+/**
+ * Component displaying a dialog of certain information to the user.
+ */
 const Toast: FC<ToastProps> = (props) => {
   const classes = useStyles(props.color);
   return (

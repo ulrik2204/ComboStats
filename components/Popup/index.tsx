@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 /**
  * A component making a popup dialog with the desired format
- * @param props
  */
 const Popup: FC<PopupProps> = (props) => {
   const theme = useTheme();

@@ -6,6 +6,10 @@ type ArrowbuttonProps = {
   variant: 'clickable' | 'clicked' | 'unclickable';
   className?: string;
 };
+
+/**
+ * Component handling the display of a single arrow button intended for use as a menu button.
+ */
 const Arrowbutton: FC<ArrowbuttonProps> = (props) => {
   const svgClickable = (
     <svg

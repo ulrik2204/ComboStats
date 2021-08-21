@@ -55,6 +55,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+/**
+ * Component handling the display of a list of ListObjects and other functionality.
+ */
 const ListView: FC<ListViewProps> = (props) => {
   if (props.corrMoreInfoList) requireTwoSameLengthArrays(props.infoList, props.corrMoreInfoList);
   const [openAddPopup, setOpenAddPopup] = useState(false);

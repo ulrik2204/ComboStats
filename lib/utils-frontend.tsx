@@ -56,6 +56,18 @@ export const useUpdateLocalStorage = (value: any, valueName: string): void => {
   }, [value]);
 };
 
+export const findLocalStartValue = (key: string): any => {
+  const defaultValue = findDefaultValue(key);
+  if (typeof window !== 'undefined') {
+    const localPop = localStorage.getItem(key);
+    return localPop == null || ['null', undefined, 'undefined'].indexOf(localPop) > -1
+      ? defaultValue
+      : JSON.parse(localPop);
+  }
+  // If it is being rendered on the server, return a matching object related to the name of the key
+  return defaultValue;
+};
+
 export type ToastOptions = {
   title: string;
   onClose?: () => void;
@@ -149,9 +161,6 @@ export const useLoginTempUser = () => {
 
 /**
  * Reducer for a FormState.
- * @param state The FormState
- * @param action
- * @returns
  */
 export const formReducer = (state: FormState, action: FormActionTypes) => {
   switch (action.type) {
@@ -165,23 +174,15 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
     case FORM_ACTION.SUBMIT_LOADING:
       return { ...state, loading: true, errorMsg: undefined, submitFinished: false };
     case FORM_ACTION.SUBMIT_FAILURE:
-      // Set all input values to empty
       const newStatt = {
         ...state,
         loading: false,
         errorMsg: (action.payload as ErrorResponse).errorMsg,
         submitFinished: true,
       };
-
-      // newStatt.form.forEach((row) =>
-      //   row.forEach((el) => {
-      //     if (typeof el.value === 'number') el.value = 0;
-      //     else el.value = '';
-      //   }),
-      // );
       return newStatt;
     case FORM_ACTION.SUBMIT_SUCCESS:
-      // Set all input values to empty
+      // Set all input values to empty if so is wanted.
       const shouldClearForm = action.payload.clearForm;
       const newStat = { ...state, loading: false, errorMsg: undefined, submitFinished: true };
       if (shouldClearForm)
