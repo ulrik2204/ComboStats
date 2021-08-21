@@ -10,26 +10,17 @@ const Home: FC = () => {
   return (
     <PageTemplate
       title="ComboStats"
-      description="Estimate the probability of drawing success from a population ComboStats!"
+      description="Estimate the probability of drawing success from a population (without replacement) using ComboStats!
+          Instead of using formulas, this app draws A LOT of samples to estimate the probability of success."
     >
       <div>
-        <div>
-          <p>
-            Using computer power, instead of calculating the probability of success using formulas,
-            this app draws from the population A LOT of times to estimate the probability of
-            success.
-          </p>
-        </div>
-        <div>
-          <p>
-            This webiste is ideal when calculating the probability of success in a population using
-            formulas becomes extremely hard and complex. Thus this webiste is perfect for
-            calculating the probability of complex starting hands in TCGs like <i>Yu-Gi-Oh!</i> and{' '}
-            <i>Magic: The Gathering</i>. In addition, it is easy to perform some effects of certain
-            cards when they are drawn, like drawing cards with "Pot of Greed" (this funcitonality
-            might be added later).
-          </p>
-        </div>
+        <p>
+          This website is ideal when the probability formula for calculating success becomes very
+          intricate. Thus this webiste is perfect for calculating the probability of complex
+          starting hands in TCGs like <i>Yu-Gi-Oh!</i> and <i>Magic: The Gathering</i>. Therefore it
+          uses terms like "Deck" instead of "Population", "Combos" instead of "Successes" and
+          "Bricks" instead of "Failures" to better suit the intended use case.
+        </p>
         <div>
           <p>Follow these steps to use the app:</p>
           <ol>
@@ -50,11 +41,6 @@ const Home: FC = () => {
             Start
           </Button>
         </MuiThemeProvider>
-        <div>
-          <p>
-            Click the START button above or the Deck menu button at the top of the page to begin.
-          </p>
-        </div>
       </div>
     </PageTemplate>
   );
