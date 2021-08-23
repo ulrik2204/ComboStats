@@ -25,8 +25,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files 
-#(temporarily .env file because of prisma only supports .env, even for running on the local database)
-.env 
 .env.local
 .env.test.local
 #.env.development
@@ -37,3 +35,5 @@ yarn-error.log*
 
 # Random local testfile
 lib/test.ts
+
+.vscode

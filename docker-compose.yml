@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+  # Create the posgres database
+  database:
+    image: 'postgres'
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: combostats
+    ports:
+      - '5433:5432'
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+  # Start the web server
+  web:
+    depends_on:
+      - database
+    image: combostats
+    restart: always
+    volumes:
+      - .:/app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - '3000:3000'
+    extra_hosts:
+      - 'hostdatabase:host-gateway'
+    entrypoint: ['/bin/bash', '-c', 'yarn prisma db push && yarn dev']
+
+    # named volumes can be managed easier using docker-compose
+volumes:
+  database-data:
