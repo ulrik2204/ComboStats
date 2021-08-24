@@ -5,7 +5,7 @@ By using typescript, react and create-next-app, this non-profit webapp will esti
 1. Create a pool of elements with attached characteristics
 2. Select what elements that have to be drawn for success to be registered
 3. If success i drawn, but if certain other elements are also drawn, failure can be registered instead.
-4. Effects can be applied when certain elements are drawn, for example to draw another random element from the pool.
+4. Effects can be applied when certain elements are drawn, for example to draw another random element from the pool. (Not implemented)
 5. Estimate the probaility of success (while not drawing any failures) by drawing any number of samples where any number of elements can be drawn per sample.
 
 By using the calculating power of the computer, 10 000 or more samples can be drawn in a short period of time. This makes the estimate extremely accurate. The default result will be provided as an estimate, however the option to provide the result as a confidence interval will also be available over time.
@@ -27,7 +27,7 @@ Running the development server with a postgreSQL database in docker.
 $ docker-compose up 
 # on unix
 $ sudo docker-compose up
-
 ```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
