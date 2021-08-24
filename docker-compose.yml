@@ -21,6 +21,7 @@ services:
     restart: always
     volumes:
       - .:/app
+      - /app/node_modules
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -28,7 +29,7 @@ services:
       NODE_ENV: development
     ports:
       - '3000:3000'
-    entrypoint: ['/bin/bash', '-c', 'yarn prisma db push && yarn dev']
+    entrypoint: ['/bin/sh', '-c', 'yarn prisma db push && yarn dev']
 
     # named volumes can be managed easier using docker-compose
 volumes:
