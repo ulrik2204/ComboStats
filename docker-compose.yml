@@ -1,3 +1,5 @@
+# This docker-compose is only used when developing locally
+# As this website deploys to vercel, there is no docker-compose for production.
 version: '3.4'
 
 services:
@@ -9,8 +11,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: combostats
-    ports:
-      - '5433:5432'
     volumes:
       - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
   # Start the web server
@@ -28,8 +28,6 @@ services:
       NODE_ENV: development
     ports:
       - '3000:3000'
-    extra_hosts:
-      - 'hostdatabase:host-gateway'
     entrypoint: ['/bin/bash', '-c', 'yarn prisma db push && yarn dev']
 
     # named volumes can be managed easier using docker-compose
