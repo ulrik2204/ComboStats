@@ -20,4 +20,8 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/prettierrc.js
+**/prettierignore
+**/.eslintrc.js
+**/LICENSE
 README.md

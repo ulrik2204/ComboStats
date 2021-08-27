@@ -21,7 +21,7 @@ const CommonLogic: FC = (props) => {
     appDispatch(failuresActions.setScenarioGroup(INITIAL_FAILURES_STATE.scenarioGroup));
   }, [populationState.population.populationId]);
 
-  return <div></div>;
+  return <></>;
 };
 
 export default CommonLogic;

@@ -20,7 +20,8 @@ services:
     image: combostats
     restart: always
     volumes:
-      - .:/app
+      # Share the src code folder with docker to allow hot-reload
+      - ./src:/app/src
       - /app/node_modules
     build:
       context: .
@@ -29,7 +30,7 @@ services:
       NODE_ENV: development
     ports:
       - '3000:3000'
-    entrypoint: ['/bin/sh', '-c', 'yarn prisma db push && yarn dev']
+    entrypoint: ['/bin/sh', '-c', 'yarn prisma generate && yarn prisma db push && yarn dev']
 
     # named volumes can be managed easier using docker-compose
 volumes:

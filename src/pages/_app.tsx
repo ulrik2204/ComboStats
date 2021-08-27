@@ -7,11 +7,8 @@ import Menu from '../components/Menu';
 import Toast, { ToastProps } from '../components/Toast/index';
 import { ToastContext } from '../lib/contexts';
 import { backgroundTheme } from '../lib/themes';
-import { findDefaultValue } from '../lib/utils-frontend';
 import store from '../store';
 import '../styles/globals.css';
-
-
 
 function MyApp({ Component, pageProps }: AppProps) {
   // The context state for creating a Toast
