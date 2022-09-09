@@ -5,10 +5,10 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 // previewFeature referenatialActions allows for onDelete: Cascade
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["referentialActions"] 
 }
 
 model UserKey {
@@ -20,7 +20,7 @@ model UserKey {
 model Profile {
   username     String  @id
   passwordhash String
-  userId       String
+  userId       String  @unique
   user         UserKey @relation(fields: [userId], references: [userId], onDelete: Cascade)
 }
 
@@ -37,17 +37,17 @@ model Element {
 // A scenario happens if all elements in requiredElements with at least 
 model Scenario {
   scenarioId       String              @id @default(cuid())
-  name             String              
+  name             String
   scenarioGroupId  String
   scenarioGroup    ScenarioGroup       @relation(fields: [scenarioGroupId], references: [scenarioGroupId], onDelete: Cascade)
   requiredElements ElementInScenario[]
-  requiredRoles RoleInScenario[]
+  requiredRoles    RoleInScenario[]
 }
 
 model ElementInScenario {
   elementId  String
   element    Element  @relation(fields: [elementId], references: [elementId], onDelete: Cascade)
-  minCount      Int // The minimum count of that element required in sample for the scenario to be registered.
+  minCount   Int // The minimum count of that element required in sample for the scenario to be registered.
   scenarioId String
   scenario   Scenario @relation(fields: [scenarioId], references: [scenarioId], onDelete: Cascade)
 
@@ -56,9 +56,10 @@ model ElementInScenario {
 
 model RoleInScenario {
   requiredRole String
-  minCount Int // The minimum count of elements with that role required in sample for the scenario to be registered.
-  scenarioId String
-  scenario Scenario @relation(fields: [scenarioId], references: [scenarioId], onDelete: Cascade)
+  minCount     Int // The minimum count of elements with that role required in sample for the scenario to be registered.
+  scenarioId   String
+  scenario     Scenario @relation(fields: [scenarioId], references: [scenarioId], onDelete: Cascade)
+
   @@id([requiredRole, scenarioId])
 }
 
