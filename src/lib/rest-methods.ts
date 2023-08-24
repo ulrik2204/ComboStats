@@ -21,7 +21,7 @@ import {
   GetScenarioGroupScenariosResponse,
   GetScenarioGroupsResponse,
   PopulationData,
-  ScenarioGroupData,
+  ScenarioGroupData
 } from './types';
 import { getEnv, isNum } from './utils';
 import {
@@ -32,7 +32,7 @@ import {
   isScenarioGroupOwner,
   isValidRequestBody,
   populationExists,
-  scenarioGroupExists,
+  scenarioGroupExists
 } from './utils-server';
 
 /**
@@ -761,10 +761,16 @@ export const createTempUser = async (
   res: NextApiResponse<CreateTempUserResponse>,
 ) => {
   // Check if the user is already logged in, then no new user should be made.
+  console.log("Entered createTempUser");
+  console.log("Hello");
+  
   const userKey = await authenticateToken(req);
+  console.log("userKey", userKey)
   if (userKey) return res.status(200).json({ createdUser: false });
+
   // Create new userKey
   const newUserKey: UserKey = await prisma.userKey.create({ data: {} });
+  console.log("Created newUserKey", newUserKey)
   const secret = getEnv('ACCESS_TOKEN_SECRET');
   // Create jwt token of that userKey object
   const userKeyJwt = sign(newUserKey, secret);
