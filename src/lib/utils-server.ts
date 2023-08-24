@@ -64,7 +64,10 @@ export const isPopulationOwner = async (userId: string, populationId: string) =>
  * @param validRequestBody The form of a vlaid request body containing the key and the type of that key (as a string)
  * @returns True if all keys in the validRequestBody are contained with the correct type in body and false otherwise.
  */
-export const isValidRequestBody = (body: { [key: string]: any }, validRequestBody: { [key: string]: string | any }) => {
+export const isValidRequestBody = (
+  body: { [key: string]: any },
+  validRequestBody: { [key: string]: string | any },
+) => {
   for (const key in validRequestBody) {
     if (body[key] == undefined || !isValidType(body[key], validRequestBody[key])) {
       return false;
@@ -79,7 +82,10 @@ export const isValidRequestBody = (body: { [key: string]: any }, validRequestBod
  * @param populationId The id of the population.
  * @returns True if the owner of the population is the provided user and false otherwise.
  */
-export const isScenarioGroupOwner = async (userId: string, scenarioGroupId: string): Promise<boolean> => {
+export const isScenarioGroupOwner = async (
+  userId: string,
+  scenarioGroupId: string,
+): Promise<boolean> => {
   // Try to find a scenario group that has the provided scenarioGroupId
   // and the userId as population owner.
   const scenarioGroup = await prisma.scenarioGroup.findFirst({

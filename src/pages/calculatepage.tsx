@@ -106,7 +106,7 @@ const Calculate: FC = () => {
             {result && (
               <div className={classes.logDiv}>
                 {result.first100Logs?.map((log) => (
-                  <div>{log}</div>
+                  <div key={log}>{log}</div>
                 ))}
               </div>
             )}

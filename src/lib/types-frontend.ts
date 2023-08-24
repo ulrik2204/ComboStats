@@ -107,7 +107,7 @@ export type FormInputChange = {
 };
 
 export type GenericAction<ActionType, PayloadType = undefined> = Action<ActionType> &
-  (PayloadType extends undefined ? {} : { payload: PayloadType });
+  (PayloadType extends undefined ? object : { payload: PayloadType });
 
 type FormAction<PayloadType = undefined> = GenericAction<FORM_ACTION, PayloadType>;
 

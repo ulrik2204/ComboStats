@@ -18,8 +18,9 @@ const Home: FC = () => {
           This website is ideal when the probability formula for calculating success becomes very
           intricate. Thus this webiste is perfect for calculating the probability of complex
           starting hands in TCGs like <i>Yu-Gi-Oh!</i> and <i>Magic: The Gathering</i>. Therefore it
-          uses terms like "Deck" instead of "Population", "Combos" instead of "Successes" and
-          "Bricks" instead of "Failures" to better suit the intended use case.
+          uses terms like &quot;Deck&ldquo; instead of &quot;Population&ldquo;, &quot;Combos&ldquo;
+          instead of &quot;Successes&ldquo; and &quot;Bricks&ldquo; instead of &quot;Failures&ldquo;
+          to better suit the intended use case.
         </p>
         <div>
           <p>Follow these steps to use the app:</p>

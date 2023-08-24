@@ -21,7 +21,7 @@ export const deleteSuccessAction = createAction('deletePopulation');
 
 export const populationReducer = createReducer(INITIAL_POPULATION_STATE, (builder) => {
   builder
-    .addCase(loadingAction, (state, action) => {
+    .addCase(loadingAction, (state) => {
       state.loading = true;
       state.errorMsg = undefined;
     })
@@ -73,7 +73,7 @@ export const populationReducer = createReducer(INITIAL_POPULATION_STATE, (builde
       state.errorMsg = undefined;
       state.population = { ...action.payload, elements: [] };
     })
-    .addCase(deleteSuccessAction, (state, action) => {
-      state = INITIAL_POPULATION_STATE;
+    .addCase(deleteSuccessAction, () => {
+      return INITIAL_POPULATION_STATE;
     });
 });

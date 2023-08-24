@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import { PrismaClient } from '@prisma/client';
 
 // add prisma to the NodeJS global type
@@ -14,14 +15,14 @@ declare const global: NodeJS.Global;
 
 let prisma = global.prisma || new PrismaClient();
 
-if (typeof window === "undefined") {
-  if (process.env.NODE_ENV === "production") {
-    prisma = new PrismaClient()
+if (typeof window === 'undefined') {
+  if (process.env.NODE_ENV === 'production') {
+    prisma = new PrismaClient();
   } else {
     if (!global.prisma) {
-      global.prisma = new PrismaClient()
+      global.prisma = new PrismaClient();
     }
-    prisma = global.prisma
+    prisma = global.prisma;
   }
 }
 

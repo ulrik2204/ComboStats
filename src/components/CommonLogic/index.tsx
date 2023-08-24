@@ -8,7 +8,7 @@ import { failuresActions, successesActions } from '../../store/reducers/scenario
 /**
  * Component handling the common logic that affects all pages.
  */
-const CommonLogic: FC = (props) => {
+const CommonLogic: FC = () => {
   const populationState = useAppSelector((state) => state.population);
   const appDispatch = useAppDispatch();
 

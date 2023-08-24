@@ -36,6 +36,7 @@ export const isValidType = (variable: any, validType: string | object): boolean 
     //  that has an invalid type
     else if (hasKeys && !isArr) {
       const invalidValue = Object.keys(validType).find(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore validType will have at least one key.
         (key) => !isValidType(variable[key], validType[key]),
       );

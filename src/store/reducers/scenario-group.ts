@@ -37,8 +37,8 @@ const scenarioGroupSlice = (scenarioGroupType: ScenarioGroupType) =>
         state.errorMsg = undefined;
         state.scenarioGroup = { ...action.payload.scenarioGroup, scenarios: [] };
       },
-      deleteScenarioGroupSuccess: (state, action: PayloadAction<CUDScenarioGroupResponse>) => {
-        state = getInitialState(scenarioGroupType);
+      deleteScenarioGroupSuccess: () => {
+        return getInitialState(scenarioGroupType);
       },
       getScenarioGroupSuccess: (
         state,

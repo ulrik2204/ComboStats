@@ -1,44 +1,59 @@
 module.exports = {
-  // parser: '@typescript-eslint/parser', // Specifies the ESLint parser
-  plugins: ['@typescript-eslint/eslint-plugin'],
-  parserOptions: {
-    ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    ecmaFeatures: {
-      jsx: true, // Allows for the parsing of JSX
-    },
-  },
   settings: {
     react: {
-      version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
+      version: 'detect',
     },
   },
   extends: [
-    'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
-    'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
     'eslint:recommended',
     'plugin:react/recommended',
+    'prettier',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
-  rules: {
-    // suppress errors for missing 'import React' in files
-    'react/react-in-jsx-scope': 'off',
-    // allow jsx syntax in js files (for next.js project)
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }], //should add ".ts" if typescript project
-    indent: [2, 2],
-    // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
-    // e.g. "@typescript-eslint/explicit-function-return-type": "off",
-    'prettier/prettier': ['warn', { endOfLine: 'auto' }],
-    // 'no-unused-vars': 'warn',
-    // 'react/prop-types': 'warn',
-    // 'prettier/prettier': 'warn',
-  },
   env: {
     browser: true,
+    es2021: true,
     amd: true,
     node: true,
+    jest: true,
+  },
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 12,
+    sourceType: 'module',
+  },
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'react', 'prettier', 'react', 'jsx-a11y', 'import'],
+  rules: {
+    'import/first': 'warn',
+    'react/prop-types': 0,
+    'linebreak-style': 0,
+    'arrow-body-style': 'off',
+    'prefer-arrow-callback': 'off',
+    'no-unused-vars': 'off',
+    camelcase: 'warn',
+    'no-tabs': 'error',
+    'no-var': 'error',
+    '@typescript-eslint/no-unused-vars': ['warn'],
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    'explicit-module-boundary-types': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
   globals: {
     React: true,
+    google: true,
     mount: true,
     mountWithRouter: true,
     shallow: true,

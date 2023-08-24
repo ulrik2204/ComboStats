@@ -278,7 +278,7 @@ const FormTemplate: FC<FormTemplateProps> = (props) => {
                   props.formDispatch({ type: FORM_ACTION.SUBMIT_LOADING });
                   // Check that onSecondButtonClick is not undefined (which it is not at this point)
                   const onClick =
-                    props.onSecondButtonClick ?? (() => new Promise((res, _rej) => res({})));
+                    props.onSecondButtonClick ?? (() => new Promise((resolve) => resolve({})));
                   const errorResponse = await onClick();
                   if (!errorResponse.errorMsg)
                     return props.formDispatch({

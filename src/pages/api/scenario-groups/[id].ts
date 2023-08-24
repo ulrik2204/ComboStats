@@ -1,5 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { deleteScenarioGroupById, editScenarioGroupById, getScenarioGroupById } from '../../../lib/rest-methods';
+import {
+  deleteScenarioGroupById,
+  editScenarioGroupById,
+  getScenarioGroupById,
+} from '../../../lib/rest-methods';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') return await getScenarioGroupById(req, res);

@@ -19,7 +19,9 @@ import {
  * @param variableName The name of the variable to find the default value for.
  * @returns The default value for the variable with given name.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const findDefaultValue = (variableName: string): any => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let defaultValue: any;
   // Different defaultValue based on the key
   switch (variableName) {
@@ -42,6 +44,7 @@ export const findDefaultValue = (variableName: string): any => {
  * @param valueName The varaible name of the value arguemnt as a string.
  * @remarks localStorage is not updated when value is rendered the first time.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useUpdateLocalStorage = (value: any, valueName: string): void => {
   const isFirst = useRef(true);
   useEffect(() => {
@@ -56,6 +59,7 @@ export const useUpdateLocalStorage = (value: any, valueName: string): void => {
   }, [value]);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const findLocalStartValue = (key: string): any => {
   const defaultValue = findDefaultValue(key);
   if (typeof window !== 'undefined') {
@@ -138,11 +142,7 @@ export const useLoading = (loading: boolean, title: string, description: string)
 export const useLoginTempUser = () => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
-  const startLoading = useLoading(
-    loading,
-    'Logging in as temporary user...',
-    'Waiting for database.',
-  );
+  useLoading(loading, 'Logging in as temporary user...', 'Waiting for database.');
 
   useEffect(() => {
     setLoading(true);
@@ -166,6 +166,7 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
   switch (action.type) {
     case FORM_ACTION.FIELD:
       // Update the respoective field.
+      // eslint-disable-next-line no-case-declarations
       const newState = { ...state };
       newState.form[(action.payload as FormInputChange).position[0]][
         (action.payload as FormInputChange).position[1]
@@ -174,6 +175,7 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
     case FORM_ACTION.SUBMIT_LOADING:
       return { ...state, loading: true, errorMsg: undefined, submitFinished: false };
     case FORM_ACTION.SUBMIT_FAILURE:
+      // eslint-disable-next-line no-case-declarations
       const newStatt = {
         ...state,
         loading: false,
@@ -183,7 +185,9 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
       return newStatt;
     case FORM_ACTION.SUBMIT_SUCCESS:
       // Set all input values to empty if so is wanted.
+      // eslint-disable-next-line no-case-declarations
       const shouldClearForm = action.payload.clearForm;
+      // eslint-disable-next-line no-case-declarations
       const newStat = { ...state, loading: false, errorMsg: undefined, submitFinished: true };
       if (shouldClearForm)
         newStat.form.forEach((row) =>
@@ -212,6 +216,7 @@ export const formReducer = (state: FormState, action: FormActionTypes) => {
  * @param label The label of the input field to find.
  * @returns The value of the input field with the provided label or undefined if none are found.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const findValueInForm = (formState: FormState, label: string): any | undefined => {
   for (const row of formState.form) {
     for (const input of row) {
@@ -230,6 +235,7 @@ const findValueInForm = (formState: FormState, label: string): any | undefined =
  * If no input field with that label is found, it returns an action that will do nothing.
  * (Sets the value of the first input field in the last row to be the same value as it already is).
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setValueActionInForm(formState: FormState, label: string, value: any): FormInteraction {
   const form = formState.form;
   for (let i = 0; i < form.length; i++) {

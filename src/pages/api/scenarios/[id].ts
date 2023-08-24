@@ -6,4 +6,3 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   else if (req.method === 'DELETE') return await deleteScenarioById(req, res);
   else return res.status(405).end();
 };
-

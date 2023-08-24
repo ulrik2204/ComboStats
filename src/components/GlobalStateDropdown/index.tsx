@@ -58,7 +58,7 @@ const setField = (field: keyof ThisState, value: ThisState[typeof field]) => {
 
 const setFields = (
   fields: [keyof ThisState, keyof ThisState],
-  values: [ThisState[typeof fields[0]], ThisState[typeof fields[1]]],
+  values: [ThisState[(typeof fields)[0]], ThisState[(typeof fields)[1]]],
 ) => {
   return {
     type: THIS_ACTION.FIELDS,
@@ -72,6 +72,7 @@ const setFields = (
 const thisStateReducer = (state: ThisState, action: ThisAction) => {
   switch (action.type) {
     case THIS_ACTION.FIELD:
+      // eslint-disable-next-line no-case-declarations
       const field = action.payload.field;
       return {
         ...state,

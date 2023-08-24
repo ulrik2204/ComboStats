@@ -56,7 +56,7 @@ export const deleteSuccessesTAction = (): CUDScenarioGroupThunk => {
     const scenarioGroupId = getState().successes.scenarioGroup.scenarioGroupId;
     const res = await deleteScenarioGroupFromAPI(scenarioGroupId);
     if (res.ok) {
-      dispatch(successesActions.deleteScenarioGroupSuccess(res.data));
+      dispatch(successesActions.deleteScenarioGroupSuccess());
       return res;
     }
     dispatch(successesActions.failure(res.data));

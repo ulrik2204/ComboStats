@@ -426,7 +426,7 @@ export const findScenarioInHand = (
 class FirstNLogs {
   private firstNLogs: string[];
   private maxLogs: number;
-  constructor(maxLogs: number = 100) {
+  constructor(maxLogs = 100) {
     this.firstNLogs = [];
     this.maxLogs = maxLogs;
   }

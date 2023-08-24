@@ -39,7 +39,9 @@ export const createPopulationTAction = (name: string): CUDPopulationThunk => {
   };
 };
 
-export const getPopulationTAction = (): AppThunk<Promise<APIResponse<GetPopulationElementsResponse>>> => {
+export const getPopulationTAction = (): AppThunk<
+  Promise<APIResponse<GetPopulationElementsResponse>>
+> => {
   return async (dispatch, getState) => {
     dispatch(loadingAction());
     const res = await getPopulationElementsFromAPI(getState().population.population.populationId);
@@ -80,7 +82,9 @@ export const deletePopulationTAction = (): CUDPopulationThunk => {
   };
 };
 
-export const addElementTAction = (body: Omit<CreateElementBody, 'populationId'>): CUDElementThunk => {
+export const addElementTAction = (
+  body: Omit<CreateElementBody, 'populationId'>,
+): CUDElementThunk => {
   return async (dispatch, getState) => {
     dispatch(loadingAction());
     const res = await createElementFromAPI({

@@ -80,7 +80,7 @@ const Toast: FC<ToastProps> = (props) => {
       <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
       {props.description && (
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">{props.description}</DialogContentText> 
+          <DialogContentText id="alert-dialog-description">{props.description}</DialogContentText>
           {props.children}
         </DialogContent>
       )}

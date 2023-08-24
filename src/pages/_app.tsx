@@ -34,10 +34,11 @@ function MyApp({ Component, pageProps }: AppProps) {
               title={toastData.title}
               description={toastData.description}
               type={toastData.type}
-              children={toastData.children}
               disableClose={toastData.disableClose}
               color={toastData.color}
-            />
+            >
+              {toastData.children}
+            </Toast>
             <Menu />
             <CommonLogic />
             <Component {...pageProps} />

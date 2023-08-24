@@ -11,5 +11,3 @@ export const ToastContext = createContext<ToastContext>({
   toastData: { open: false, type: 'none', title: '', onClose: () => {} },
   setToastData: () => {},
 });
-
-
